@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
+import { ThemeProvider } from 'next-themes'
 import { Inter } from "next/font/google";
+import Navbar from '../components/Navbar'
 import "./globals.css";
 
-const inter = Inter({ subsets: ['latin']});
+const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
   title: "Swaft Landing Page",
@@ -15,11 +17,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="fr">
-      <body
-        className={inter.className}>
-        {children}
-      </body>
+    <html lang="fr" suppressHydrationWarning>
+      <ThemeProvider attribute="class" defaultTheme="dark">
+        <body className={`${inter.className} dark:bg-[#01020E] bg-[#F2F2F2]`}>
+          <Navbar />
+          <main className="pt-16 dark:bg-[#01020E] bg-[#F2F2F2]">
+            {children}
+          </main>
+        </body>
+      </ThemeProvider>
     </html>
   );
 }
