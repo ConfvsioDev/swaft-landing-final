@@ -57,7 +57,7 @@ const Navbar: React.FC = () => {
                 className={`w-full max-w-[90%] lg:max-w-[75%] mx-auto ${
                     theme === 'dark' ? 'bg-[#01020E]' : 'bg-[#F2F2F2]'
                 } bg-opacity-90 rounded-full`}
-                initial={{ opacity: 0, y: -100 }}
+                initial={{ opacity: 0, y: 0 }}
                 animate={{ opacity: isVisible ? 1 : 0, y: isVisible ? 0 : -100 }}
                 transition={{ duration: 0.3 }}
             >
@@ -106,17 +106,23 @@ const Navbar: React.FC = () => {
 
                             {/* Bouton mobile */}
                             <button
-                                className="2xl:hidden p-2"
-                                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                            >
-                                <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                    {isMobileMenuOpen ? (
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                                    ) : (
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16m-7 6h7" />
-                                    )}
-                                </svg>
-                            </button>
+            className={`2xl:hidden p-2 ${theme === 'light' ? 'text-black' : 'text-white'}`}
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+        >
+            <svg 
+                className="w-7 h-7" 
+                fill="none" 
+                stroke="currentColor" 
+                viewBox="0 0 24 24" 
+                xmlns="http://www.w3.org/2000/svg"
+            >
+                {isMobileMenuOpen ? (
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                ) : (
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16m-7 6h7" />
+                )}
+            </svg>
+        </button>
                         </div>
                     </div>
                 </div>
