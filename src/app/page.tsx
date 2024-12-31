@@ -1,7 +1,9 @@
-'use client'
+'use client';
 import { motion } from 'motion/react';
 import Hero from '../components/Hero';
 import Video from '../components/Video';
+import Creations from '../components/Creations';
+import Process from '@/components/Process';
 import { useTheme } from 'next-themes';
 
 export default function Home() {
@@ -26,7 +28,7 @@ export default function Home() {
       <Video />
       
       {/* Blurred horizontal line under the video */}
-      <div className="w-1/2 h-0.5 mt-32 mx-auto"> {/* Height set to 0.5 for thinner line */}
+      <div className="w-1/2 h-0.5 mt-32 mx-auto"> 
         <div 
           className="h-full bg-gradient-to-r"
           style={{
@@ -36,14 +38,13 @@ export default function Home() {
         />
       </div>
 
-      {/* Scrollable boxes with padding above */}
-      <div className="flex flex-col items-center w-full mt-8 space-y-4 pt-8">
-        {[...Array(10)].map((_, index) => (
-          <div key={index} className="w-3/4 md:w-1/2 lg:w-1/3 h-32 bg-gray-200 dark:bg-gray-700 rounded-lg shadow-md flex items-center justify-center">
-            <p className="text-center text-lg font-semibold">Box {index + 1}</p>
-          </div>
-        ))}
-      </div>
+      {/* Add ID to Creations for scrolling */}
+      <Creations id="creations" />
+      
+      {/* Ensure enough space between Creations and Process */}
+      <div style={{ height: '100vh' }}></div> {/* This div ensures there's enough space */}
+      
+      <Process />
     </main>
   );
 }
