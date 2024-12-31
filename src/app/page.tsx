@@ -18,7 +18,7 @@ export default function Home() {
         transition={{ delay: 0.5, duration: 0.5 }}
         className="text-xl"
       >
-        Nous sommes ravis de vous accueillir !
+        Ylian tu pus
       </motion.p>
     </main>
   )

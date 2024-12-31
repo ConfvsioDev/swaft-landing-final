@@ -11,9 +11,9 @@ const NavLink: React.FC<{ href: string; children: React.ReactNode }> = ({ href, 
     return (
         <Link 
             href={href} 
-            className={`relative text-center px-5 py-3 rounded-full text-lg font-medium transition-all duration-300 ${
+            className={`relative text-center px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
                 theme === 'dark' ? 'text-white' : 'text-[#01020E]'
-            }`}
+            } group`}
         >
             <span className={`absolute inset-0 rounded-full transition-all duration-300 opacity-0 group-hover:opacity-60 z-0 ${
                 theme === 'dark' 
@@ -21,6 +21,7 @@ const NavLink: React.FC<{ href: string; children: React.ReactNode }> = ({ href, 
                     : 'bg-gradient-to-r from-[#E5E2FA] to-[#E5E2FA]'
             }`} />
             <span className="relative z-10">{children}</span>
+            <span className="absolute bottom-0 left-0 right-0 h-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
         </Link>
     );
 };
@@ -51,9 +52,9 @@ const Navbar: React.FC = () => {
     if (!mounted) return null;
 
     return (
-        <div className="fixed w-full z-50 pt-5">
+        <div className="fixed w-full z-50">
             <motion.nav
-                className={`w-full max-w-[75%] mx-auto ${
+                className={`w-full max-w-[90%] lg:max-w-[75%] mx-auto ${
                     theme === 'dark' ? 'bg-[#01020E]' : 'bg-[#F2F2F2]'
                 } bg-opacity-90 rounded-full`}
                 initial={{ opacity: 0, y: -100 }}
@@ -70,7 +71,7 @@ const Navbar: React.FC = () => {
                         </div>
 
                         {/* Liens */}
-                        <div className="absolute left-1/2 transform -translate-x-1/2 flex items-center space-x-8">
+                        <div className="hidden 2xl:flex absolute left-1/2 transform -translate-x-1/2 items-center space-x-4 xl:space-x-8 text-sm lg:text-base">
                             <NavLink href="/creations">Nos Créations</NavLink>
                             <NavLink href="/processus">Notre Processus</NavLink>
                             <NavLink href="/offres">Nos Offres</NavLink>
@@ -94,18 +95,18 @@ const Navbar: React.FC = () => {
                             </button>
                             <Link 
                                 href="/reserver" 
-                                className={`px-5 py-3 rounded-full border ${
+                                className={`px-4 py-2 rounded-full border ${
                                     theme === 'dark' 
                                         ? 'border-white text-white hover:bg-white hover:text-[#01020E]' 
                                         : 'border-[#01020E] text-[#01020E] hover:bg-[#01020E] hover:text-white'
-                                } transition-colors duration-300 text-lg font-medium`}
+                                } transition-colors duration-300 text-sm font-medium`}
                             >
                                 Réserver un Appel
                             </Link>
 
                             {/* Bouton mobile */}
                             <button
-                                className="md:hidden p-2"
+                                className="2xl:hidden p-2"
                                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                             >
                                 <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -123,9 +124,9 @@ const Navbar: React.FC = () => {
 
             {/* Menu mobile */}
             {isMobileMenuOpen && (
-                <div className={`md:hidden fixed top-[90px] left-0 w-full ${
+                <div className={`2xl:hidden fixed top-[90px] left-0 w-full ${
                     theme === 'dark' ? 'bg-[#01020E]' : 'bg-[#F2F2F2]'
-                } bg-opacity-90 p-4`}>
+                } bg-opacity-90 p-4 mt-10`}>
                     <div className="flex flex-col items-center space-y-4"> 
                         <NavLink href="/creations">Nos Créations</NavLink>
                         <NavLink href="/processus">Notre Processus</NavLink>
