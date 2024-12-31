@@ -19,7 +19,7 @@ const Video: React.FC = () => {
 
     // Adjusted transformations for better animation effect
     const rotateX = useTransform(smoothScrollProgress, [0, 0.5], [70, 0]);
-    const opacity = useTransform(smoothScrollProgress, [0, 0.5], [0.2, 1]);
+    const opacity = useTransform(smoothScrollProgress, [0, 0.2], [0.2, 1]);
     
     // Scale from 0.8 to 1.2 for less aggressive growth
     const scale = useTransform(smoothScrollProgress, [0, 0.5], [0.8, 1.2]);
@@ -32,11 +32,11 @@ const Video: React.FC = () => {
     if (!isClient) return null;
 
     // Define colors based on the theme
-    const borderColor = theme === 'dark' ? 'rgba(5, 14, 25, 0.3)' : 'rgba(0, 0, 139, 0.3)';
+    const borderColor = theme === 'dark' ? 'rgba(5, 14, 25, 0.3)' : 'rgba(0, 0, 190, 0.2)';
     const glowColor = theme === 'dark' ? 'rgba(143, 186, 200, 0.5)' : 'rgba(173, 216, 230, 0.2)';
 
     return (
-        <div ref={containerRef} className="w-full flex items-center justify-center perspective-1000 z-10">
+        <div ref={containerRef} className="w-full flex items-center justify-center perspective-1000 z-10 mb-8"> {/* Added margin-bottom */}
             <motion.div
                 style={{
                     rotateX,
@@ -49,7 +49,7 @@ const Video: React.FC = () => {
                 className="w-full max-w-6xl aspect-video rounded-2xl overflow-hidden border-4"
             >
                 <iframe
-                    className="w-full h-[40vh] md:h-[60vh] lg:h-[70vh] xl:h-[80vh]" // Responsive height settings
+                    className="w-full h-[60vh] md:h-[70vh] lg:h-[80vh] xl:h-[90vh]" // Responsive height settings
                     src="https://www.youtube.com/embed/z9sctViHNqg?autoplay=1&mute=1&loop=1&playlist=z9sctViHNqg"
                     title="YouTube video player"
                     frameBorder="0"
@@ -57,6 +57,8 @@ const Video: React.FC = () => {
                     allowFullScreen
                 ></iframe>
             </motion.div>
+            {/* Ensure there's enough space below the video */}
+            <div style={{ height: '40px' }} /> {/* This div creates space below the video */}
         </div>
     );
 };
