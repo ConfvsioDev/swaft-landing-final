@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 
 const words = ["unique.", "parfait.", "original.", "exceptionnel."]; // Words to cycle through
 
@@ -16,6 +16,10 @@ const TypingEffect: React.FC<TypingEffectProps> = ({ onComplete }) => {
   const erasingSpeed = 50; // Speed of erasing
   const pauseDuration = 1500; // Pause duration after typing the full word
 
+  const handleComplete = useCallback(() => {
+    onComplete();
+  }, [onComplete]);
+
   useEffect(() => {
     let interval: NodeJS.Timeout;
     let currentLength = isTyping ? 0 : words[currentIndex].length;
@@ -30,7 +34,7 @@ const TypingEffect: React.FC<TypingEffectProps> = ({ onComplete }) => {
           clearInterval(interval);
           setTimeout(() => {
             setIsTyping(false); // Switch to erasing after pause
-            onComplete(); // Notify parent that typing is complete
+            handleComplete(); // Use the callback
           }, pauseDuration);
         }
       }, typingSpeed);
@@ -49,7 +53,7 @@ const TypingEffect: React.FC<TypingEffectProps> = ({ onComplete }) => {
     }
 
     return () => clearInterval(interval); // Cleanup on unmount
-  }, [isTyping, currentIndex]);
+  }, [isTyping, currentIndex, handleComplete]);
 
   return (
     <span className="font-bold absolute" style={{ left: '0', top: '0', whiteSpace: 'nowrap' }}>

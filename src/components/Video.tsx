@@ -18,7 +18,7 @@ const Video: React.FC = () => {
     });
 
     // Adjusted transformations for better animation effect
-    const rotateX = useTransform(smoothScrollProgress, [0, 0.5], [70, 0]);
+    const rotateX = useTransform(smoothScrollProgress, [0, 0.25], [70, 0]);
     const opacity = useTransform(smoothScrollProgress, [0, 0.2], [0.2, 1]);
     
     // Scale from 0.8 to 1.2 for less aggressive growth
@@ -55,6 +55,7 @@ const Video: React.FC = () => {
                     frameBorder="0"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                     allowFullScreen
+                    loading="lazy" // Added for better performance
                 ></iframe>
             </motion.div>
             {/* Ensure there's enough space below the video */}

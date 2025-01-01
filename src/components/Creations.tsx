@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useTheme } from 'next-themes'; 
 import travelerImage from './traveler.png'; 
 import Link from 'next/link'; 
@@ -13,11 +13,11 @@ const Creations: React.FC<CreationsProps> = ({ id }) => {
   const { theme } = useTheme(); 
   const [isTypingComplete, setIsTypingComplete] = useState(false); 
 
-  const glowStyle = theme === 'dark'
+  const glowStyle = useMemo(() => theme === 'dark'
     ? '0 0 20px rgba(0, 0, 0, 0.5), 0 0 40px rgba(0, 0, 0, 0.3)' 
-    : '0 0 20px rgba(173, 216, 230, 0.5), 0 0 40px rgba(173, 216, 230, 0.3)'; 
+    : '0 0 20px rgba(173, 216, 230, 0.5), 0 0 40px rgba(173, 216, 230, 0.3)', [theme]);
 
-  const titleColor = theme === 'dark' ? 'text-white' : 'text-gray-800';
+  const titleColor = useMemo(() => theme === 'dark' ? 'text-white' : 'text-gray-800', [theme]);
 
   return (
     <section id={id} className="py-12 md:py-24"> 
@@ -45,7 +45,8 @@ const Creations: React.FC<CreationsProps> = ({ id }) => {
               <img 
                 src={travelerImage.src} 
                 alt="Notre collaboration actuelle"
-                className="w-full h-auto object-cover" 
+                className="w-full h-auto object-cover"
+                loading="lazy" // Added for better performance
               />
               <div className="absolute top-4 left-4 p-2 backdrop-blur-md bg-black bg-opacity-50 rounded-lg">
                 <h2 className={`text-xl md:text-3xl font-semibold text-white`}>Traveler</h2>
@@ -54,7 +55,7 @@ const Creations: React.FC<CreationsProps> = ({ id }) => {
           </motion.div>
         </div>
 
-        <div className="md:w-1/2 flex flex-col items-center md:items-end mt-8 md:mt-0">
+        <div className="md:w-1/2 flex flex-col  items-center md:items-end mt-8 md:mt-0">
           <motion.p 
             className={`text-lg md:text-xl text-center ${titleColor} mb-6 relative`} 
             initial={{ opacity: 0, y: -20 }} 
@@ -75,7 +76,7 @@ const Creations: React.FC<CreationsProps> = ({ id }) => {
           <div className="flex justify-center w-full"> 
             <Link 
               href="/reserver" 
-              className={`mt-4 px-8 py-4 rounded-full border ${
+              className={`mt-4 ml-auto px-8 py-4 rounded-full border ${
                 theme === 'dark' 
                   ? 'border-white text-white hover:bg-white hover:text-[#01020E]' 
                   : 'border-[#01020E] text-[#01020E] hover:bg-[#01020E] hover:text-white'

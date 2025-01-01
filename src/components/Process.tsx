@@ -1,150 +1,199 @@
-import React, { useEffect, useState, useRef } from 'react';
-import { motion, useAnimation, useScroll, useTransform } from 'framer-motion';
-import { Search, Wand2, Code, Rocket } from 'lucide-react';
+import React, { useState, useEffect, useRef, useMemo } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Search, Wand2, Code, Rocket } from "lucide-react";
+import { useTheme } from 'next-themes';
 
-const steps = [
+interface StepType {
+  title: string;
+  description: string;
+  Icon: React.ElementType;
+  color: string;
+}
+interface ProcessProps {
+  id?: string;
+}
+const steps: StepType[] = [
   {
     title: "Audit complet",
-    description: "L'équipe de Swaft réalise un audit complet de ton SaaS afin de fournir toutes les informations nécessaires.",
+    description:
+      "L'équipe de Swaft réalise un audit complet de ton SaaS afin de fournir toutes les informations nécessaires.",
     Icon: Search,
-    color: 'bg-blue-500'
+    color: "bg-blue-500",
   },
   {
     title: "Création de la maquette",
-    description: "Notre designer réalise une maquette basée sur les points faibles vus pendant la première phase.",
+    description:
+      "Notre designer réalise une maquette basée sur les points faibles vus pendant la première phase.",
     Icon: Wand2,
-    color: 'bg-green-500'
+    color: "bg-green-500",
   },
   {
     title: "Développement",
-    description: "Notre développeur s'occupe de concrétiser la maquette, nous nous occupons d'intégrer le nécessaire afin de traker les KPIs qu'on aura défini au préalable.",
+    description:
+      "Notre développeur s'occupe de concrétiser la maquette, nous nous occupons d'intégrer le nécessaire afin de tracker les KPIs qu'on aura défini au préalable.",
     Icon: Code,
-    color: 'bg-purple-500'
+    color: "bg-purple-500",
   },
   {
     title: "Suivi et garantie",
-    description: "Notre équipe assurera un suivi sur 2 semaines pour les résultats. En cas de résultats non satisfaisants, le tout est remboursé.",
+    description:
+      "Notre équipe assurera un suivi sur 2 semaines pour les résultats. En cas de résultats non satisfaisants, le tout est remboursé.",
     Icon: Rocket,
-    color: 'bg-cyan-500'
-  }
+    color: "bg-cyan-500",
+  },
 ];
 
-const Process = () => {
-  const [currentStep, setCurrentStep] = useState(0);
-  const controls = useAnimation();
-  const ref = useRef<HTMLDivElement>(null);
-  const [isVisible, setIsVisible] = useState(false); // Track visibility
+const iconVariant = {
+  enter: { rotateY: 90, opacity: 0 },
+  center: { rotateY: 0, opacity: 1 },
+  exit: { rotateY: -90, opacity: 0 },
+};
 
-  // Use Framer Motion's useScroll hook
-  const { scrollY } = useScroll();
+const Process: React.FC<ProcessProps> = ({ id }) => {
+  const [currentStep, setCurrentStep] = useState(0); // Ensures it's initialized to a valid index (0)
+  const stepRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const { theme } = useTheme();
 
-  // Calculate current step index based on scroll position
-  const stepHeight = window.innerHeight; // Each step takes full viewport height
-  const currentStepIndex = useTransform(scrollY, [0, stepHeight * steps.length], [0, steps.length]);
+  // Ensure theme is defined before rendering the component
+  if (theme === undefined) {
+    return <div>Loading theme...</div>;
+  }
 
-  // Update current step based on scroll position when visible
-  useEffect(() => {
-    if (!isVisible) return; // Only update steps if in view
+  const shadowStyle = useMemo(() => ({
+    textShadow:
+      theme === "dark"
+        ? "0 0 10px rgba(255, 255, 255, 0.6)"
+        : "0 0 10px rgba(0, 0, 0, 0.3)",
+  }), [theme]);
 
-    return currentStepIndex.onChange((latest) => {
-      const newStep = Math.floor(latest);
-      if (newStep !== currentStep && newStep < steps.length) {
-        setCurrentStep(newStep);
-        controls.start({ opacity: 0, y: -20 });
-        setTimeout(() => {
-          controls.start({ opacity: 1, y: 0 });
-        }, 300);
-      }
-    });
-  }, [currentStepIndex, isVisible]);
-
-  // Intersection Observer to track visibility of the component
+  // IntersectionObserver to update icon based on step in view
   useEffect(() => {
     const observer = new IntersectionObserver(
-      ([entry]) => {
-        setIsVisible(entry.isIntersecting); // Set visibility based on intersection
-        if (entry.isIntersecting) {
-          setCurrentStep(0); // Reset to first step when entering view
-          controls.start({ opacity: 1 }); // Start animation when in view
-        } else {
-          controls.start({ opacity: 0 }); // Fade out when out of view
-        }
+      (entries) => {
+        entries.forEach((entry) => {
+          const index = stepRefs.current.indexOf(entry.target as HTMLDivElement);
+          if (entry.isIntersecting) {
+            setCurrentStep(index);
+          }
+        });
       },
-      { threshold: 0.5 } // Trigger when at least 50% of the component is visible
+      {
+        rootMargin: "0px 0px -50% 0px", // Update as step is near the middle
+        threshold: 0,
+      }
     );
 
-    if (ref.current) {
-      observer.observe(ref.current);
-    }
+    stepRefs.current.forEach((step) => {
+      if (step) observer.observe(step);
+    });
 
-    return () => {
-      if (ref.current) {
-        observer.unobserve(ref.current);
-      }
-    };
-  }, [controls]);
+    return () => observer.disconnect();
+  }, []);
+
+  // Ensure currentStep stays within bounds of steps array
+  const currentStepData = steps[currentStep] || steps[0]; // Fallback to the first step if `currentStep` is invalid
 
   return (
-    <div ref={ref} className="relative h-screen overflow-hidden">
-      {/* Background for each step */}
-      <div className="absolute inset-0 flex flex-col">
-        {steps.map((stepData, index) => (
-          <motion.div 
-            key={index} 
-            className={`h-screen flex items-center justify-center ${stepData.color}`} 
-            initial={{ opacity: 0 }} 
-            animate={isVisible && currentStep === index ? { opacity: 1 } : { opacity: 0 }} 
-            transition={{ duration: 0.5 }}
-          >
-            <h1 className="text-white text-5xl font-bold">{stepData.title}</h1>
-          </motion.div>
-        ))}
-      </div>
-
-      {/* Sticky Centered Icon */}
-      {isVisible && ( // Render icon only when visible
-        <motion.div 
-          className="fixed inset-0 flex items-center justify-center"
-          animate={controls}
-          initial={{ opacity: 0 }} 
-          style={{ zIndex: 10 }} 
+    <div
+      id={id}
+      className={`w-full min-h-screen relative ${
+        theme === "dark"
+          ? "bg-gradient-to-b from-[#03030e] to-[#0F0844] text-white"
+          : "bg-gradient-to-b from-[#f2f2f2] to-[#a39bf0] text-black"
+      }`}
+    >
+      {/* Section Title */}
+      <div className="text-center mb-6">
+        <h1
+          className="text-4xl sm:text-5xl md:text-6xl font-bold neon-effect"
+          style={shadowStyle}
         >
-          <div className="flex items-center justify-center w-48 h-48 shadow-lg rounded-full">
-            <div className={`flex items-center justify-center w-32 h-32 ${steps[currentStep].color} rounded-full`}>
-              {/* Correctly render the current step's icon */}
-              {React.createElement(steps[currentStep].Icon, { className: "w-16 h-16 text-gray-800" })}
-            </div>
-          </div>
-        </motion.div>
-      )}
+          Notre Processus
+        </h1>
+      </div>
+      <div className="lg:block hidden sm:hidden">
+        {/* Sticky Icon for larger devices */}
+        <div className="lg:flex hidden sticky top-0 h-screen flex-col justify-center items-center pointer-events-none">
+          {/* Animated Icon */}
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={currentStep}
+              variants={iconVariant}
+              initial="enter"
+              animate="center"
+              exit="exit"
+              transition={{
+                duration: 0.1, // Smoother rotation transition
+                ease: "easeInOut", // Smooth easing for fluid transition
+              }}
+              className={`w-32 h-32 rounded-full flex items-center justify-center ${currentStepData.color} absolute`}
+            >
+              {React.createElement(currentStepData.Icon, {
+                className: "w-16 h-16 text-white",
+              })}
+            </motion.div>
+          </AnimatePresence>
+        </div>
 
-      {/* Text Content */}
-      <div className="absolute right-64 top-1/2 transform -translate-y-1/2 max-w-md">
-        {isVisible && ( // Render text only when visible
-          <>
-            <motion.h2 
-              className="text-3xl font-bold"
-              animate={controls}
-              initial={{ opacity: 0 }} 
-              transition={{ duration: 0.3 }}
+        {/* Fixed Texts (visible on large devices only) */}
+        <div className="absolute top-0 w-full lg:block sm:hidden md:hidden">
+          {steps.map((step, index) => (
+            <div
+              key={index}
+              ref={(el) => {
+                stepRefs.current[index] = el;
+              }}
+              className="absolute"
+              style={{
+                top: `${index * 100 + 50}vh`, // Adjusted step positioning
+                left: index % 2 === 0 ? "10%" : "auto",
+                right: index % 2 === 0 ? "auto" : "10%",
+                width: "35%",
+              }}
             >
-              {steps[currentStep].title}
-            </motion.h2>
-            <motion.p 
-              className="text-lg text-gray-700"
-              animate={controls}
-              initial={{ opacity: 0 }} 
-              transition={{ duration: 0.3 }}
-            >
-              {steps[currentStep].description}
-            </motion.p>
-          </>
-        )}
+              <div className="w-[70%] px-4 pb-24 mx-auto">
+                <h2
+                  className="text-3xl sm:text-4xl font-bold neon-effect"
+                  style={shadowStyle}
+                >
+                  {step.title}
+                </h2>
+                <p className="text-xl text-gray-500">{step.description}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Scrollable Area */}
+        <div className="relative">
+          {steps.map((_, index) => (
+            <div
+              key={index}
+              className={index === steps.length - 1 ? "h-[0vh]" : "h-[90vh] sm:h-[100vh]"} // Last step has reduced height
+            ></div>
+          ))}
+        </div>
       </div>
 
-      <div className="fixed bottom-10 left-0 right-0 flex flex-col items-center">
-        <span className="text-gray-600 text-3xl cursor-pointer">&#8595;</span>
-        <span className="text-gray-600 text-3xl cursor-pointer mt-1">&#8595;</span>
+      {/* Stacked Layout for small devices */}
+      <div className="lg:hidden">
+        {steps.map((step, index) => (
+          <div
+            key={index}
+            className="flex flex-col items-center mb-16 px-4"
+            style={{ position: "relative", width: "100%" }}
+          >
+            <div className={`w-32 h-32 rounded-full flex items-center justify-center ${step.color} mb-4`}>
+              {React.createElement(step.Icon, {
+                className: "w-16 h-16 text-white",
+              })}
+            </div>
+            <h2 className="text-3xl sm:text-4xl font-bold text-center" style={shadowStyle}>
+              {step.title}
+            </h2>
+            <p className="text-xl text-gray-500 text-center">{step.description}</p>
+          </div>
+        ))}
       </div>
     </div>
   );

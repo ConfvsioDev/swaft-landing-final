@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useTheme } from 'next-themes';
 
 function smoothScroll(targetId: string) {
@@ -15,15 +15,19 @@ function smoothScroll(targetId: string) {
     }
 }
 
-
 const Hero: React.FC = () => {
     const { theme } = useTheme();
 
-    const shadowStyle = {
+    // Make sure theme is defined before rendering the component
+    if (theme === undefined) {
+        return <div>Loading theme...</div>; // Display a loading state until theme is determined
+    }
+
+    const shadowStyle = useMemo(() => ({
         textShadow: theme === 'dark' 
             ? '0 0 10px rgba(255, 255, 255, 0.6)' 
             : '0 0 10px rgba(0, 0, 0, 0.3)',
-    };
+    }), [theme]);
 
     return (
         <div className="hero text-center px-4 sm:px-6 lg:px-8 py-8 sm:py-12 md:py-16 lg:py-20">
@@ -48,36 +52,32 @@ const Hero: React.FC = () => {
                 Optimisez votre taux de conversion grâce à une landing page parfaite.
             </h3>
             <div className="mt-8 sm:mt-10 md:mt-12">
-            <button 
-    className={`group relative inline-flex items-center overflow-hidden rounded-full h-12 pr-12 pl-6 text-lg font-medium transition-all duration-300 ease-out
-                ${theme === 'dark' 
-                    ? 'text-white hover:text-black' 
-                    : 'text-black hover:text-white'}`}
-    onClick={() => smoothScroll('creations')} // Use the smoothScroll function
->
-    <span className="relative z-10 mr-4">
-        Nous découvrir
-    </span>
-    <span className={`absolute right-0 w-12 h-12 rounded-full transition-all duration-300 ease-out group-hover:w-full
-        ${theme === 'dark' 
-            ? 'bg-white' 
-            : 'bg-black'}`}>
-    </span>
-    <span className="absolute right-0 z-10 flex h-12 w-12 items-center justify-center">
-        <svg 
-            xmlns="http://www.w3.org/2000/svg" 
-            fill="none" 
-            viewBox="0 0 24 24" 
-            stroke="currentColor" 
-            className={`h-6 w-6 rotate-90 ${theme === 'dark' ? 'text-black' : 'text-white'}`}
-        >
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-        </svg>
-    </span>
-</button>
-
-
-
+                <button 
+                    className={`group relative inline-flex items-center overflow-hidden rounded-full h-12 pr-12 pl-6 text-lg font-medium transition-all duration-300 ease-out
+                    ${theme === 'dark' 
+                        ? 'text-white hover:text-black' 
+                        : 'text-black hover:text-white'}`}
+                    onClick={() => smoothScroll('creations')} // Use the smoothScroll function
+                >
+                    <span className="relative z-10 mr-4">
+                        Nous découvrir
+                    </span>
+                    <span className={`absolute right-0 w-12 h-12 rounded-full transition-all duration-300 ease-out group-hover:w-full
+                        ${theme === 'dark' 
+                            ? 'bg-white' 
+                            : 'bg-black'}`} />
+                    <span className="absolute right-0 z-10 flex h-12 w-12 items-center justify-center">
+                        <svg 
+                            xmlns="http://www.w3.org/2000/svg" 
+                            fill="none" 
+                            viewBox="0 0 24 24" 
+                            stroke="currentColor" 
+                            className={`h-6 w-6 rotate-90 ${theme === 'dark' ? 'text-black' : 'text-white'}`}
+                        >
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                        </svg>
+                    </span>
+                </button>
             </div>
         </div>
     );

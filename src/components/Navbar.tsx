@@ -26,6 +26,7 @@ const NavLink: React.FC<{ href: string; children: React.ReactNode }> = ({ href, 
     );
 };
 
+
 // Navbar
 const Navbar: React.FC = () => {
     const [isVisible, setIsVisible] = useState(true);
@@ -43,20 +44,22 @@ const Navbar: React.FC = () => {
         const handleScroll = () => {
             const currentScrollY = window.pageYOffset;
             setIsVisible(currentScrollY <= 50);
+            // Ferme le menu mobile lorsqu'on fait défiler
+            if (currentScrollY > 50 && isMobileMenuOpen) {
+                setIsMobileMenuOpen(false);
+            }
         };
 
         window.addEventListener('scroll', handleScroll, { passive: true });
         return () => window.removeEventListener('scroll', handleScroll);
-    }, []);
+    }, [isMobileMenuOpen]);
 
     if (!mounted) return null;
 
     return (
         <div className="fixed w-full z-50">
             <motion.nav
-                className={`w-full max-w-[90%] lg:max-w-[75%] mx-auto ${
-                    theme === 'dark' ? 'bg-[#01020E]' : 'bg-[#F2F2F2]'
-                } bg-opacity-90 rounded-full`}
+                className={`w-full max-w-[90%] lg:max-w-[75%] mx-auto ${theme === 'dark' ? 'bg-[#01020E]' : 'bg-[#F2F2F2]'} bg-opacity-90 rounded-full`}
                 initial={{ opacity: 0, y: 0 }}
                 animate={{ opacity: isVisible ? 1 : 0, y: isVisible ? 0 : -100 }}
                 transition={{ duration: 0.3 }}
@@ -72,9 +75,9 @@ const Navbar: React.FC = () => {
 
                         {/* Liens */}
                         <div className="hidden 2xl:flex absolute left-1/2 transform -translate-x-1/2 items-center space-x-4 xl:space-x-8 text-sm lg:text-base">
-                            <NavLink href="/creations">Nos Créations</NavLink>
-                            <NavLink href="/processus">Notre Processus</NavLink>
-                            <NavLink href="/offres">Nos Offres</NavLink>
+                            <NavLink href="#creations">Nos Créations</NavLink>
+                            <NavLink href="#process">Notre Processus</NavLink>
+                            <NavLink href="#offres">Nos Offres</NavLink>
                         </div>
 
                         {/* Boutons à droite */}
@@ -93,50 +96,34 @@ const Navbar: React.FC = () => {
                                     </svg>
                                 )}
                             </button>
-                            <Link 
-                                href="/reserver" 
-                                className={`px-4 py-2 rounded-full border ${
-                                    theme === 'dark' 
-                                        ? 'border-white text-white hover:bg-white hover:text-[#01020E]' 
-                                        : 'border-[#01020E] text-[#01020E] hover:bg-[#01020E] hover:text-white'
-                                } transition-colors duration-300 text-sm font-medium`}
-                            >
-                                Réserver un Appel
-                            </Link>
-
-                            {/* Bouton mobile */}
                             <button
-            className={`2xl:hidden p-2 ${theme === 'light' ? 'text-black' : 'text-white'}`}
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-        >
-            <svg 
-                className="w-7 h-7" 
-                fill="none" 
-                stroke="currentColor" 
-                viewBox="0 0 24 24" 
-                xmlns="http://www.w3.org/2000/svg"
-            >
-                {isMobileMenuOpen ? (
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                ) : (
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16m-7 6h7" />
-                )}
-            </svg>
-        </button>
+                                className={`2xl:hidden p-2 ${theme === 'dark' ? 'text-white' : 'text-[#01020E]'}`}
+                                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                            >
+                                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                                </svg>
+                            </button>
                         </div>
                     </div>
                 </div>
             </motion.nav>
 
-            {/* Menu mobile */}
+            {/* Mobile Dropdown Menu */}
             {isMobileMenuOpen && (
-                <div className={`2xl:hidden fixed top-[90px] left-0 w-full ${
-                    theme === 'dark' ? 'bg-[#01020E]' : 'bg-[#F2F2F2]'
-                } bg-opacity-90 p-4 mt-10`}>
-                    <div className="flex flex-col items-center space-y-4"> 
-                        <NavLink href="/creations">Nos Créations</NavLink>
-                        <NavLink href="/processus">Notre Processus</NavLink>
-                        <NavLink href="/offres">Nos Offres</NavLink>
+                <div className={`absolute top-full w-full z-40 ${theme === 'dark' ? 'bg-black bg-opacity-60' : 'bg-white bg-opacity-80'} backdrop-blur-md`}>
+                    <div className={`rounded-b-lg shadow-lg py-4 space-y-4 ${theme === 'dark' ? 'bg-[#01020E]' : 'bg-[#F2F2F2]'}`}>
+                        <nav className="flex flex-col items-center">
+                            <NavLink href="#creations">Nos Créations</NavLink>
+                            <NavLink href="#process">Notre Processus</NavLink>
+                            <NavLink href="#offres">Nos Offres</NavLink>
+                            <Link 
+                                href="/reserver" 
+                                className={`block text-center px-4 py-2 rounded-full border ${theme === 'dark' ? 'border-white text-white hover:bg-white hover:text-[#01020E]' : 'border-[#01020E] text-[#01020E] hover:bg-[#01020E] hover:text-white'} transition-colors duration-300 text-sm font-medium`}
+                            >
+                                Réserver un Appel
+                            </Link>
+                        </nav>
                     </div>
                 </div>
             )}
