@@ -6,6 +6,8 @@ import Video from '../components/Video';
 import Creations from '../components/Creations';
 import Process from '../components/Process';
 import { useTheme } from 'next-themes';
+import Testimonials from '@/components/Testimonials';
+import Offer from '@/components/Offer';
 
 const LoadingSpinner: React.FC = () => {
   return (
@@ -18,6 +20,7 @@ const LoadingSpinner: React.FC = () => {
 export default function Home() {
   const { theme } = useTheme();
   const [isLoading, setIsLoading] = useState(true);
+  const [mounted, setMounted] = useState(false);
 
   // Define colors based on the theme
   const darkThemeColors = {
@@ -33,11 +36,14 @@ export default function Home() {
   const colors = theme === 'dark' ? darkThemeColors : lightThemeColors;
 
   useEffect(() => {
-    // Simulate loading for demonstration (e.g., fetching data)
-    setTimeout(() => {
-      setIsLoading(false); // Set loading to false after 2 seconds
-    }, 2000);
+    setMounted(true);
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 1000);
+    return () => clearTimeout(timer);
   }, []);
+
+  if (!mounted) return null;
 
   return (
     <main className='flex min-h-screen flex-col items-center justify-start p-24'>
@@ -67,6 +73,12 @@ export default function Home() {
 
           <div className='relative w-screen'>
             <Process id="process" />
+          </div>
+
+          <Testimonials/>
+
+          <div className="min-h-screen bg-[#F2F2F2] dark:bg-[#01020E]">
+            <Offer />
           </div>
         </>
       )}

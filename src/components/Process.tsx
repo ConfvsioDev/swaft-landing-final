@@ -9,9 +9,11 @@ interface StepType {
   Icon: React.ElementType;
   color: string;
 }
+
 interface ProcessProps {
   id?: string;
 }
+
 const steps: StepType[] = [
   {
     title: "Audit complet",
@@ -44,29 +46,54 @@ const steps: StepType[] = [
 ];
 
 const iconVariant = {
-  enter: { rotateY: 90, opacity: 0 },
-  center: { rotateY: 0, opacity: 1 },
-  exit: { rotateY: -90, opacity: 0 },
+  enter: { 
+    rotateY: 90, 
+    opacity: 0,
+    scale: 0.8
+  },
+  center: { 
+    rotateY: 0, 
+    opacity: 1,
+    scale: 1,
+    transition: {
+      duration: 0.5,
+      ease: [0.23, 1, 0.32, 1]
+    }
+  },
+  exit: { 
+    rotateY: -90, 
+    opacity: 0,
+    scale: 0.8
+  }
 };
 
 const Process: React.FC<ProcessProps> = ({ id }) => {
-  const [currentStep, setCurrentStep] = useState(0); // Ensures it's initialized to a valid index (0)
+  const [currentStep, setCurrentStep] = useState(0);
+  const sectionRef = useRef<HTMLDivElement | null>(null);
   const stepRefs = useRef<(HTMLDivElement | null)[]>([]);
   const { theme } = useTheme();
 
-  // Ensure theme is defined before rendering the component
-  if (theme === undefined) {
-    return <div>Loading theme...</div>;
-  }
-
-  const shadowStyle = useMemo(() => ({
-    textShadow:
-      theme === "dark"
+  const themeStyles = useMemo(() => ({
+    text: theme === "dark" ? "text-white" : "text-gray-900",
+    cardBg: theme === "dark" ? "bg-black/5" : "bg-white",
+    descriptionText: theme === "dark" ? "text-gray-300" : "text-gray-800",
+    shadowStyle: {
+      textShadow: theme === "dark"
         ? "0 0 10px rgba(255, 255, 255, 0.6)"
-        : "0 0 10px rgba(0, 0, 0, 0.3)",
+        : "0 0 10px rgba(0, 0, 0, 0.2)",
+    },
+    iconColor: theme === "dark" ? "text-white" : "text-gray-900",
+    iconShadow: theme === "dark"
+      ? "shadow-[0_0_30px_rgba(255,255,255,0.1)]"
+      : "shadow-[0_0_30px_rgba(0,0,0,0.1)]",
+    cardShadow: theme === "dark"
+      ? "shadow-[0_8px_30px_rgba(0,0,0,0.3)]"
+      : "shadow-[0_8px_30px_rgba(0,0,0,0.1)]",
+    background: theme === "dark"
+      ? "bg-gradient-to-b from-[#03030e] to-[#1E108C]"
+      : "bg-gradient-to-b from-white via-[#f0f0ff] to-[#e0e0ff]"
   }), [theme]);
 
-  // IntersectionObserver to update icon based on step in view
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
@@ -78,8 +105,8 @@ const Process: React.FC<ProcessProps> = ({ id }) => {
         });
       },
       {
-        rootMargin: "0px 0px -50% 0px", // Update as step is near the middle
-        threshold: 0,
+        rootMargin: "-45% 0px -45% 0px",
+        threshold: 0.1,
       }
     );
 
@@ -90,109 +117,130 @@ const Process: React.FC<ProcessProps> = ({ id }) => {
     return () => observer.disconnect();
   }, []);
 
-  // Ensure currentStep stays within bounds of steps array
-  const currentStepData = steps[currentStep] || steps[0]; // Fallback to the first step if `currentStep` is invalid
+  const currentStepData = steps[currentStep] || steps[0];
 
   return (
     <div
       id={id}
-      className={`w-full min-h-screen relative ${
-        theme === "dark"
-          ? "bg-gradient-to-b from-[#03030e] to-[#0F0844] text-white"
-          : "bg-gradient-to-b from-[#f2f2f2] to-[#a39bf0] text-black"
-      }`}
+      ref={sectionRef}
+      className={`w-full relative mx-auto ${themeStyles.text} ${themeStyles.background}`}
     >
-      {/* Section Title */}
-      <div className="text-center mb-6">
+      <motion.div 
+        className="text-center py-8"
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
+      >
         <h1
-          className="text-4xl sm:text-5xl md:text-6xl font-bold neon-effect"
-          style={shadowStyle}
+          className="text-4xl sm:text-5xl md:text-6xl font-bold"
+          style={themeStyles.shadowStyle}
         >
           Notre Processus
         </h1>
-      </div>
-      <div className="lg:block hidden sm:hidden">
-        {/* Sticky Icon for larger devices */}
-        <div className="lg:flex hidden sticky top-0 h-screen flex-col justify-center items-center pointer-events-none">
-          {/* Animated Icon */}
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={currentStep}
-              variants={iconVariant}
-              initial="enter"
-              animate="center"
-              exit="exit"
-              transition={{
-                duration: 0.1, // Smoother rotation transition
-                ease: "easeInOut", // Smooth easing for fluid transition
-              }}
-              className={`w-32 h-32 rounded-full flex items-center justify-center ${currentStepData.color} absolute`}
-            >
-              {React.createElement(currentStepData.Icon, {
-                className: "w-16 h-16 text-white",
-              })}
-            </motion.div>
-          </AnimatePresence>
+      </motion.div>
+
+      <div className="lg:block hidden">
+        <div className="sticky top-1/2 h-0">
+          <div className="absolute left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={currentStep}
+                variants={iconVariant}
+                initial="enter"
+                animate="center"
+                exit="exit"
+                className={`w-32 h-32 rounded-full flex items-center justify-center ${themeStyles.iconShadow}`}
+              >
+                {React.createElement(currentStepData.Icon, {
+                  className: `w-16 h-16 ${themeStyles.iconColor}`
+                })}
+              </motion.div>
+            </AnimatePresence>
+          </div>
         </div>
 
-        {/* Fixed Texts (visible on large devices only) */}
-        <div className="absolute top-0 w-full lg:block sm:hidden md:hidden">
+        <div>
           {steps.map((step, index) => (
-            <div
+            <motion.div
               key={index}
               ref={(el) => {
                 stepRefs.current[index] = el;
               }}
-              className="absolute"
-              style={{
-                top: `${index * 100 + 50}vh`, // Adjusted step positioning
-                left: index % 2 === 0 ? "10%" : "auto",
-                right: index % 2 === 0 ? "auto" : "10%",
-                width: "35%",
-              }}
+              className={`h-screen flex items-center ${
+                index === 0 ? 'mt-64' : ''
+              }`}
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              transition={{ duration: 0.5 }}
             >
-              <div className="w-[70%] px-4 pb-24 mx-auto">
-                <h2
-                  className="text-3xl sm:text-4xl font-bold neon-effect"
-                  style={shadowStyle}
+              <div 
+                className={`w-[40%] ${index % 2 === 0 ? 'ml-[5%]' : 'ml-[55%]'}`}
+              >
+                <motion.div 
+                  className={`${themeStyles.cardBg} ${themeStyles.cardShadow} 
+                    rounded-2xl p-6`}
+                  whileHover={{ scale: 1.02 }}
+                  transition={{ duration: 0.2 }}
                 >
-                  {step.title}
-                </h2>
-                <p className="text-xl text-gray-500">{step.description}</p>
+                  <h2
+                    className="text-3xl font-bold mb-4 flex items-center gap-3"
+                    style={themeStyles.shadowStyle}
+                  >
+                    <span className={`text-5xl font-light ${theme === "dark" ? "text-white" : "text-gray-700"}`}>
+                      {(index + 1).toString().padStart(2, '0')}
+                    </span>
+                    {step.title}
+                  </h2>
+                  <p className={`text-lg leading-relaxed ${themeStyles.descriptionText}`}>
+                    {step.description}
+                  </p>
+                </motion.div>
               </div>
-            </div>
-          ))}
-        </div>
-
-        {/* Scrollable Area */}
-        <div className="relative">
-          {steps.map((_, index) => (
-            <div
-              key={index}
-              className={index === steps.length - 1 ? "h-[0vh]" : "h-[90vh] sm:h-[100vh]"} // Last step has reduced height
-            ></div>
+            </motion.div>
           ))}
         </div>
       </div>
 
-      {/* Stacked Layout for small devices */}
-      <div className="lg:hidden">
+      <div className="lg:hidden container mx-auto px-4 md:px-8">
         {steps.map((step, index) => (
-          <div
+          <motion.div
             key={index}
-            className="flex flex-col items-center mb-16 px-4"
-            style={{ position: "relative", width: "100%" }}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: index * 0.2 }}
+            className="flex flex-col md:flex-row md:items-center md:gap-8 mb-16"
           >
-            <div className={`w-32 h-32 rounded-full flex items-center justify-center ${step.color} mb-4`}>
-              {React.createElement(step.Icon, {
-                className: "w-16 h-16 text-white",
-              })}
+            <div className="flex justify-center md:justify-start md:flex-shrink-0">
+              <motion.div 
+                className={`w-24 h-24 sm:w-28 sm:h-28 rounded-full flex items-center justify-center ${themeStyles.iconShadow}`}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                initial={{ rotateY: 90, opacity: 0 }}
+                whileInView={{ rotateY: 0, opacity: 1 }}
+                transition={{
+                  duration: 0.5,
+                  ease: [0.23, 1, 0.32, 1]
+                }}
+              >
+                {React.createElement(step.Icon, {
+                  className: `w-12 h-12 sm:w-14 sm:h-14 ${themeStyles.iconColor}`
+                })}
+              </motion.div>
             </div>
-            <h2 className="text-3xl sm:text-4xl font-bold text-center" style={shadowStyle}>
-              {step.title}
-            </h2>
-            <p className="text-xl text-gray-500 text-center">{step.description}</p>
-          </div>
+            
+            <div className="mt-6 md:mt-0 text-center md:text-left">
+              <h2 
+                className="text-2xl sm:text-3xl font-bold mb-3" 
+                style={themeStyles.shadowStyle}
+              >
+                {step.title}
+              </h2>
+              <p className={`text-lg ${themeStyles.descriptionText} leading-relaxed max-w-xl`}>
+                {step.description}
+              </p>
+            </div>
+          </motion.div>
         ))}
       </div>
     </div>

@@ -56,8 +56,24 @@ const TypingEffect: React.FC<TypingEffectProps> = ({ onComplete }) => {
   }, [isTyping, currentIndex, handleComplete]);
 
   return (
-    <span className="font-bold absolute" style={{ left: '0', top: '0', whiteSpace: 'nowrap' }}>
+    <span 
+      className="font-bold inline-flex items-center relative" 
+      style={{ 
+        minWidth: '180px',  // Slightly increased for better word fit
+        textAlign: 'left',
+        height: '1.5em',    // Maintain consistent height
+        padding: '0 4px'    // Add slight padding
+      }}
+    >
       {displayedWord}
+      <span 
+        className="animate-blink ml-0.5 -mt-1" 
+        style={{ 
+          borderRight: '2px solid currentColor',
+          height: '1.1em'
+        }}
+      >
+      </span>
     </span>
   );
 };

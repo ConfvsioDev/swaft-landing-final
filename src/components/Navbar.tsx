@@ -11,7 +11,7 @@ const NavLink: React.FC<{ href: string; children: React.ReactNode }> = ({ href, 
     return (
         <Link 
             href={href} 
-            className={`relative text-center px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
+            className={`relative text-center px-4 py-3 rounded-full text-sm font-medium transition-all duration-300 w-full sm:w-auto ${
                 theme === 'dark' ? 'text-white' : 'text-[#01020E]'
             } group`}
         >
@@ -33,18 +33,36 @@ const Navbar: React.FC = () => {
     const { theme, setTheme } = useTheme();
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [mounted, setMounted] = useState(false);
+    const mobileMenuRef = React.useRef<HTMLDivElement>(null);
 
-    // Vérifie si le composant est monté
     useEffect(() => {
         setMounted(true);
     }, []);
 
-    // Gère la visibilité de la barre de navigation lors du défilement
+    // Add click outside handler
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (mobileMenuRef.current && !mobileMenuRef.current.contains(event.target as Node)) {
+                setIsMobileMenuOpen(false);
+            }
+        };
+
+        if (isMobileMenuOpen) {
+            document.addEventListener('mousedown', handleClickOutside);
+        }
+
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, [isMobileMenuOpen]);
+
+    // Simplified scroll handler - only shows navbar at the very top
     useEffect(() => {
         const handleScroll = () => {
-            const currentScrollY = window.pageYOffset;
+            const currentScrollY = window.scrollY;
             setIsVisible(currentScrollY <= 50);
-            // Ferme le menu mobile lorsqu'on fait défiler
+            
+            // Close mobile menu when scrolling
             if (currentScrollY > 50 && isMobileMenuOpen) {
                 setIsMobileMenuOpen(false);
             }
@@ -57,11 +75,13 @@ const Navbar: React.FC = () => {
     if (!mounted) return null;
 
     return (
-        <div className="fixed w-full z-50">
+        <>
             <motion.nav
-                className={`w-full max-w-[90%] lg:max-w-[75%] mx-auto ${theme === 'dark' ? 'bg-[#01020E]' : 'bg-[#F2F2F2]'} bg-opacity-90 rounded-full`}
-                initial={{ opacity: 0, y: 0 }}
-                animate={{ opacity: isVisible ? 1 : 0, y: isVisible ? 0 : -100 }}
+                className={`fixed top-0 left-0 right-0 z-50 transition-transform duration-300 ease-in-out ${
+                    isVisible ? 'translate-y-0' : '-translate-y-full'
+                }`}
+                initial={{ y: 0 }}
+                animate={{ y: isVisible ? 0 : '-100%' }}
                 transition={{ duration: 0.3 }}
             >
                 <div className="px-8 sm:px-10 lg:px-20">
@@ -109,25 +129,42 @@ const Navbar: React.FC = () => {
                 </div>
             </motion.nav>
 
-            {/* Mobile Dropdown Menu */}
-            {isMobileMenuOpen && (
-                <div className={`absolute top-full w-full z-40 ${theme === 'dark' ? 'bg-black bg-opacity-60' : 'bg-white bg-opacity-80'} backdrop-blur-md`}>
-                    <div className={`rounded-b-lg shadow-lg py-4 space-y-4 ${theme === 'dark' ? 'bg-[#01020E]' : 'bg-[#F2F2F2]'}`}>
-                        <nav className="flex flex-col items-center">
-                            <NavLink href="#creations">Nos Créations</NavLink>
-                            <NavLink href="#process">Notre Processus</NavLink>
-                            <NavLink href="#offres">Nos Offres</NavLink>
-                            <Link 
-                                href="/reserver" 
-                                className={`block text-center px-4 py-2 rounded-full border ${theme === 'dark' ? 'border-white text-white hover:bg-white hover:text-[#01020E]' : 'border-[#01020E] text-[#01020E] hover:bg-[#01020E] hover:text-white'} transition-colors duration-300 text-sm font-medium`}
-                            >
-                                Réserver un Appel
-                            </Link>
-                        </nav>
-                    </div>
+            {/* Update Mobile menu with animation and better positioning */}
+            <motion.div
+                ref={mobileMenuRef}
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ 
+                    opacity: isMobileMenuOpen && isVisible ? 1 : 0,
+                    y: isMobileMenuOpen && isVisible ? 0 : -20 
+                }}
+                transition={{ duration: 0.2 }}
+                className={`fixed top-28 left-0 right-0 z-40 ${
+                    !isMobileMenuOpen && 'pointer-events-none'
+                }`}
+            >
+                <div className={`mx-4 rounded-2xl shadow-lg ${
+                    theme === 'dark' 
+                        ? 'bg-[#01020E]/95 backdrop-blur-lg' 
+                        : 'bg-white/95 backdrop-blur-lg'
+                }`}>
+                    <nav className="flex flex-col items-stretch p-4 space-y-2">
+                        <NavLink href="#creations">Nos Créations</NavLink>
+                        <NavLink href="#process">Notre Processus</NavLink>
+                        <NavLink href="#offres">Nos Offres</NavLink>
+                        <Link 
+                            href="/reserver" 
+                            className={`text-center px-4 py-3 mt-2 rounded-full border ${
+                                theme === 'dark' 
+                                    ? 'border-white text-white hover:bg-white hover:text-[#01020E]' 
+                                    : 'border-[#01020E] text-[#01020E] hover:bg-[#01020E] hover:text-white'
+                            } transition-colors duration-300 text-sm font-medium`}
+                        >
+                            Réserver un Appel
+                        </Link>
+                    </nav>
                 </div>
-            )}
-        </div>
+            </motion.div>
+        </>
     );
 };
 

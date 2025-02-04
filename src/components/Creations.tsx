@@ -1,9 +1,10 @@
+import Image from 'next/image';
 import { motion } from 'framer-motion';
 import React, { useState, useMemo } from 'react';
 import { useTheme } from 'next-themes'; 
-import travelerImage from './traveler.png'; 
+import travelerImage from '../../public/images/traveler.png'; 
 import Link from 'next/link'; 
-import TypingEffect from './TypingEffect'; 
+import TypingEffect from './TypingEffect';
 
 interface CreationsProps {
     id?: string; 
@@ -19,12 +20,26 @@ const Creations: React.FC<CreationsProps> = ({ id }) => {
 
   const titleColor = useMemo(() => theme === 'dark' ? 'text-white' : 'text-gray-800', [theme]);
 
+  // Define reduced image dimensions for 9:16 aspect ratio
+  const IMAGE_DIMENSIONS = {
+    width: 480,  // Reduced width
+    height: 853, // Reduced height
+  };
+
   return (
-    <section id={id} className="py-12 md:py-24"> 
-      <div className="container mx-auto flex flex-col md:flex-row items-center justify-between">
-        <div className="md:w-1/2 flex flex-col items-center">
+    <section 
+      id={id} 
+      className="py-12 md:py-24 min-h-screen"
+      style={{ 
+        containIntrinsicSize: '0 500px',
+        contentVisibility: 'auto'
+      }}
+    > 
+      <div className="container mx-auto px-4 flex flex-col lg:flex-row items-center justify-between gap-8 lg:gap-12">
+        {/* Image Container - Full width on mobile, half on desktop */}
+        <div className="w-full lg:w-1/2 flex flex-col items-center">
           <motion.h1 
-            className={`text-3xl md:text-4xl font-bold text-center ${titleColor} mb-4`}
+            className={`text-3xl md:text-4xl font-bold text-center ${titleColor} mb-8`}
             initial={{ opacity: 0, y: -20 }} 
             whileInView={{ opacity: 1, y: 0 }} 
             transition={{ duration: 0.5 }}
@@ -33,50 +48,52 @@ const Creations: React.FC<CreationsProps> = ({ id }) => {
           </motion.h1>
           
           <motion.div
-            className="max-w-md rounded-lg overflow-hidden relative"
-            initial={{ opacity: 0, y: 50 }} 
-            whileInView={{ opacity: 1, y: 0 }} 
+            className="w-full max-w-[480px] rounded-lg overflow-hidden relative mx-auto"
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease: 'easeInOut' }}
             style={{
               boxShadow: glowStyle,
+              height: IMAGE_DIMENSIONS.height,
             }}
           >
-            <div className="overflow-hidden">
-              <img 
-                src={travelerImage.src} 
+            <div className="overflow-hidden h-full relative">
+              <div className="absolute inset-0 bg-gray-200 dark:bg-gray-800 animate-pulse" />
+              
+              <Image 
+                src={travelerImage}
                 alt="Notre collaboration actuelle"
-                className="w-full h-auto object-cover"
-                loading="lazy" // Added for better performance
+                className="object-cover"
+                fill
+                sizes="(max-width: 480px) 100vw, 480px"
+                priority
+                quality={90}
+                placeholder="blur"
+                blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRg..."
               />
-              <div className="absolute top-4 left-4 p-2 backdrop-blur-md bg-black bg-opacity-50 rounded-lg">
-                <h2 className={`text-xl md:text-3xl font-semibold text-white`}>Traveler</h2>
-              </div>
             </div>
           </motion.div>
         </div>
 
-        <div className="md:w-1/2 flex flex-col  items-center md:items-end mt-8 md:mt-0">
-          <motion.p 
-            className={`text-lg md:text-xl text-center ${titleColor} mb-6 relative`} 
+        {/* Text Container - Full width on mobile, half on desktop */}
+        <div className="w-full lg:w-1/2 flex flex-col items-center lg:items-start mt-8 lg:mt-0">
+          <motion.div 
+            className={`text-lg md:text-xl text-center lg:text-left ${titleColor} mb-6 relative max-w-xl`}
             initial={{ opacity: 0, y: -20 }} 
             whileInView={{ opacity: 1, y: 0 }} 
             transition={{ duration: 0.5 }}
           >
-            Nous nous adaptons à chaque demande afin d'obtenir un résultat&nbsp;
-            {/* Render TypingEffect with absolute positioning */}
-            <span style={{ position: 'relative', display: 'inline-block', marginLeft: '4px' }}>
+            <p className="mb-2">Nous nous adaptons à chaque demande</p>
+            <p className="flex items-center justify-center lg:justify-start gap-2">
+              afin d'obtenir un résultat
               <TypingEffect onComplete={() => setIsTypingComplete(true)} />
-              {isTypingComplete && (
-                <span style={{ marginLeft: '4px', fontWeight: 'bold' }}></span>
-              )}
-              {/* The dot is positioned right after the typed word */}
-            </span>
-          </motion.p>
+            </p>
+          </motion.div>
 
-          <div className="flex justify-center w-full"> 
+          <div className="flex justify-center lg:justify-start w-full"> 
             <Link 
               href="/reserver" 
-              className={`mt-4 ml-auto px-8 py-4 rounded-full border ${
+              className={`mt-4 px-8 py-4 rounded-full border ${
                 theme === 'dark' 
                   ? 'border-white text-white hover:bg-white hover:text-[#01020E]' 
                   : 'border-[#01020E] text-[#01020E] hover:bg-[#01020E] hover:text-white'

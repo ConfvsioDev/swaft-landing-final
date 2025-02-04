@@ -18,7 +18,7 @@ const Video: React.FC = () => {
     });
 
     // Adjusted transformations for better animation effect
-    const rotateX = useTransform(smoothScrollProgress, [0, 0.25], [70, 0]);
+    const rotateX = useTransform(smoothScrollProgress, [0, 0.15], [90, 0]);
     const opacity = useTransform(smoothScrollProgress, [0, 0.2], [0.2, 1]);
     
     // Scale from 0.8 to 1.2 for less aggressive growth
@@ -33,7 +33,7 @@ const Video: React.FC = () => {
 
     // Define colors based on the theme
     const borderColor = theme === 'dark' ? 'rgba(5, 14, 25, 0.3)' : 'rgba(0, 0, 190, 0.2)';
-    const glowColor = theme === 'dark' ? 'rgba(143, 186, 200, 0.5)' : 'rgba(173, 216, 230, 0.2)';
+    const glowColor = theme === 'dark' ? 'rgba(0, 0, 139, 0.5)' : 'rgba(173, 216, 230, 0.2)';
 
     return (
         <div ref={containerRef} className="w-full flex items-center justify-center perspective-1000 z-10 mb-8">
