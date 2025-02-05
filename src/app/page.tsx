@@ -1,6 +1,6 @@
 'use client';
 import { useState, useEffect } from 'react';
-import { PostHogFeature, usePostHog } from 'posthog-js/react'
+import { usePostHog } from 'posthog-js/react'
 import Hero from '../components/Hero';
 import Video from '../components/Video';
 import Creations from '../components/Creations';
@@ -18,17 +18,12 @@ const LoadingSpinner: React.FC = () => {
 };
 
 const AB_EXPERIMENT_NAME = 'main-cta'
-const AbVariants = {
-  Control: 'control',
-  Test: 'test'
-} as const;
 
 export default function Home() {
   const [isLoading, setIsLoading] = useState(true);
   const [mounted, setMounted] = useState(false);
   const posthog = usePostHog()
-  const [showPainSection, setShowPainSection] = useState(false)
-
+  const [variant, setVariant] = useState<'control' | 'test'>('control');
 
   // Define colors for the dark theme
   const colors = {
@@ -45,18 +40,16 @@ export default function Home() {
     // Capture page view event
     posthog?.capture('page_view', { page: 'Home' })
 
-    // Determine which variant to show
-    if (posthog?.getFeatureFlag('main-cta') === 'test') {
-      setShowPainSection(true);
+    // Determine A/B test variant
+    const experimentVariant = posthog?.getFeatureFlag(AB_EXPERIMENT_NAME)
+    if (experimentVariant === 'test') {
+      setVariant('test')
     } else {
-      // Control variant (default behavior)
-      setShowPainSection(false);
+      setVariant('control')
     }
 
     return () => clearTimeout(timer);
   }, [posthog]);
-
-
 
   if (!mounted) return null;
 
@@ -85,26 +78,12 @@ export default function Home() {
 
           <div className="relative w-screen bg-[#01020E] overflow-hidden"></div>
 
-              <PostHogFeature
-                flag={AB_EXPERIMENT_NAME}
-                match={AbVariants.Control}
-                fallback={null}
-              >
-                <Process id="process" />
-              </PostHogFeature>
-
-              <PostHogFeature
-                flag={AB_EXPERIMENT_NAME}
-                match={AbVariants.Test}
-                fallback={null}
-              >
-                <Pain />
-              </PostHogFeature>
-
-
-              <div className='relative w-screen'>
-            {showPainSection ? <Pain /> : <Process id="process" />}
-          </div>
+          {/* A/B Test Variant Rendering */}
+          {variant === 'control' ? (
+            <Process id="process" />
+          ) : (
+            <Pain />
+          )}
 
           <Testimonials/>
 
