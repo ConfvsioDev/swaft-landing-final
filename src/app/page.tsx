@@ -1,6 +1,6 @@
 'use client';
 import { useState, useEffect } from 'react';
-import { usePostHog, useFeatureFlagEnabled } from 'posthog-js/react'
+import { useFeatureFlagEnabled } from 'posthog-js/react'
 import Hero from '../components/Hero';
 import Video from '../components/Video';
 import Creations from '../components/Creations';
@@ -20,7 +20,6 @@ const LoadingSpinner: React.FC = () => {
 export default function Home() {
   const [isLoading, setIsLoading] = useState(true);
   const [mounted, setMounted] = useState(false);
-  const posthog = usePostHog()
   const showPainSection = useFeatureFlagEnabled('show-pain-section')
 
   // Define colors for the dark theme
@@ -34,21 +33,8 @@ export default function Home() {
     const timer = setTimeout(() => {
       setIsLoading(false);
     }, 1000);
-
-    // Capture page view event
-    posthog?.capture('page_view', { page: 'Home' })
-
     return () => clearTimeout(timer);
-  }, [posthog]);
-
-  useEffect(() => {
-    // Capture which variant the user saw
-    if (mounted) {
-      posthog?.capture('section_viewed', { 
-        section: showPainSection ? 'Pain' : 'Process'
-      })
-    }
-  }, [mounted, showPainSection, posthog])
+  }, []);
 
   if (!mounted) return null;
 
@@ -75,9 +61,10 @@ export default function Home() {
           
           <div style={{ height: '8vh' }}></div>
 
+
           <div className="relative w-screen bg-[#01020E] overflow-hidden"></div>
           <div className='relative w-screen'>
-            {showPainSection ? <Pain /> : <Process id="process" />}
+          {showPainSection ? <Pain /> : <Process id="process" />}
           </div>
 
           <Testimonials/>
