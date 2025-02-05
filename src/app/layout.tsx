@@ -2,8 +2,9 @@ import type { Metadata } from "next";
 import { ThemeProvider } from 'next-themes';
 import { Inter } from "next/font/google";
 import Navbar from '../components/Navbar';
+import Footer from '@/components/Footer';
 import "./globals.css";
-import type {} from 'ldrs'
+import { CSPostHogProvider } from '../providers/ph-providers';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -33,12 +34,15 @@ export default function RootLayout({
         enableSystem={true}
         disableTransitionOnChange
       >
-        <body className={`${inter.className} dark:bg-[#01020E] bg-[#F2F2F2]`}>
-          <Navbar />
-          <main className="dark:bg-[#01020E] bg-[#F2F2F2]">
-            {children}
-          </main>
-        </body>
+        <CSPostHogProvider>
+          <body className={`${inter.className} dark:bg-[#01020E] bg-[#F2F2F2]`}>
+            <Navbar />
+            <main className="dark:bg-[#01020E]">
+              {children}
+            </main>
+            <Footer />
+          </body>
+          </CSPostHogProvider>
       </ThemeProvider>
     </html>
   );

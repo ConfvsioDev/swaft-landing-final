@@ -3,8 +3,8 @@ import { motion } from 'framer-motion';
 import React, { useState, useMemo } from 'react';
 import { useTheme } from 'next-themes'; 
 import travelerImage from '../../public/images/traveler.png'; 
-import Link from 'next/link'; 
 import TypingEffect from './TypingEffect';
+import {Button} from './Button';
 
 interface CreationsProps {
     id?: string; 
@@ -86,18 +86,7 @@ const Creations: React.FC<CreationsProps> = ({ id }) => {
             </p>
           </motion.div>
 
-          <div className="flex justify-center lg:justify-start w-full"> 
-            <Link 
-              href="/reserver" 
-              className={`mt-4 px-8 py-4 rounded-full border ${
-                theme === 'dark' 
-                  ? 'border-white text-white hover:bg-white hover:text-[#01020E]' 
-                  : 'border-[#01020E] text-[#01020E] hover:bg-[#01020E] hover:text-white'
-              } transition-colors duration-300 text-lg font-medium`}
-            >
-              Réserver un Appel
-            </Link>
-          </div>
+          <Button />
         </div>
       </div>
     </section>

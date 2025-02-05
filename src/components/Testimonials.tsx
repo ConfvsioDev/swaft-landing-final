@@ -16,21 +16,21 @@ const testimonials: Testimonial[] = [
     id: 1,
     name: 'Nathan',
     role: "Fondateur de Swaft",
-    comment: 'Une expérience exceptionnelle avec une équipe professionnelle.',
+    comment: 'Le GOAT',
     avatarUrl: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=100&h=100&q=80',
   },
   {
     id: 2,
     name: 'Ylian',
-    role: 'CEO de TechVision',
-    comment: "L'attention aux détails et la qualité du travail sont remarquables.",
+    role: 'Fondateur de Swaft',
+    comment: "J'suis aigri",
     avatarUrl: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=100&h=100&q=80',
   },
   {
     id: 3,
-    name: 'Theophile',
-    role: "Directeur Marketing",
-    comment: "Une collaboration fructueuse qui a dépassé nos attentes.",
+    name: 'Theophyl',
+    role: "Fondateur de Swaft",
+    comment: "Mon ebook tjrs pas fini",
     avatarUrl: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=100&h=100&q=80',
   },
 ];
@@ -54,7 +54,7 @@ const Testimonials: React.FC = () => {
 
   const themeStyles = useMemo(() => ({
     text: theme === 'dark' ? 'text-white' : 'text-gray-900',
-    cardBg: theme === 'dark' ? 'bg-[#1A103C]/90' : 'bg-white/90',
+    cardBg: theme === 'dark' ? 'bg-[#0A051E]' : 'bg-[#e8eaed]',
     subtitleColor: theme === 'dark' ? 'text-gray-400' : 'text-gray-700',
     roleColor: theme === 'dark' ? 'text-indigo-400' : 'text-indigo-700',
     background: theme === 'dark'
@@ -118,39 +118,36 @@ const Testimonials: React.FC = () => {
 
   const TestimonialCard = ({ testimonial }: { testimonial: Testimonial }) => (
     <motion.div
-      className={`${themeStyles.cardBg} ${themeStyles.cardShadow}
-        rounded-2xl p-6 backdrop-blur-sm transition-all duration-300
+      className={`${themeStyles.cardBg} rounded-[20px] p-8
+        backdrop-blur-sm transition-all duration-300 border border-blue-500/10
+        bg-gradient-to-b from-[blue-900/10] to-transparent
         ${isMobile ? 'w-full' : 'flex-shrink-0 w-[280px] sm:w-[320px] md:w-[380px] lg:w-[440px]'}`}
       whileHover={{ 
         scale: isMobile ? 1 : 1.02,
         transition: { duration: 0.2 }
       }}
     >
-      <div className="flex items-center gap-4 mb-4">
+      <div className="flex items-center gap-4 mb-6">
         <div className="relative w-12 h-12 md:w-14 md:h-14">
           <img
             src={testimonial.avatarUrl}
             alt={testimonial.name}
-            className="rounded-full object-cover w-full h-full"
+            className="rounded-full object-cover w-full h-full ring-2 ring-purple-500/20"
             loading="lazy"
             decoding="async"
           />
-          <div className={`absolute inset-0 rounded-full ${
-            theme === 'dark'
-              ? 'bg-gradient-to-tr from-purple-500/20 to-transparent'
-              : 'bg-gradient-to-tr from-indigo-500/10 to-transparent'
-          }`} />
+          <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-purple-500/20 to-transparent" />
         </div>
         <div>
           <h3 className={`font-semibold text-lg ${themeStyles.text}`}>
             {testimonial.name}
           </h3>
-          <p className={`text-sm ${themeStyles.roleColor}`}>
+          <p className="text-sm text-purple-400">
             {testimonial.role}
           </p>
         </div>
       </div>
-      <p className={`${themeStyles.text} text-base md:text-lg leading-relaxed`}>
+      <p className={`${themeStyles.text} text-base md:text-lg leading-relaxed opacity-90`}>
         {testimonial.comment}
       </p>
     </motion.div>
@@ -188,7 +185,6 @@ const Testimonials: React.FC = () => {
           </div>
         ) : (
           <div className="relative overflow-hidden">
-            {/* Left & Right Gradient Fades */}
             <div className={`absolute left-0 top-0 h-full w-16 sm:w-24 md:w-32 z-10 pointer-events-none
                 ${themeStyles.fadeLeft} transition-colors duration-300`}
             />
@@ -196,7 +192,6 @@ const Testimonials: React.FC = () => {
                 ${themeStyles.fadeRight} transition-colors duration-300`}
             />
   
-            {/* Scrolling Wrapper */}
             <div className="flex" ref={ref}>
               <motion.div
                 className="flex gap-6 py-4"
