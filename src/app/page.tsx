@@ -1,6 +1,6 @@
 'use client';
 import React, { useState, useEffect } from 'react';
-import { usePostHog, useFeatureFlagVariantKey } from 'posthog-js/react'
+import { useFeatureFlagVariantKey } from 'posthog-js/react'
 import Hero from '../components/Hero';
 import Video from '../components/Video';
 import Creations from '../components/Creations';
@@ -19,7 +19,6 @@ const LoadingSpinner: React.FC = () => {
 
 export default function Home() {
   const [isLoading, setIsLoading] = useState(true);
-  const posthog = usePostHog();
   const variant = useFeatureFlagVariantKey('main-cta');
 
   const colors = {
@@ -34,12 +33,6 @@ export default function Home() {
 
     return () => clearTimeout(timer);
   }, []);
-
-  useEffect(() => {
-    if (posthog && variant) {
-      posthog.capture('variant_viewed', { variant });
-    }
-  }, [posthog, variant]);
 
   const MainCTA = variant === 'test' ? Pain : Process;
 
