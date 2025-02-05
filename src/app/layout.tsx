@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { ThemeProvider } from 'next-themes';
 import { Inter } from "next/font/google";
 import Navbar from '../components/Navbar';
 import Footer from '@/components/Footer';
