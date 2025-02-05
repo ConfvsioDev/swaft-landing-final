@@ -27,7 +27,6 @@ export default function Home() {
   const [isLoading, setIsLoading] = useState(true);
   const [mounted, setMounted] = useState(false);
   const posthog = usePostHog()
-  const [showPainSection, setShowPainSection] = useState(false)
 
 
   // Define colors for the dark theme
@@ -36,25 +35,7 @@ export default function Home() {
     middle: '#1A1E30',
   };
 
-  useEffect(() => {
-    setMounted(true);
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 1000);
 
-    // Capture page view event
-    posthog?.capture('page_view', { page: 'Home' })
-
-    // Determine which variant to show
-    if (posthog?.getFeatureFlag('main-cta') === 'test') {
-      setShowPainSection(true);
-    } else {
-      // Control variant (default behavior)
-      setShowPainSection(false);
-    }
-
-    return () => clearTimeout(timer);
-  }, [posthog]);
 
 
 
