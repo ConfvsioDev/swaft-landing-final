@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, use } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { animate, motion, useAnimation, useMotionValue } from 'framer-motion';
 import { useTheme } from 'next-themes';
 import useMeasure from 'react-use-measure';
@@ -76,15 +76,13 @@ const Testimonials: React.FC = () => {
       : 'bg-gradient-to-l from-[#f2f2f2] via-gray-200/90 to-transparent', 
   }), [theme]);
 
-  let [ref, {width}] = useMeasure();
+  const [ref, { width }] = useMeasure();
 
   const xTranslation = useMotionValue(0);
  
   useEffect(() => {
-    let controls;
-    let finalPosition = -width / 2 - 8;
-
-    controls = animate(xTranslation, [0, finalPosition], {
+    const finalPosition = -width / 2 - 8;
+    const controls = animate(xTranslation, [0, finalPosition], {
       ease: 'linear',
       duration: 40,
       repeat: Infinity,

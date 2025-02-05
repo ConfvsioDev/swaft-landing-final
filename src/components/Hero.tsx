@@ -20,15 +20,15 @@ const smoothScroll = (targetId: string) => {
 const Hero: React.FC = () => {
   const { theme } = useTheme();
 
-  if (theme === undefined) {
-    return <div>Loading theme...</div>;
-  }
-
   const shadowStyle = useMemo(() => ({
     textShadow: theme === "dark" 
       ? '0 0 12px rgba(255, 255, 255, 0.4)' 
       : '0 0 12px rgba(0, 0, 0, 0.2)',
   }), [theme]);
+
+  if (theme === undefined) {
+    return <div>Loading theme...</div>;
+  }
 
   return (
     <div className="hero min-h-[85vh] flex flex-col justify-center items-center px-4 sm:px-6 lg:px-8 py-6 sm:py-8 md:py-12 lg:py-8 relative w-screen overflow-hidden">

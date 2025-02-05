@@ -4,7 +4,6 @@ import Hero from '../components/Hero';
 import Video from '../components/Video';
 import Creations from '../components/Creations';
 import Process from '../components/Process';
-import { useTheme } from 'next-themes';
 import Testimonials from '@/components/Testimonials';
 import Offer from '@/components/Offer';
 
