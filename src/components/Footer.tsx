@@ -13,7 +13,7 @@ const Footer: React.FC = () => {
   }), [theme]);
 
   return (
-    <footer className="w-full py-8 sm:py-12 relative">
+    <footer className="w-full py-8 sm:py-12 relative min-h-[200px]">
       {/* Glowing line with responsive width */}
       <div 
         className="absolute top-0 left-1/2 -translate-x-1/2 h-[1px] w-[90%] sm:w-2/3 md:w-1/2 lg:w-1/3 bg-gradient-to-r from-transparent via-blue-500 to-transparent opacity-50 blur-sm"

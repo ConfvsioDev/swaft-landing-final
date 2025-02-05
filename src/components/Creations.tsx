@@ -26,7 +26,8 @@ const Creations: React.FC<CreationsProps> = ({ id }) => {
       className="py-12 md:py-24 min-h-screen"
       style={{ 
         containIntrinsicSize: '0 500px',
-        contentVisibility: 'auto'
+        contentVisibility: 'auto',
+        minHeight: '600px'
       }}
     > 
       <div className="container mx-auto px-4 flex flex-col lg:flex-row items-center justify-between gap-8 lg:gap-12">
@@ -48,6 +49,7 @@ const Creations: React.FC<CreationsProps> = ({ id }) => {
             transition={{ duration: 0.6, ease: 'easeInOut' }}
             style={{
               boxShadow: glowStyle,
+              minHeight: '300px'
             }}
           >
             <div className="overflow-hidden">
