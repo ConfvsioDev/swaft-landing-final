@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import Navbar from '../components/Navbar';
 import Footer from '@/components/Footer';
-import { CSPostHogProvider } from './providers/ph-providers';
+import { PostHogProvider  } from './providers/ph-providers';
 import "./globals.css";
 
 const inter = Inter({ subsets: ['latin'] });
@@ -27,15 +27,17 @@ export default function RootLayout({
         />
       </head>
       {/* The ThemeProvider with defaultTheme="dark" ensures that dark theme is applied from the start */}
-      <CSPostHogProvider>
+      
           <body className={`${inter.className} dark:bg-[#01020E] bg-[#F2F2F2]`}>
+          <PostHogProvider >
             <Navbar />
             <main className="dark:bg-[#01020E]">
               {children}
             </main>
             <Footer />
+            </PostHogProvider >
           </body>
-        </CSPostHogProvider>
+        
     </html>
   );
 }
