@@ -36,37 +36,31 @@ export default function Home() {
     const timer = setTimeout(() => {
       setIsLoading(false);
     }, 1000);
-  
+
     if (posthog) {
       setIsPostHogReady(true);
       console.log('PostHog is initialized');
       
       const checkFeatureFlag = () => {
-        const variant = posthog.getFeatureFlag(AB_EXPERIMENT_NAME);
-        console.log('Feature flag value:', variant);
-        
-        if (variant === 'test') {
-          setCurrentVariant(<Pain />);
-          posthog.capture('variant_viewed', { variant: 'test' });
-        } else if (variant === 'control') {
+        if (posthog.getFeatureFlag(AB_EXPERIMENT_NAME) === 'control') {
+          console.log('Control variant');
           setCurrentVariant(<Process id="process" />);
           posthog.capture('variant_viewed', { variant: 'control' });
         } else {
-          console.error('Unexpected feature flag value:', variant);
-          // Default to control if we get an unexpected value
-          setCurrentVariant(<Process id="process" />);
-          posthog.capture('variant_viewed', { variant: 'control', error: 'unexpected_value' });
+          // Default behavior (including when flag evaluation fails)
+          console.log('Test variant (or default)');
+          setCurrentVariant(<Pain />);
+          posthog.capture('variant_viewed', { variant: 'test' });
         }
       };
-  
+
       posthog.onFeatureFlags(checkFeatureFlag);
       // Check immediately in case flags are already loaded
       checkFeatureFlag();
     }
-  
+
     return () => clearTimeout(timer);
   }, [posthog]);
-  
 
   if (!mounted || !isPostHogReady) return <LoadingSpinner />;
 
