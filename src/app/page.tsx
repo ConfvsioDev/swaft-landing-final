@@ -1,6 +1,6 @@
 'use client';
 import React, { useState, useEffect } from 'react';
-import { usePostHog } from 'posthog-js/react'
+import { usePostHog, useFeatureFlagVariantKey } from 'posthog-js/react'
 import Hero from '../components/Hero';
 import Video from '../components/Video';
 import Creations from '../components/Creations';
@@ -22,9 +22,8 @@ const AB_EXPERIMENT_NAME = 'main-cta'
 export default function Home() {
   const [isLoading, setIsLoading] = useState(true);
   const [mounted, setMounted] = useState(false);
-  const [isPostHogReady, setIsPostHogReady] = useState(false);
   const posthog = usePostHog();
-  const [currentVariant, setCurrentVariant] = useState<React.JSX.Element | null>(null);
+  const abTestVariant = useFeatureFlagVariantKey(AB_EXPERIMENT_NAME);
 
   const colors = {
     side: '#01020E',
@@ -37,32 +36,16 @@ export default function Home() {
       setIsLoading(false);
     }, 1000);
 
-    if (posthog) {
-      setIsPostHogReady(true);
-      console.log('PostHog is initialized');
-      
-      const checkFeatureFlag = () => {
-        if (posthog.getFeatureFlag(AB_EXPERIMENT_NAME) === 'control') {
-          console.log('Control variant');
-          setCurrentVariant(<Process id="process" />);
-          posthog.capture('variant_viewed', { variant: 'control' });
-        } else {
-          // Default behavior (including when flag evaluation fails)
-          console.log('Test variant (or default)');
-          setCurrentVariant(<Pain />);
-          posthog.capture('variant_viewed', { variant: 'test' });
-        }
-      };
-
-      posthog.onFeatureFlags(checkFeatureFlag);
-      // Check immediately in case flags are already loaded
-      checkFeatureFlag();
-    }
-
     return () => clearTimeout(timer);
-  }, [posthog]);
+  }, []);
 
-  if (!mounted || !isPostHogReady) return <LoadingSpinner />;
+  useEffect(() => {
+    if (posthog && abTestVariant) {
+      posthog.capture('variant_viewed', { variant: abTestVariant });
+    }
+  }, [posthog, abTestVariant]);
+
+  if (!mounted) return <LoadingSpinner />;
 
   return (
     <main className='flex min-h-screen flex-col items-center justify-start'>
@@ -89,7 +72,7 @@ export default function Home() {
 
           <div className="relative w-screen bg-[#01020E] overflow-hidden"></div>
 
-          {currentVariant}
+          {abTestVariant === 'test' ? <Pain /> : <Process id="process" />}
 
           <Testimonials/>
 
