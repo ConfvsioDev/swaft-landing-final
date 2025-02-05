@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import Navbar from '../components/Navbar';
 import Footer from '@/components/Footer';
 import { PostHogProvider  } from './providers/ph-providers';
+import { ThemeProvider } from "next-themes";
 import "./globals.css";
 
 const inter = Inter({ subsets: ['latin'] });
@@ -27,7 +28,7 @@ export default function RootLayout({
         />
       </head>
       {/* The ThemeProvider with defaultTheme="dark" ensures that dark theme is applied from the start */}
-      
+      <ThemeProvider defaultTheme="dark">
           <body className={`${inter.className} dark:bg-[#01020E] bg-[#F2F2F2]`}>
           <PostHogProvider >
             <Navbar />
@@ -37,7 +38,7 @@ export default function RootLayout({
             <Footer />
             </PostHogProvider >
           </body>
-        
+          </ThemeProvider>
     </html>
   );
 }
