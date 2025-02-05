@@ -17,13 +17,10 @@ const LoadingSpinner: React.FC = () => {
   );
 };
 
-const AB_EXPERIMENT_NAME = 'main-cta'
-
 export default function Home() {
   const [isLoading, setIsLoading] = useState(true);
-  const [mounted, setMounted] = useState(false);
   const posthog = usePostHog();
-  const abTestVariant = useFeatureFlagVariantKey(AB_EXPERIMENT_NAME);
+  const variant = useFeatureFlagVariantKey('main-cta');
 
   const colors = {
     side: '#01020E',
@@ -31,7 +28,6 @@ export default function Home() {
   };
 
   useEffect(() => {
-    setMounted(true);
     const timer = setTimeout(() => {
       setIsLoading(false);
     }, 1000);
@@ -40,12 +36,12 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    if (posthog && abTestVariant) {
-      posthog.capture('variant_viewed', { variant: abTestVariant });
+    if (posthog && variant) {
+      posthog.capture('variant_viewed', { variant });
     }
-  }, [posthog, abTestVariant]);
+  }, [posthog, variant]);
 
-  if (!mounted) return <LoadingSpinner />;
+  const MainCTA = variant === 'test' ? Pain : Process;
 
   return (
     <main className='flex min-h-screen flex-col items-center justify-start'>
@@ -72,7 +68,7 @@ export default function Home() {
 
           <div className="relative w-screen bg-[#01020E] overflow-hidden"></div>
 
-          {abTestVariant === 'test' ? <Pain /> : <Process id="process" />}
+          <MainCTA id="process" />
 
           <Testimonials/>
 
