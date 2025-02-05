@@ -82,6 +82,7 @@ export default function Home() {
           <div className="relative w-screen bg-[#01020E] overflow-hidden"></div>
 
           {showPainSection ? <Pain /> : <Process id="process" />}
+          {showPainSection && <Process id="process" />}
 
           <Testimonials/>
 
