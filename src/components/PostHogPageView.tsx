@@ -18,6 +18,7 @@ function PostHogPageViewTracker() {
       posthog.capture('$pageview', {
         $current_url: url,
       })
+      console.log('PageView captured:', url)
     }
   }, [pathname, searchParams])
 

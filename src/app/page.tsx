@@ -1,6 +1,6 @@
 'use client';
-import { useState, useEffect } from 'react';
-import { PostHogFeature, usePostHog } from 'posthog-js/react'
+import React, { useState, useEffect } from 'react';
+import { usePostHog } from 'posthog-js/react'
 import Hero from '../components/Hero';
 import Video from '../components/Video';
 import Creations from '../components/Creations';
@@ -18,17 +18,14 @@ const LoadingSpinner: React.FC = () => {
 };
 
 const AB_EXPERIMENT_NAME = 'main-cta'
-const AbVariants = {
-  Control: 'control',
-  Test: 'test'
-} as const;
 
 export default function Home() {
   const [isLoading, setIsLoading] = useState(true);
   const [mounted, setMounted] = useState(false);
-  const posthog = usePostHog()
+  const [isPostHogReady, setIsPostHogReady] = useState(false);
+  const posthog = usePostHog();
+  const [currentVariant, setCurrentVariant] = useState<React.JSX.Element | null>(null);
 
-  // Define colors for the dark theme
   const colors = {
     side: '#01020E',
     middle: '#1A1E30',
@@ -39,14 +36,39 @@ export default function Home() {
     const timer = setTimeout(() => {
       setIsLoading(false);
     }, 1000);
-
-    // Capture page view event
-    posthog?.capture('page_view', { page: 'Home' })
-
+  
+    if (posthog) {
+      setIsPostHogReady(true);
+      console.log('PostHog is initialized');
+      
+      const checkFeatureFlag = () => {
+        const variant = posthog.getFeatureFlag(AB_EXPERIMENT_NAME);
+        console.log('Feature flag value:', variant);
+        
+        if (variant === 'test') {
+          setCurrentVariant(<Pain />);
+          posthog.capture('variant_viewed', { variant: 'test' });
+        } else if (variant === 'control') {
+          setCurrentVariant(<Process id="process" />);
+          posthog.capture('variant_viewed', { variant: 'control' });
+        } else {
+          console.error('Unexpected feature flag value:', variant);
+          // Default to control if we get an unexpected value
+          setCurrentVariant(<Process id="process" />);
+          posthog.capture('variant_viewed', { variant: 'control', error: 'unexpected_value' });
+        }
+      };
+  
+      posthog.onFeatureFlags(checkFeatureFlag);
+      // Check immediately in case flags are already loaded
+      checkFeatureFlag();
+    }
+  
     return () => clearTimeout(timer);
   }, [posthog]);
+  
 
-  if (!mounted) return null;
+  if (!mounted || !isPostHogReady) return <LoadingSpinner />;
 
   return (
     <main className='flex min-h-screen flex-col items-center justify-start'>
@@ -73,21 +95,7 @@ export default function Home() {
 
           <div className="relative w-screen bg-[#01020E] overflow-hidden"></div>
 
-          <PostHogFeature
-            flag={AB_EXPERIMENT_NAME}
-            match={AbVariants.Control}
-            fallback={null}
-          >
-            <Process id="process" />
-          </PostHogFeature>
-
-          <PostHogFeature
-            flag={AB_EXPERIMENT_NAME}
-            match={AbVariants.Test}
-            fallback={null}
-          >
-            <Pain />
-          </PostHogFeature>
+          {currentVariant}
 
           <Testimonials/>
 

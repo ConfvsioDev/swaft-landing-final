@@ -201,7 +201,7 @@ const Process: React.FC<ProcessProps> = ({ id }) => {
         </div>
       </div>
 
-      <div className="lg:hidden container mx-auto px-4 md:px-8">
+      <div className="lg:hidden container mx-auto px-4 md:px-8 pb-1">
         {steps.map((step, index) => (
           <motion.div
             key={index}
