@@ -3,18 +3,17 @@ import React, { useEffect, useState, useCallback } from 'react';
 const words = ["unique.", "parfait.", "original.", "exceptionnel."]; // Words to cycle through
 
 interface TypingEffectProps {
-  onComplete: () => void; // Callback when typing is complete
+  onComplete: () => void;
 }
 
 const TypingEffect: React.FC<TypingEffectProps> = ({ onComplete }) => {
-  const [displayedWord, setDisplayedWord] = useState(""); // Start with an empty string
-  const [currentIndex, setCurrentIndex] = useState(0); // Index for cycling through words
-  const [isTyping, setIsTyping] = useState(true); // State for typing or erasing
+  const [displayedWord, setDisplayedWord] = useState("");
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [isTyping, setIsTyping] = useState(true);
 
-  // Define typing speeds and pause duration
-  const typingSpeed = 75; // Speed of typing
-  const erasingSpeed = 50; // Speed of erasing
-  const pauseDuration = 1500; // Pause duration after typing the full word
+  const typingSpeed = 75;
+  const erasingSpeed = 50;
+  const pauseDuration = 1500;
 
   const handleComplete = useCallback(() => {
     onComplete();
@@ -25,49 +24,47 @@ const TypingEffect: React.FC<TypingEffectProps> = ({ onComplete }) => {
     let currentLength = isTyping ? 0 : words[currentIndex].length;
 
     if (isTyping) {
-      // Typing logic
       interval = setInterval(() => {
         if (currentLength < words[currentIndex].length) {
           currentLength++;
-          setDisplayedWord(words[currentIndex].substring(0, currentLength)); // No leading space here
+          setDisplayedWord(words[currentIndex].substring(0, currentLength));
         } else {
           clearInterval(interval);
           setTimeout(() => {
-            setIsTyping(false); // Switch to erasing after pause
-            handleComplete(); // Use the callback
+            setIsTyping(false);
+            handleComplete();
           }, pauseDuration);
         }
       }, typingSpeed);
     } else {
-      // Erasing logic
       interval = setInterval(() => {
         if (currentLength > 0) {
           currentLength--;
-          setDisplayedWord(words[currentIndex].substring(0, currentLength)); // Maintain space during erasing
+          setDisplayedWord(words[currentIndex].substring(0, currentLength));
         } else {
           clearInterval(interval);
-          setCurrentIndex((prevIndex) => (prevIndex + 1) % words.length); // Cycle to the next word
-          setIsTyping(true); // Switch back to typing mode
+          setCurrentIndex((prevIndex) => (prevIndex + 1) % words.length);
+          setIsTyping(true);
         }
       }, erasingSpeed);
     }
 
-    return () => clearInterval(interval); // Cleanup on unmount
+    return () => clearInterval(interval);
   }, [isTyping, currentIndex, handleComplete]);
 
   return (
     <span 
-      className="font-bold inline-flex items-center relative" 
+      className="font-bold inline-flex items-center relative"
       style={{ 
-        minWidth: '180px',  // Slightly increased for better word fit
+        minWidth: 'min(180px, 40vw)',
         textAlign: 'left',
-        height: '1.5em',    // Maintain consistent height
-        padding: '0 4px'    // Add slight padding
+        height: '1.5em',
+        padding: '0 4px'
       }}
     >
       {displayedWord}
       <span 
-        className="animate-blink ml-0.5 -mt-1" 
+        className="animate-cursor ml-0.5 -mt-1" 
         style={{ 
           borderRight: '2px solid currentColor',
           height: '1.1em'

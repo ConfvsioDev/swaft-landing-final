@@ -88,10 +88,7 @@ const Process: React.FC<ProcessProps> = ({ id }) => {
       : "shadow-[0_0_30px_rgba(0,0,0,0.1)]",
     cardShadow: theme === "dark"
       ? "shadow-[0_8px_30px_rgba(0,0,0,0.3)]"
-      : "shadow-[0_8px_30px_rgba(0,0,0,0.1)]",
-    background: theme === "dark"
-      ? "bg-gradient-to-b from-[#03030e] to-[#1E108C]"
-      : "bg-gradient-to-b from-white via-[#f0f0ff] to-[#e0e0ff]"
+      : "shadow-[0_8px_30px_rgba(0,0,0,0.1)]"
   }), [theme]);
 
   useEffect(() => {
@@ -123,7 +120,7 @@ const Process: React.FC<ProcessProps> = ({ id }) => {
     <div
       id={id}
       ref={sectionRef}
-      className={`w-full relative mx-auto ${themeStyles.text} ${themeStyles.background}`}
+      className={`w-full relative mx-auto ${themeStyles.text}`}
     >
       <motion.div 
         className="text-center py-8"

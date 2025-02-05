@@ -19,6 +19,7 @@ const Creations: React.FC<CreationsProps> = ({ id }) => {
     : '0 0 20px rgba(173, 216, 230, 0.5), 0 0 40px rgba(173, 216, 230, 0.3)', [theme]);
 
   const titleColor = useMemo(() => theme === 'dark' ? 'text-white' : 'text-gray-800', [theme]);
+  const textColor = useMemo(() => theme === 'dark' ? 'text-white' : 'text-gray-800', [theme]);
 
   // Define reduced image dimensions for 9:16 aspect ratio
   const IMAGE_DIMENSIONS = {
@@ -48,44 +49,39 @@ const Creations: React.FC<CreationsProps> = ({ id }) => {
           </motion.h1>
           
           <motion.div
-            className="w-full max-w-[480px] rounded-lg overflow-hidden relative mx-auto"
-            initial={{ opacity: 0, y: 50 }}
-            whileInView={{ opacity: 1, y: 0 }}
+            className="max-w-md rounded-lg overflow-hidden relative"
+            initial={{ opacity: 0, y: 50 }} 
+            whileInView={{ opacity: 1, y: 0 }} 
             transition={{ duration: 0.6, ease: 'easeInOut' }}
             style={{
               boxShadow: glowStyle,
-              height: IMAGE_DIMENSIONS.height,
             }}
           >
-            <div className="overflow-hidden h-full relative">
-              <div className="absolute inset-0 bg-gray-200 dark:bg-gray-800 animate-pulse" />
-              
-              <Image 
-                src={travelerImage}
+            <div className="overflow-hidden">
+              <img 
+                src={travelerImage.src} 
                 alt="Notre collaboration actuelle"
-                className="object-cover"
-                fill
-                sizes="(max-width: 480px) 100vw, 480px"
-                priority
-                quality={90}
-                placeholder="blur"
-                blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRg..."
+                className="w-full h-auto object-cover"
+                loading="lazy" // Added for better performance
               />
+              <div className="absolute top-4 left-4 p-2 backdrop-blur-md bg-black bg-opacity-50 rounded-lg">
+                <h2 className={`text-xl md:text-3xl font-semibold text-white`}>Traveler</h2>
+              </div>
             </div>
           </motion.div>
         </div>
 
         {/* Text Container - Full width on mobile, half on desktop */}
         <div className="w-full lg:w-1/2 flex flex-col items-center lg:items-start mt-8 lg:mt-0">
-          <motion.div 
-            className={`text-lg md:text-xl text-center lg:text-left ${titleColor} mb-6 relative max-w-xl`}
+        <motion.div 
+            className={`text-lg md:text-xl text-center lg:text-left mb-6 relative max-w-xl ${textColor}`}
             initial={{ opacity: 0, y: -20 }} 
             whileInView={{ opacity: 1, y: 0 }} 
             transition={{ duration: 0.5 }}
           >
-            <p className="mb-2">Nous nous adaptons à chaque demande</p>
-            <p className="flex items-center justify-center lg:justify-start gap-2">
-              afin d'obtenir un résultat
+            <p className={`mb-2 ${textColor}`}>Nous nous adaptons à chaque demande</p>
+            <p className="flex items-center justify-center lg:justify-start gap-2 flex-wrap">
+              <span>afin d'obtenir un résultat</span>
               <TypingEffect onComplete={() => setIsTypingComplete(true)} />
             </p>
           </motion.div>
