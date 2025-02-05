@@ -47,7 +47,7 @@ export default function Home() {
         <LoadingSpinner />
       ) : (
         <>
-          <button onClick={handleClick}> Click Me </button>
+          
           <Hero />
           <Video id="video" />
           
@@ -60,6 +60,8 @@ export default function Home() {
               }}
             />
           </div>
+
+          <button onClick={handleClick}> Click Me </button>
 
           <Creations id="creations" />
           
