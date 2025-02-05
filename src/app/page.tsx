@@ -1,9 +1,11 @@
 'use client';
 import { useState, useEffect } from 'react';
+import { useFeatureFlagEnabled } from 'posthog-js/react'
 import Hero from '../components/Hero';
 import Video from '../components/Video';
 import Creations from '../components/Creations';
 import Process from '../components/Process';
+import Pain from '../components/Pain';
 import Testimonials from '@/components/Testimonials';
 import Offer from '@/components/Offer';
 
@@ -18,6 +20,7 @@ const LoadingSpinner: React.FC = () => {
 export default function Home() {
   const [isLoading, setIsLoading] = useState(true);
   const [mounted, setMounted] = useState(false);
+  const showPainSection = useFeatureFlagEnabled('show-pain-section')
 
   // Define colors for the dark theme
   const colors = {
@@ -61,7 +64,7 @@ export default function Home() {
 
           <div className="relative w-screen bg-[#01020E] overflow-hidden"></div>
           <div className='relative w-screen'>
-            <Process id="process" />
+          {showPainSection ? <Pain /> : <Process id="process" />}
           </div>
 
           <Testimonials/>

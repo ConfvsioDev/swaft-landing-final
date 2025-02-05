@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useMemo } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence } from "motion/react";
 import { Search, Wand2, Code, Rocket } from "lucide-react";
 import { useTheme } from 'next-themes';
 
@@ -164,7 +164,7 @@ const Process: React.FC<ProcessProps> = ({ id }) => {
             <motion.div
               key={index}
               ref={(el) => {
-                stepRefs.current[index] = el;
+                stepRefs.current[index] = el as HTMLDivElement;
               }}
               className={`h-screen flex items-center ${
                 index === 0 ? 'mt-64' : ''
