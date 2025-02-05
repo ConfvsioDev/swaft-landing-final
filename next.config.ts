@@ -37,7 +37,6 @@ const nextConfig: NextConfig = {
     ],
   },
   experimental: {
-    optimizeCss: true,
     optimizePackageImports: ['framer-motion', 'lucide-react'],
     webVitalsAttribution: ['CLS', 'LCP'],
   },
@@ -45,6 +44,5 @@ const nextConfig: NextConfig = {
     removeConsole: process.env.NODE_ENV === 'production',
   },
 };
-
 
 export default nextConfig;
