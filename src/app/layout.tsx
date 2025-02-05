@@ -4,7 +4,6 @@ import { Inter } from "next/font/google";
 import Navbar from '../components/Navbar';
 import Footer from '@/components/Footer';
 import "./globals.css";
-import { CSPostHogProvider } from '../providers/ph-providers';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -34,7 +33,6 @@ export default function RootLayout({
         enableSystem={true}
         disableTransitionOnChange
       >
-        <CSPostHogProvider>
           <body className={`${inter.className} dark:bg-[#01020E] bg-[#F2F2F2]`}>
             <Navbar />
             <main className="dark:bg-[#01020E]">
@@ -42,7 +40,6 @@ export default function RootLayout({
             </main>
             <Footer />
           </body>
-          </CSPostHogProvider>
       </ThemeProvider>
     </html>
   );
