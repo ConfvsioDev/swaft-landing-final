@@ -44,18 +44,3 @@ export default function RootLayout({
     </html>
   );
 }
-
-const iconVariant = {
-  enter: { rotateY: 90, opacity: 0, scale: 0.9 },
-  center: { 
-    rotateY: 0, 
-    opacity: 1, 
-    scale: 1,
-    transition: {
-      type: "spring",
-      stiffness: 300,
-      damping: 24
-    }
-  },
-  exit: { rotateY: -90, opacity: 0, scale: 0.9 }
-};

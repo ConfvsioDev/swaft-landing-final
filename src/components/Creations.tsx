@@ -21,12 +21,6 @@ const Creations: React.FC<CreationsProps> = ({ id }) => {
   const titleColor = useMemo(() => theme === 'dark' ? 'text-white' : 'text-gray-800', [theme]);
   const textColor = useMemo(() => theme === 'dark' ? 'text-white' : 'text-gray-800', [theme]);
 
-  // Define reduced image dimensions for 9:16 aspect ratio
-  const IMAGE_DIMENSIONS = {
-    width: 480,  // Reduced width
-    height: 853, // Reduced height
-  };
-
   return (
     <section 
       id={id} 
@@ -58,8 +52,8 @@ const Creations: React.FC<CreationsProps> = ({ id }) => {
             }}
           >
             <div className="overflow-hidden">
-              <img 
-                src={travelerImage.src} 
+              <Image 
+                src={travelerImage} 
                 alt="Notre collaboration actuelle"
                 className="w-full h-auto object-cover"
                 loading="lazy" // Added for better performance

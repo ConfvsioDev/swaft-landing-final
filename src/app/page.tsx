@@ -17,7 +17,6 @@ const LoadingSpinner: React.FC = () => {
 };
 
 export default function Home() {
-  const { theme } = useTheme();
   const [isLoading, setIsLoading] = useState(true);
   const [mounted, setMounted] = useState(false);
 
