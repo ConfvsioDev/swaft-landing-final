@@ -28,7 +28,6 @@ export default function Home() {
   const [mounted, setMounted] = useState(false);
   const posthog = usePostHog()
   const [showPainSection, setShowPainSection] = useState(false)
-  const experimentVariant = posthog.getFeatureFlag(AB_EXPERIMENT_NAME)
 
 
   // Define colors for the dark theme
