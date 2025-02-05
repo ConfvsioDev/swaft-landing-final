@@ -1,6 +1,6 @@
 'use client';
 import { useState, useEffect } from 'react';
-import { usePostHog, useFeatureFlagEnabled } from 'posthog-js/react'
+import { usePostHog } from 'posthog-js/react'
 import Hero from '../components/Hero';
 import Video from '../components/Video';
 import Creations from '../components/Creations';
@@ -21,7 +21,7 @@ export default function Home() {
   const [isLoading, setIsLoading] = useState(true);
   const [mounted, setMounted] = useState(false);
   const posthog = usePostHog()
-  const showPainSection = useFeatureFlagEnabled('show-pain-section')
+  const [showPainSection, setShowPainSection] = useState(false);
 
   // Define colors for the dark theme
   const colors = {
@@ -38,6 +38,14 @@ export default function Home() {
     // Capture page view event
     posthog?.capture('page_view', { page: 'Home' })
 
+    // Determine which variant to show
+    if (posthog?.getFeatureFlag('main-cta') === 'test') {
+      setShowPainSection(true);
+    } else {
+      // Control variant (default behavior)
+      setShowPainSection(false);
+    }
+
     return () => clearTimeout(timer);
   }, [posthog]);
 
@@ -49,6 +57,14 @@ export default function Home() {
       })
     }
   }, [mounted, showPainSection, posthog])
+
+  // Function to handle "Reserver" button click
+  const handleReserverClick = () => {
+    posthog?.capture('Click Reserver', {
+      variant: showPainSection ? 'test' : 'control'
+    });
+    // Add your reservation logic here
+  };
 
   if (!mounted) return null;
 
@@ -90,6 +106,11 @@ export default function Home() {
             </div>
             <Offer id="offer" />
           </div>
+
+          {/* Add the "Reserver" button */}
+          <button onClick={handleReserverClick} className="mt-4 px-6 py-2 bg-blue-500 text-white rounded">
+            Reserver
+          </button>
         </>
       )}
     </main>
