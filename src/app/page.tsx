@@ -76,7 +76,7 @@ export default function Home() {
           <PostHogFeature
             flag={AB_EXPERIMENT_NAME}
             match={AbVariants.Control}
-            fallback={<Process id="process" />}
+            fallback={null}
           >
             <Process id="process" />
           </PostHogFeature>
@@ -84,7 +84,7 @@ export default function Home() {
           <PostHogFeature
             flag={AB_EXPERIMENT_NAME}
             match={AbVariants.Test}
-            fallback={<Pain />}
+            fallback={null}
           >
             <Pain />
           </PostHogFeature>
