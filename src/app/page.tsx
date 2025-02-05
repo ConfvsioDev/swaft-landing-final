@@ -26,7 +26,6 @@ const AbVariants = {
 export default function Home() {
   const [isLoading, setIsLoading] = useState(true);
   const [mounted, setMounted] = useState(false);
-  const posthog = usePostHog()
 
 
   // Define colors for the dark theme
@@ -35,7 +34,14 @@ export default function Home() {
     middle: '#1A1E30',
   };
 
+  useEffect(() => {
+    setMounted(true);
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 1000);
 
+    return () => clearTimeout(timer);
+  });
 
 
 
