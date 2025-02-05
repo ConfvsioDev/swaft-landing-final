@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { animate, motion, useAnimation, useMotionValue } from 'framer-motion';
+import {animate, motion, useAnimation, useMotionValue  } from 'motion/react';
 import { useTheme } from 'next-themes';
 import useMeasure from 'react-use-measure';
 import Image from 'next/image'; // Add this import
