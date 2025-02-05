@@ -20,7 +20,6 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-intersection-observer": "^9.14.1",
-    "react-particles": "^2.12.2",
     "react-tsparticles": "^2.12.2",
     "react-use-measure": "^2.1.7",
     "sharp": "^0.32.0",
