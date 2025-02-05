@@ -56,22 +56,7 @@ export default function Home() {
     return () => clearTimeout(timer);
   }, [posthog]);
 
-  useEffect(() => {
-    // Capture which variant the user saw
-    if (mounted) {
-      posthog?.capture('section_viewed', { 
-        section: showPainSection ? 'Pain' : 'Process'
-      })
-    }
-  }, [mounted, showPainSection, posthog])
 
-  // Function to handle "Reserver" button click
-  const handleReserverClick = () => {
-    posthog?.capture('Click Reserver', {
-      variant: showPainSection ? 'test' : 'control'
-    });
-    // Add your reservation logic here
-  };
 
   if (!mounted) return null;
 
@@ -117,9 +102,7 @@ export default function Home() {
               </PostHogFeature>
 
 
-              <div className='relative w-screen'>
-            {showPainSection ? <Pain /> : <Process id="process" />}
-          </div>
+              
 
           <Testimonials/>
 
@@ -131,11 +114,6 @@ export default function Home() {
             </div>
             <Offer id="offer" />
           </div>
-
-          {/* Add the "Reserver" button */}
-          <button onClick={handleReserverClick} className="mt-4 px-6 py-2 bg-blue-500 text-white rounded">
-            Reserver
-          </button>
         </>
       )}
     </main>
