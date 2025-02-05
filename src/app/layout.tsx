@@ -29,7 +29,7 @@ export default function RootLayout({
       <Providers>
         <body className={`${inter.className} dark:bg-[#01020E] bg-[#F2F2F2]`}>
           <Navbar />
-            {children}
+          {children}
           <Footer />
         </body>
       </Providers>
