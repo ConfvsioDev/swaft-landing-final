@@ -1,6 +1,6 @@
 'use client';
 import { useState, useEffect } from 'react';
-import { PostHogFeature, usePostHog } from 'posthog-js/react'
+import { usePostHog } from 'posthog-js/react'
 import Hero from '../components/Hero';
 import Video from '../components/Video';
 import Creations from '../components/Creations';
@@ -27,6 +27,7 @@ export default function Home() {
   const [isLoading, setIsLoading] = useState(true);
   const [mounted, setMounted] = useState(false);
   const posthog = usePostHog()
+  const [showPainSection, setShowPainSection] = useState(false)
 
   // Define colors for the dark theme
   const colors = {
@@ -42,6 +43,13 @@ export default function Home() {
 
     // Capture page view event
     posthog?.capture('page_view', { page: 'Home' })
+
+    // Determine which variant to show
+    if (posthog?.getFeatureFlag(AB_EXPERIMENT_NAME) === AbVariants.Test) {
+      setShowPainSection(true);
+    } else {
+      setShowPainSection(false);
+    }
 
     return () => clearTimeout(timer);
   }, [posthog]);
@@ -73,21 +81,7 @@ export default function Home() {
 
           <div className="relative w-screen bg-[#01020E] overflow-hidden"></div>
 
-          <PostHogFeature
-            flag={AB_EXPERIMENT_NAME}
-            match={AbVariants.Control}
-            fallback={<Process id="process" />}
-          >
-            <Process id="process" />
-          </PostHogFeature>
-
-          <PostHogFeature
-            flag={AB_EXPERIMENT_NAME}
-            match={AbVariants.Test}
-            fallback={<Pain />}
-          >
-            <Pain />
-          </PostHogFeature>
+          {showPainSection ? <Pain /> : <Process id="process" />}
 
           <Testimonials/>
 
