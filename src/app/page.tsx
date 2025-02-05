@@ -1,6 +1,6 @@
 'use client';
 import { useState, useEffect } from 'react';
-import { PostHogFeature, usePostHog } from 'posthog-js/react'
+import { PostHogFeature } from 'posthog-js/react'
 import Hero from '../components/Hero';
 import Video from '../components/Video';
 import Creations from '../components/Creations';
