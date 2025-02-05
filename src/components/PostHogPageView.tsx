@@ -3,6 +3,7 @@
 import { useEffect } from 'react'
 import { usePathname, useSearchParams } from 'next/navigation'
 import posthog from 'posthog-js'
+import { Suspense } from 'react'
 
 function PostHogPageViewTracker() {
   const pathname = usePathname()
@@ -23,4 +24,10 @@ function PostHogPageViewTracker() {
   return null
 }
 
-export default PostHogPageViewTracker
+export default function PostHogPageView() {
+  return (
+    <Suspense fallback={null}>
+      <PostHogPageViewTracker />
+    </Suspense>
+  )
+}
