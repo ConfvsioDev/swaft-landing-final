@@ -12,7 +12,6 @@ interface CreationsProps {
 
 const Creations: React.FC<CreationsProps> = ({ id }) => {
   const { theme } = useTheme(); 
-  const [isTypingComplete, setIsTypingComplete] = useState(false); 
 
   const glowStyle = useMemo(() => theme === 'dark'
     ? '0 0 20px rgba(0, 0, 0, 0.5), 0 0 40px rgba(0, 0, 0, 0.3)' 
@@ -76,7 +75,7 @@ const Creations: React.FC<CreationsProps> = ({ id }) => {
             <p className={`mb-2 ${textColor}`}>Nous nous adaptons à chaque demande</p>
             <p className="flex items-center justify-center lg:justify-start gap-2 flex-wrap">
               <span>afin d'obtenir un résultat</span>
-              <TypingEffect onComplete={() => setIsTypingComplete(true)} />
+              <TypingEffect onComplete={() => {}} />
             </p>
           </motion.div>
 

@@ -2,7 +2,6 @@
 
 import React, { useMemo } from 'react';
 import { useTheme } from 'next-themes';
-import { Logs as Logo } from 'lucide-react';
 
 const Footer: React.FC = () => {
   const { theme } = useTheme();

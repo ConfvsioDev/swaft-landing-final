@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { animate, motion, useAnimation, useMotionValue } from 'framer-motion';
 import { useTheme } from 'next-themes';
 import useMeasure from 'react-use-measure';
+import Image from 'next/image'; // Add this import
 
 interface Testimonial {
   id: number;
@@ -127,12 +128,13 @@ const Testimonials: React.FC = () => {
     >
       <div className="flex items-center gap-4 mb-6">
         <div className="relative w-12 h-12 md:w-14 md:h-14">
-          <img
+          <Image
             src={testimonial.avatarUrl}
             alt={testimonial.name}
             className="rounded-full object-cover w-full h-full ring-2 ring-purple-500/20"
             loading="lazy"
             decoding="async"
+            layout="fill" // Add this attribute
           />
           <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-purple-500/20 to-transparent" />
         </div>
