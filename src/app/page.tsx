@@ -6,7 +6,6 @@ import Creations from '../components/Creations';
 import Process from '../components/Process';
 import Testimonials from '@/components/Testimonials';
 import Offer from '@/components/Offer';
-import { usePostHog } from 'posthog-js/react';
 
 const LoadingSpinner: React.FC = () => {
   return (
@@ -17,13 +16,8 @@ const LoadingSpinner: React.FC = () => {
 };
 
 export default function Home() {
-  const posthog = usePostHog();
   const [isLoading, setIsLoading] = useState(true);
   const [mounted, setMounted] = useState(false);
-
-  const handleClick = () => {
-    posthog.capture('clicked_button', { page: 'home' });
-  }
 
   // Define colors for the dark theme
   const colors = {
@@ -47,7 +41,6 @@ export default function Home() {
         <LoadingSpinner />
       ) : (
         <>
-          
           <Hero />
           <Video id="video" />
           
@@ -60,8 +53,6 @@ export default function Home() {
               }}
             />
           </div>
-
-          <button onClick={handleClick}> Click Me </button>
 
           <Creations id="creations" />
           

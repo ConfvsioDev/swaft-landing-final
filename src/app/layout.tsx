@@ -1,12 +1,10 @@
 import type { Metadata } from "next";
-import { ThemeProvider } from 'next-themes';
 import { Inter } from "next/font/google";
 import Navbar from '../components/Navbar';
 import Footer from '@/components/Footer';
-import { NextHogProvider } from "./providers/ph-providers";
-import PostHogPageView from "../components/page-view";
 import "./globals.css";
 import { Suspense } from "react";
+import { Providers } from './providers';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -29,24 +27,13 @@ export default function RootLayout({
           src="https://cdn.jsdelivr.net/npm/ldrs/dist/auto/spiral.js"
         />
       </head>
-      {/* The ThemeProvider with defaultTheme="dark" ensures that dark theme is applied from the start */}
-      <ThemeProvider 
-        attribute="class" 
-        defaultTheme="dark"
-        enableSystem={true}
-        disableTransitionOnChange
-      >
-          <body className={`${inter.className} dark:bg-[#01020E] bg-[#F2F2F2]`}>
-            <NextHogProvider>
-            <Suspense fallback={null}>
-            <PostHogPageView />
-          </Suspense>
-            <Navbar />
-              {children}
-            <Footer />
-            </NextHogProvider >
-          </body>
-      </ThemeProvider>
+      <Providers>
+        <body className={`${inter.className} dark:bg-[#01020E] bg-[#F2F2F2]`}>
+          <Navbar />
+            {children}
+          <Footer />
+        </body>
+      </Providers>
     </html>
   );
 }
