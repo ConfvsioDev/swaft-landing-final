@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import { motion } from 'framer-motion';
-import React, { useState, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import { useTheme } from 'next-themes'; 
 import travelerImage from '../../public/images/traveler.png'; 
 import TypingEffect from './TypingEffect';
