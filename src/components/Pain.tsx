@@ -1,5 +1,7 @@
 // src/components/Pain.tsx
-import React, { useRef } from 'react';
+'use client';
+
+import React, { useRef, useEffect } from 'react';
 import { CaretDoubleDown } from '@phosphor-icons/react';
 import { motion, useScroll, useTransform } from "motion/react"
 
@@ -15,14 +17,14 @@ const Pain: React.FC<PainProps> = ({
   ] 
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const questionRefs = questions.map(() => ({
+  const questionRefs = useRef(questions.map(() => ({
     main: useRef<HTMLDivElement>(null),
     trigger: useRef<HTMLDivElement>(null),
-  }));
+  })));
 
   const scrollConfigs = questions.map((_, index) => {
     const { scrollYProgress } = useScroll({
-      target: questionRefs[index].main,
+      target: questionRefs.current[index].main,
       offset: ["start center", "end start"]
     });
 
@@ -83,11 +85,11 @@ const Pain: React.FC<PainProps> = ({
         {questions.map((_, index) => (
           <React.Fragment key={index}>
             <motion.div 
-              ref={questionRefs[index].main}
+              ref={questionRefs.current[index].main}
               className='relative w-full h-[45vh] overflow-hidden'
             />
             <motion.div 
-              ref={questionRefs[index].trigger}
+              ref={questionRefs.current[index].trigger}
               className='relative w-full h-[45vh] overflow-hidden'
             />
             <motion.div 

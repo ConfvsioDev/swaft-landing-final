@@ -1,3 +1,5 @@
+'use client';
+
 import { memo } from 'react';
 
 const LoadingSpinner = memo(() => {
@@ -11,8 +13,11 @@ const LoadingSpinner = memo(() => {
         {[0, 1, 2, 3].map((index) => (
           <div
             key={index}
-            className={`w-1.5 h-10 bg-black dark:bg-white animate-grow ${
-              index > 0 ? `delay-${index * 100}` : ''
+            className={`w-1.5 h-10 bg-black dark:bg-white ${
+              index === 0 ? 'animate-grow' :
+              index === 1 ? 'animate-grow-delay-1' :
+              index === 2 ? 'animate-grow-delay-2' :
+              'animate-grow-delay-3'
             }`}
             aria-hidden="true"
           />

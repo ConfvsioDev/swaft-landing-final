@@ -4,11 +4,14 @@ import { useTheme } from 'next-themes';
 import { memo } from 'react';
 
 // Replace lodash debounce with a custom implementation
-const debounce = (func: Function, wait: number) => {
+const debounce = <T extends (...args: any[]) => void>(
+  func: T,
+  wait: number
+): ((...args: Parameters<T>) => void) => {
   let timeout: NodeJS.Timeout;
-  return (...args: any[]) => {
+  return (...args: Parameters<T>) => {
     clearTimeout(timeout);
-    timeout = setTimeout(() => func.apply(this, args), wait);
+    timeout = setTimeout(() => func(...args), wait);
   };
 };
 
