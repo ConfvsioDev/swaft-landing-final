@@ -1,10 +1,11 @@
 import Image from 'next/image';
 import { motion } from 'motion/react';
-import React, { useMemo } from 'react';
+import React, { useMemo, useCallback } from 'react';
 import { useTheme } from 'next-themes'; 
 import travelerImage from '../../public/images/traveler.png'; 
 import TypingEffect from './TypingEffect';
 import {Button} from './Button';
+import { memo } from 'react';
 
 interface CreationsProps {
     id?: string; 
@@ -13,28 +14,29 @@ interface CreationsProps {
 const Creations: React.FC<CreationsProps> = ({ id }) => {
   const { theme } = useTheme(); 
 
-  const glowStyle = useMemo(() => theme === 'dark'
-    ? '0 0 20px rgba(0, 0, 0, 0.5), 0 0 40px rgba(0, 0, 0, 0.3)' 
-    : '0 0 20px rgba(173, 216, 230, 0.5), 0 0 40px rgba(173, 216, 230, 0.3)', [theme]);
+  const styles = useMemo(() => ({
+    glow: theme === 'dark'
+      ? '0 0 20px rgba(0, 0, 0, 0.5), 0 0 40px rgba(0, 0, 0, 0.3)'
+      : '0 0 20px rgba(173, 216, 230, 0.5), 0 0 40px rgba(173, 216, 230, 0.3)',
+    title: theme === 'dark' ? 'text-white' : 'text-gray-800',
+    text: theme === 'dark' ? 'text-white' : 'text-gray-800'
+  }), [theme]);
 
-  const titleColor = useMemo(() => theme === 'dark' ? 'text-white' : 'text-gray-800', [theme]);
-  const textColor = useMemo(() => theme === 'dark' ? 'text-white' : 'text-gray-800', [theme]);
+  const handleTypingComplete = useCallback(() => {
+    // Add any completion logic here
+  }, []);
 
   return (
     <section 
       id={id} 
-      className="py-12 md:py-24 min-h-screen"
-      style={{ 
-        containIntrinsicSize: '0 500px',
-        contentVisibility: 'auto',
-        minHeight: '600px'
-      }}
+      className="py-8 sm:py-12 md:py-24 min-h-[600px] w-full overflow-x-hidden"
+      aria-label="Nos créations"
     > 
-      <div className="container mx-auto px-4 flex flex-col lg:flex-row items-center justify-between gap-8 lg:gap-12">
-        {/* Image Container - Full width on mobile, half on desktop */}
+      <div className="container mx-auto px-4 flex flex-col lg:flex-row items-center justify-between sm:gap-1 lg:gap-2">
+        {/* Image Container */}
         <div className="w-full lg:w-1/2 flex flex-col items-center">
           <motion.h1 
-            className={`text-3xl md:text-4xl font-bold text-center ${titleColor} mb-8`}
+            className={`text-2xl sm:text-3xl md:text-4xl font-bold text-center ${styles.title} mb-6 sm:mb-8`}
             initial={{ opacity: 0, y: -20 }} 
             whileInView={{ opacity: 1, y: 0 }} 
             transition={{ duration: 0.5 }}
@@ -43,42 +45,55 @@ const Creations: React.FC<CreationsProps> = ({ id }) => {
           </motion.h1>
           
           <motion.div
-            className="max-w-md rounded-lg overflow-hidden relative"
+            className="w-full max-w-md rounded-lg overflow-hidden relative"
             initial={{ opacity: 0, y: 50 }} 
             whileInView={{ opacity: 1, y: 0 }} 
             transition={{ duration: 0.6, ease: 'easeInOut' }}
             style={{
-              boxShadow: glowStyle,
-              minHeight: '300px'
+              boxShadow: styles.glow,
+              minHeight: '500px',
+              maxHeight: '700px'
             }}
           >
-            <div className="overflow-hidden">
+            <div className="overflow-hidden h-full">
               <Image 
                 src={travelerImage} 
-                alt="Notre collaboration actuelle"
-                className="w-full h-auto object-cover"
-                loading="lazy" // Added for better performance
+                alt="Illustration de notre projet Traveler"
+                className="w-full h-full object-contain"
+                priority
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                loading="eager"
               />
-              <div className="absolute top-4 left-4 p-2 backdrop-blur-md bg-black bg-opacity-50 rounded-lg">
-                <h2 className={`text-xl md:text-3xl font-semibold text-white`}>Traveler</h2>
+              <div 
+                className="absolute top-2 sm:top-4 left-2 sm:left-4 p-2 backdrop-blur-md bg-black bg-opacity-50 rounded-lg"
+                aria-hidden="true"
+              >
+                <h2 className="text-lg sm:text-xl md:text-3xl font-semibold text-white">
+                  Traveler
+                </h2>
               </div>
             </div>
           </motion.div>
         </div>
 
-        {/* Text Container - Full width on mobile, half on desktop */}
-        <div className="w-full lg:w-1/2 flex flex-col items-center lg:items-start mt-8 lg:mt-0">
-        <motion.div 
-            className={`text-lg md:text-xl text-center lg:text-left mb-6 relative max-w-xl ${textColor}`}
+        {/* Text Container */}
+        <div className="w-full lg:w-1/2 flex flex-col items-center mt-6 sm:mt-8 lg:mt-0 text-center">
+          <motion.div 
+            className={`text-base sm:text-lg md:text-xl mb-4 sm:mb-6 relative max-w-xl ${styles.text}`}
             initial={{ opacity: 0, y: -20 }} 
             whileInView={{ opacity: 1, y: 0 }} 
             transition={{ duration: 0.5 }}
           >
-            <p className={`mb-2 ${textColor}`}>Nous nous adaptons à chaque demande</p>
-            <p className="flex items-center justify-center lg:justify-start gap-2 flex-wrap">
-              <span>afin d'obtenir un résultat</span>
-              <TypingEffect onComplete={() => {}} />
+            <p className={`mb-2 ${styles.text}`}>
+              Nous nous adaptons à chaque demande
             </p>
+            <div>
+              <span>afin d'obtenir un résultat </span>
+              <TypingEffect 
+                onComplete={handleTypingComplete}
+                ariaLabel="Caractéristiques de notre travail"
+              />
+            </div>
           </motion.div>
 
           <Button />
@@ -88,4 +103,4 @@ const Creations: React.FC<CreationsProps> = ({ id }) => {
   );
 };
 
-export default Creations;
+export default memo(Creations);

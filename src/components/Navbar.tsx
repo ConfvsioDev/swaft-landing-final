@@ -47,15 +47,26 @@ const Navbar: React.FC = () => {
         };
     }, [isMobileMenuOpen]);
 
-    // Simplified scroll handler - only shows navbar at the very top
+    // Optimize scroll handler with throttle instead of debounce
     useEffect(() => {
+        let lastScrollY = window.scrollY;
+        let lastTime = Date.now();
+        const THROTTLE_MS = 100; // Adjust based on needs
+
         const handleScroll = () => {
-            const currentScrollY = window.scrollY;
-            setIsVisible(currentScrollY <= 50);
-            
-            // Close mobile menu when scrolling
-            if (currentScrollY > 50 && isMobileMenuOpen) {
-                setIsMobileMenuOpen(false);
+            const now = Date.now();
+            if (now - lastTime >= THROTTLE_MS) {
+                const currentScrollY = window.scrollY;
+                const shouldBeVisible = currentScrollY < lastScrollY || currentScrollY <= 50;
+                
+                setIsVisible(shouldBeVisible);
+                
+                if (currentScrollY > 50 && isMobileMenuOpen) {
+                    setIsMobileMenuOpen(false);
+                }
+                
+                lastScrollY = currentScrollY;
+                lastTime = now;
             }
         };
 
@@ -68,12 +79,13 @@ const Navbar: React.FC = () => {
     return (
         <>
             <motion.nav
-                className={`fixed top-0 left-0 right-0 z-50 transition-transform duration-300 ease-in-out ${
+                aria-label="Navigation principale"
+                className={`fixed top-0 left-0 right-0 z-50 transition-transform duration-200 ease-in-out ${
                     isVisible ? 'translate-y-0' : '-translate-y-full'
                 }`}
                 initial={{ y: 0 }}
                 animate={{ y: isVisible ? 0 : '-100%' }}
-                transition={{ duration: 0.3 }}
+                transition={{ duration: 0.1 }}
             >
                 <div className="px-8 sm:px-10 lg:px-20">
                     <div className="flex items-center justify-between h-28 relative">
@@ -96,8 +108,10 @@ const Navbar: React.FC = () => {
                             <button
                                 className="2xl:hidden p-2 text-white"
                                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                                aria-expanded={isMobileMenuOpen}
+                                aria-label="Menu principal"
                             >
-                                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <svg aria-hidden="true" className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
                                 </svg>
                             </button>
@@ -117,10 +131,11 @@ const Navbar: React.FC = () => {
                     opacity: isMobileMenuOpen && isVisible ? 1 : 0,
                     y: isMobileMenuOpen && isVisible ? 0 : -20 
                 }}
-                transition={{ duration: 0.2 }}
+                transition={{ duration: 0.15 }}
                 className={`fixed top-28 left-0 right-0 z-40 ${
                     !isMobileMenuOpen && 'pointer-events-none'
                 }`}
+                aria-hidden={!isMobileMenuOpen}
             >
                 <div className="mx-4 rounded-2xl shadow-lg bg-[#01020E]/95 backdrop-blur-lg">
                     <nav className="flex flex-col items-stretch p-4 space-y-2">

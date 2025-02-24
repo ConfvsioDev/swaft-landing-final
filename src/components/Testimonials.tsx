@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useMemo } from 'react';
-import {animate, motion, useAnimation, useMotionValue  } from 'motion/react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
+import { animate, motion, useAnimation, useMotionValue } from 'motion/react';
 import { useTheme } from 'next-themes';
 import useMeasure from 'react-use-measure';
-import Image from 'next/image'; // Add this import
+import Image from 'next/image';
 
 interface Testimonial {
   id: number;
@@ -36,11 +36,58 @@ const testimonials: Testimonial[] = [
   },
 ];
 
+const TestimonialCard = React.memo(({ testimonial, themeStyles, isMobile }: {
+  testimonial: Testimonial;
+  themeStyles: any;
+  isMobile: boolean;
+}) => (
+  <motion.div
+    className={`${themeStyles.cardBg} rounded-[20px] p-8
+      backdrop-blur-sm transition-all duration-300 border border-blue-500/10
+      bg-gradient-to-b from-[blue-900/10] to-transparent
+      ${isMobile ? 'w-full' : 'flex-shrink-0 w-[280px] sm:w-[320px] md:w-[380px] lg:w-[440px]'}`}
+    whileHover={{ 
+      scale: isMobile ? 1 : 1.02,
+      transition: { duration: 0.2 }
+    }}
+  >
+    <div className="flex items-center gap-4 mb-6">
+      <div className="relative w-12 h-12 md:w-14 md:h-14">
+        <Image
+          src={testimonial.avatarUrl}
+          alt={`${testimonial.name}'s avatar`}
+          className="rounded-full object-cover w-full h-full ring-2 ring-purple-500/20"
+          loading="lazy"
+          width={56}
+          height={56}
+          quality={75}
+        />
+        <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-purple-500/20 to-transparent" />
+      </div>
+      <div>
+        <h3 className={`font-semibold text-lg ${themeStyles.text}`}>
+          {testimonial.name}
+        </h3>
+        <p className="text-sm text-purple-400">
+          {testimonial.role}
+        </p>
+      </div>
+    </div>
+    <p className={`${themeStyles.text} text-base md:text-lg leading-relaxed opacity-90`}>
+      {testimonial.comment}
+    </p>
+  </motion.div>
+));
+
+TestimonialCard.displayName = 'TestimonialCard';
+
 const Testimonials: React.FC = () => {
   const [mounted, setMounted] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const { theme } = useTheme();
   const controls = useAnimation();
+  const [ref, { width }] = useMeasure();
+  const xTranslation = useMotionValue(0);
 
   useEffect(() => {
     setMounted(true);
@@ -74,13 +121,9 @@ const Testimonials: React.FC = () => {
       : 'bg-gradient-to-r from-[#f2f2f2] via-gray-50/90 to-transparent',
     fadeRight: theme === 'dark'
       ? 'bg-gradient-to-l from-[#01020E] via-[#01020E]/80 to-transparent'
-      : 'bg-gradient-to-l from-[#f2f2f2] via-gray-200/90 to-transparent', 
+      : 'bg-gradient-to-l from-[#f2f2f2] via-gray-200/90 to-transparent',
   }), [theme]);
 
-  const [ref, { width }] = useMeasure();
-
-  const xTranslation = useMotionValue(0);
- 
   useEffect(() => {
     const finalPosition = -width / 2 - 8;
     const controls = animate(xTranslation, [0, finalPosition], {
@@ -92,66 +135,9 @@ const Testimonials: React.FC = () => {
     });
 
     return controls.stop;
-    }, [xTranslation, width]);
-
-
-  const sliderVariants = {
-    animate: (custom: number) => ({
-      x: [`${custom}%`, `${custom - 100}%`],
-      transition: {
-        x: {
-          repeat: Infinity,
-          repeatType: "loop",
-          duration: 60,
-          ease: "linear",
-        },
-      },
-    }),
-  };
-
-  useEffect(() => {
-    controls.start("animate");
-  }, [controls]);
+  }, [xTranslation, width]);
 
   if (!mounted) return null;
-
-  const TestimonialCard = ({ testimonial }: { testimonial: Testimonial }) => (
-    <motion.div
-      className={`${themeStyles.cardBg} rounded-[20px] p-8
-        backdrop-blur-sm transition-all duration-300 border border-blue-500/10
-        bg-gradient-to-b from-[blue-900/10] to-transparent
-        ${isMobile ? 'w-full' : 'flex-shrink-0 w-[280px] sm:w-[320px] md:w-[380px] lg:w-[440px]'}`}
-      whileHover={{ 
-        scale: isMobile ? 1 : 1.02,
-        transition: { duration: 0.2 }
-      }}
-    >
-      <div className="flex items-center gap-4 mb-6">
-        <div className="relative w-12 h-12 md:w-14 md:h-14">
-          <Image
-            src={testimonial.avatarUrl}
-            alt={testimonial.name}
-            className="rounded-full object-cover w-full h-full ring-2 ring-purple-500/20"
-            loading="lazy"
-            decoding="async"
-            layout="fill" // Add this attribute
-          />
-          <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-purple-500/20 to-transparent" />
-        </div>
-        <div>
-          <h3 className={`font-semibold text-lg ${themeStyles.text}`}>
-            {testimonial.name}
-          </h3>
-          <p className="text-sm text-purple-400">
-            {testimonial.role}
-          </p>
-        </div>
-      </div>
-      <p className={`${themeStyles.text} text-base md:text-lg leading-relaxed opacity-90`}>
-        {testimonial.comment}
-      </p>
-    </motion.div>
-  );
 
   const duplicatedTestimonials = [...testimonials, ...testimonials, ...testimonials];
 
@@ -167,7 +153,7 @@ const Testimonials: React.FC = () => {
         >
           Ce qu'ils en pensent
         </motion.h2>
-  
+
         <motion.p
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -176,11 +162,16 @@ const Testimonials: React.FC = () => {
         >
           Découvrez les retours de nos clients satisfaits
         </motion.p>
-  
+
         {isMobile ? (
           <div className="space-y-6">
             {testimonials.map((testimonial) => (
-              <TestimonialCard key={testimonial.id} testimonial={testimonial} />
+              <TestimonialCard 
+                key={testimonial.id} 
+                testimonial={testimonial} 
+                themeStyles={themeStyles} 
+                isMobile={isMobile} 
+              />
             ))}
           </div>
         ) : (
@@ -191,20 +182,18 @@ const Testimonials: React.FC = () => {
             <div className={`absolute right-0 top-0 h-full w-16 sm:w-24 md:w-32 z-10 pointer-events-none
                 ${themeStyles.fadeRight} transition-colors duration-300`}
             />
-  
+
             <div className="flex" ref={ref}>
               <motion.div
                 className="flex gap-6 py-4"
-                ref={ref}
-                style={{x: xTranslation}}
-                variants={sliderVariants}
-                animate={controls}
-                custom={0}
+                style={{ x: xTranslation }}
               >
                 {duplicatedTestimonials.map((testimonial, index) => (
                   <TestimonialCard 
                     key={`${testimonial.id}-${index}`} 
                     testimonial={testimonial} 
+                    themeStyles={themeStyles}
+                    isMobile={isMobile}
                   />
                 ))}
               </motion.div>
@@ -214,6 +203,8 @@ const Testimonials: React.FC = () => {
       </div>
     </section>
   );
-}  
+};
 
-export default Testimonials;
+Testimonials.displayName = 'Testimonials';
+
+export default React.memo(Testimonials);

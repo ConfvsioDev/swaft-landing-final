@@ -2,32 +2,62 @@
 
 import React, { useMemo } from 'react';
 import { useTheme } from 'next-themes';
+import { memo } from 'react';
 
+// Optimize smooth scroll with requestAnimationFrame
 const smoothScroll = (targetId: string) => {
   const targetElement = document.getElementById(targetId);
   if (!targetElement) return;
 
   const headerOffset = 80;
   const elementPosition = targetElement.getBoundingClientRect().top;
-  const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
-
-  window.scrollTo({
-    top: offsetPosition,
-    behavior: 'smooth'
-  });
+  const startPosition = window.pageYOffset;
+  const targetPosition = elementPosition + startPosition - headerOffset;
+  
+  const duration = 1000;
+  let start: number | null = null;
+  
+  const animation = (currentTime: number) => {
+    if (start === null) start = currentTime;
+    const timeElapsed = currentTime - start;
+    const progress = Math.min(timeElapsed / duration, 1);
+    
+    const easeInOutCubic = progress < 0.5
+      ? 4 * progress * progress * progress
+      : 1 - Math.pow(-2 * progress + 2, 3) / 2;
+    
+    window.scrollTo(0, startPosition + (targetPosition - startPosition) * easeInOutCubic);
+    
+    if (timeElapsed < duration) {
+      requestAnimationFrame(animation);
+    }
+  };
+  
+  requestAnimationFrame(animation);
 };
 
 const Hero: React.FC = () => {
   const { theme } = useTheme();
 
-  const shadowStyle = useMemo(() => ({
-    textShadow: theme === "dark" 
-      ? '0 0 12px rgba(255, 255, 255, 0.4)' 
-      : '0 0 12px rgba(0, 0, 0, 0.2)',
+  // Memoize all theme-dependent styles
+  const styles = useMemo(() => ({
+    textShadow: {
+      textShadow: theme === "dark" 
+        ? '0 0 12px rgba(255, 255, 255, 0.4)' 
+        : '0 0 12px rgba(0, 0, 0, 0.2)',
+    },
+    textColors: {
+      primary: theme === 'dark' ? 'text-white' : 'text-[#01020E]',
+      secondary: theme === 'dark' ? 'text-gray-300' : 'text-gray-700',
+    },
+    buttonStyles: {
+      text: theme === 'dark' ? 'text-white hover:text-black' : 'text-black hover:text-white',
+      bg: theme === 'dark' ? 'bg-white' : 'bg-black',
+    }
   }), [theme]);
 
   if (theme === undefined) {
-    return <div>Loading theme...</div>;
+    return <div aria-busy="true">Loading theme...</div>;
   }
 
   return (
@@ -45,22 +75,22 @@ const Hero: React.FC = () => {
       <div className="relative z-10 space-y-6 md:space-y-8">
         <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-medium leading-tight text-center max-w-5xl mx-auto">
           <span 
-            className={`inline-block mb-2 sm:mb-3 ${theme === 'dark' ? 'text-white' : 'text-[#01020E]'} tracking-tight`}
-            style={shadowStyle}
+            className={`inline-block mb-2 sm:mb-3 ${styles.textColors.primary} tracking-tight`}
+            style={styles.textShadow}
           >
             Des interfaces intuitives qui
           </span>
           <br />
           <span 
-            className={`inline-block ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'} tracking-tight`}
-            style={shadowStyle}
+            className={`inline-block ${styles.textColors.secondary} tracking-tight`}
+            style={styles.textShadow}
           >
             transforment l'expérience utilisateur
           </span>
         </h1>
         
         <h3 
-          className={`text-xl sm:text-2xl md:text-3xl font-light ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'} text-center max-w-3xl mx-auto leading-relaxed`}
+          className={`text-xl sm:text-2xl md:text-3xl font-light ${styles.textColors.secondary} text-center max-w-3xl mx-auto leading-relaxed`}
         >
           Optimisez votre taux de conversion grâce à une landing page parfaite.
         </h3>
@@ -68,18 +98,14 @@ const Hero: React.FC = () => {
         <div className="mt-8 sm:mt-10 md:mt-12 flex justify-center">
           <button 
             className={`group relative inline-flex items-center overflow-hidden rounded-full h-14 pr-14 pl-8 text-lg sm:text-xl font-medium transition-all duration-300 ease-out transform hover:scale-105
-            ${theme === 'dark' 
-                ? 'text-white hover:text-black bg-opacity-10 bg-white' 
-                : 'text-black hover:text-white bg-opacity-10 bg-black'}`}
+            ${styles.buttonStyles.text} bg-opacity-10 ${styles.buttonStyles.bg}`}
             onClick={() => smoothScroll('video')}
           >
             <span className="relative z-10 mr-4">
               Nous découvrir
             </span>
             <span className={`absolute right-0 w-14 h-14 rounded-full transition-all duration-300 ease-out group-hover:w-full
-                ${theme === 'dark' 
-                    ? 'bg-white' 
-                    : 'bg-black'}`} />
+                ${styles.buttonStyles.bg}`} />
             <span className="absolute right-0 z-10 flex h-14 w-14 items-center justify-center">
               <svg 
                 xmlns="http://www.w3.org/2000/svg" 
@@ -98,4 +124,6 @@ const Hero: React.FC = () => {
   );
 };
 
-export default Hero;
+Hero.displayName = 'Hero';
+
+export default memo(Hero);

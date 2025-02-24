@@ -8,10 +8,16 @@ import Pain from '../components/Pain';
 import Testimonials from '@/components/Testimonials';
 import { useFeatureFlagVariantKey } from 'posthog-js/react'
 import { posthog } from '@/lib/posthog'
+import { motion } from 'motion/react';
+import { Button } from '@/components/Button';
 
-const LoadingSpinner: React.FC = () => {
+interface LoadingSpinnerProps {
+  'aria-label': string;
+}
+
+const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({ 'aria-label': ariaLabel }) => {
   return (
-    <div className="flex justify-center items-center w-full h-screen">
+    <div className="flex justify-center items-center w-full h-screen" aria-label={ariaLabel}>
       <div className="w-16 h-16 border-t-4 border-blue-500 border-solid rounded-full animate-spin"></div>
     </div>
   );
@@ -23,15 +29,15 @@ export default function Home() {
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsLoading(false);
-    }, 1000);
+    }, 500);
 
     return () => clearTimeout(timer);
   }, []);
 
-  const colors = {
+  const colors = React.useMemo(() => ({
     side: '#01020E',
     middle: '#1A1E30',
-  };
+  }), []);
 
   const variant = useFeatureFlagVariantKey('main-cta')
 
@@ -46,9 +52,9 @@ export default function Home() {
   }, [variant])
 
   return (
-    <main className='flex min-h-screen flex-col items-center justify-start'>
+    <main className='flex min-h-screen flex-col items-center justify-start' role="main">
       {isLoading ? (
-        <LoadingSpinner />
+        <LoadingSpinner aria-label="Loading content" />
       ) : (
         <>
           <Hero />
@@ -72,6 +78,24 @@ export default function Home() {
           <div className="relative w-screen bg-[#01020E] overflow-hidden"></div>
 
            {variant === 'test' ? <Pain /> : <Process />}
+
+           <div className="w-full pt-40 flex flex-col items-center justify-center text-center px-4 sm:px-6 lg:px-8">
+            <motion.h2 
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              className="text-3xl sm:text-4xl md:text-5xl font-bold mb-6 text-white"
+            >
+              Prêt à transformer votre SaaS ?
+            </motion.h2>
+            <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.4 }}
+          >
+            <Button />
+          </motion.div>
+          </div>
 
           <Testimonials/>
 

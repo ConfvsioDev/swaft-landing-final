@@ -1,78 +1,81 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, useCallback, memo } from 'react';
 
-const words = ["unique.", "parfait.", "original.", "exceptionnel."]; // Words to cycle through
+const words = [" unique", " parfait", " original", " exceptionnel"] as const;
 
 interface TypingEffectProps {
   onComplete: () => void;
+  ariaLabel?: string;
 }
 
-const TypingEffect: React.FC<TypingEffectProps> = ({ onComplete }) => {
+const TypingEffect: React.FC<TypingEffectProps> = ({ 
+  onComplete, 
+  ariaLabel = "Texte animé qui change automatiquement" 
+}) => {
   const [displayedWord, setDisplayedWord] = useState("");
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isTyping, setIsTyping] = useState(true);
 
-  const typingSpeed = 75;
-  const erasingSpeed = 50;
-  const pauseDuration = 1500;
+  const TYPING_SPEED = 75;
+  const ERASING_SPEED = 50;
+  const PAUSE_DURATION = 1500;
 
   const handleComplete = useCallback(() => {
     onComplete();
   }, [onComplete]);
 
-  useEffect(() => {
-    let interval: NodeJS.Timeout;
-    let currentLength = isTyping ? 0 : words[currentIndex].length;
-
+  const updateText = useCallback(() => {
     if (isTyping) {
-      interval = setInterval(() => {
-        if (currentLength < words[currentIndex].length) {
-          currentLength++;
-          setDisplayedWord(words[currentIndex].substring(0, currentLength));
-        } else {
-          clearInterval(interval);
-          setTimeout(() => {
-            setIsTyping(false);
-            handleComplete();
-          }, pauseDuration);
-        }
-      }, typingSpeed);
+      setDisplayedWord(prev => {
+        const nextWord = words[currentIndex];
+        return prev.length < nextWord.length 
+          ? nextWord.substring(0, prev.length + 1)
+          : prev;
+      });
     } else {
-      interval = setInterval(() => {
-        if (currentLength > 0) {
-          currentLength--;
-          setDisplayedWord(words[currentIndex].substring(0, currentLength));
-        } else {
-          clearInterval(interval);
-          setCurrentIndex((prevIndex) => (prevIndex + 1) % words.length);
-          setIsTyping(true);
-        }
-      }, erasingSpeed);
+      setDisplayedWord(prev => prev.substring(0, prev.length - 1));
     }
+  }, [currentIndex, isTyping]);
 
-    return () => clearInterval(interval);
-  }, [isTyping, currentIndex, handleComplete]);
+  useEffect(() => {
+    let timeoutId: NodeJS.Timeout;
+    const interval = setInterval(() => {
+      const currentWord = words[currentIndex];
+      
+      if (isTyping && displayedWord === currentWord) {
+        clearInterval(interval);
+        timeoutId = setTimeout(() => {
+          setIsTyping(false);
+          handleComplete();
+        }, PAUSE_DURATION);
+      } else if (!isTyping && displayedWord === '') {
+        clearInterval(interval);
+        setCurrentIndex(prev => (prev + 1) % words.length);
+        setIsTyping(true);
+      } else {
+        updateText();
+      }
+    }, isTyping ? TYPING_SPEED : ERASING_SPEED);
+
+    return () => {
+      clearInterval(interval);
+      clearTimeout(timeoutId);
+    };
+  }, [displayedWord, isTyping, currentIndex, handleComplete, updateText]);
 
   return (
     <span 
-      className="font-bold inline-flex items-center relative"
-      style={{ 
-        minWidth: 'min(180px, 40vw)',
-        textAlign: 'left',
-        height: '1.5em',
-        padding: '0 4px'
-      }}
+      className="inline-flex"
+      role="text"
+      aria-label={`${ariaLabel}: ${displayedWord}`}
     >
       {displayedWord}
       <span 
-        className="animate-cursor ml-0.5 -mt-1" 
-        style={{ 
-          borderRight: '2px solid currentColor',
-          height: '1.1em'
-        }}
-      >
-      </span>
+        className="animate-cursor"
+        aria-hidden="true"
+        style={{ borderRight: '2px solid currentColor', height: '1.1em' }}
+      />
     </span>
   );
 };
 
-export default TypingEffect;
+export default memo(TypingEffect);

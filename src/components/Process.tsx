@@ -95,50 +95,50 @@ const Process: React.FC<ProcessProps> = ({ id }) => {
   }), [theme]);
 
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
+    const options = {
+      rootMargin: "-45% 0px -45% 0px",
+      threshold: 0.1,
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
           const index = stepRefs.current.indexOf(entry.target as HTMLDivElement);
-          if (entry.isIntersecting) {
-            setCurrentStep(index);
-          }
-        });
-      },
-      {
-        rootMargin: "-45% 0px -45% 0px",
-        threshold: 0.1,
-      }
-    );
+          if (index !== -1) setCurrentStep(index);
+        }
+      });
+    }, options);
 
-    stepRefs.current.forEach((step) => {
-      if (step) observer.observe(step);
-    });
-
+    stepRefs.current.forEach((step) => step && observer.observe(step));
     return () => observer.disconnect();
   }, []);
 
   const currentStepData = steps[currentStep] || steps[0];
 
   return (
-    <div
+    <section
       id={id}
       ref={sectionRef}
       className={`w-full relative mx-auto ${themeStyles.text} ${themeStyles.gradient}`}
+      aria-labelledby="process-title"
     >
       <motion.div 
         className="text-center py-8"
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
+        viewport={{ once: true }}
       >
-        <h1
+        <h2
+          id="process-title"
           className="text-4xl sm:text-5xl md:text-6xl font-bold"
           style={themeStyles.shadowStyle}
         >
           Notre Processus
-        </h1>
+        </h2>
       </motion.div>
 
+      {/* Desktop version */}
       <div className="lg:block hidden">
         <div className="sticky top-1/2 h-0">
           <div className="absolute left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none">
@@ -152,7 +152,8 @@ const Process: React.FC<ProcessProps> = ({ id }) => {
                 className={`w-32 h-32 rounded-full flex items-center justify-center ${themeStyles.iconShadow}`}
               >
                 {React.createElement(currentStepData.Icon, {
-                  className: `w-16 h-16 ${themeStyles.iconColor}`
+                  className: `w-16 h-16 ${themeStyles.iconColor}`,
+                  "aria-hidden": "true"
                 })}
               </motion.div>
             </AnimatePresence>
@@ -164,7 +165,7 @@ const Process: React.FC<ProcessProps> = ({ id }) => {
             <motion.div
               key={index}
               ref={(el) => {
-                stepRefs.current[index] = el as HTMLDivElement;
+                stepRefs.current[index] = el;
               }}
               className={`h-screen flex items-center ${
                 index === 0 ? 'mt-64' : ''
@@ -172,6 +173,7 @@ const Process: React.FC<ProcessProps> = ({ id }) => {
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 1 }}
               transition={{ duration: 0.5 }}
+              viewport={{ once: true }}
             >
               <div 
                 className={`w-[40%] ${index % 2 === 0 ? 'ml-[5%]' : 'ml-[55%]'}`}
@@ -182,7 +184,7 @@ const Process: React.FC<ProcessProps> = ({ id }) => {
                   whileHover={{ scale: 1.02 }}
                   transition={{ duration: 0.2 }}
                 >
-                  <h2
+                  <h3
                     className="text-3xl font-bold mb-4 flex items-center gap-3"
                     style={themeStyles.shadowStyle}
                   >
@@ -190,7 +192,7 @@ const Process: React.FC<ProcessProps> = ({ id }) => {
                       {(index + 1).toString().padStart(2, '0')}
                     </span>
                     {step.title}
-                  </h2>
+                  </h3>
                   <p className={`text-lg leading-relaxed ${themeStyles.descriptionText}`}>
                     {step.description}
                   </p>
@@ -201,6 +203,7 @@ const Process: React.FC<ProcessProps> = ({ id }) => {
         </div>
       </div>
 
+      {/* Mobile version */}
       <div className="lg:hidden container mx-auto px-4 md:px-8 pb-1">
         {steps.map((step, index) => (
           <motion.div
@@ -224,18 +227,19 @@ const Process: React.FC<ProcessProps> = ({ id }) => {
                 }}
               >
                 {React.createElement(step.Icon, {
-                  className: `w-12 h-12 sm:w-14 sm:h-14 ${themeStyles.iconColor}`
+                  className: `w-12 h-12 sm:w-14 sm:h-14 ${themeStyles.iconColor}`,
+                  "aria-hidden": "true"
                 })}
               </motion.div>
             </div>
             
             <div className="mt-6 md:mt-0 text-center md:text-left">
-              <h2 
+              <h3 
                 className="text-2xl sm:text-3xl font-bold mb-3" 
                 style={themeStyles.shadowStyle}
               >
                 {step.title}
-              </h2>
+              </h3>
               <p className={`text-lg ${themeStyles.descriptionText} leading-relaxed max-w-xl`}>
                 {step.description}
               </p>
@@ -243,7 +247,7 @@ const Process: React.FC<ProcessProps> = ({ id }) => {
           </motion.div>
         ))}
       </div>
-    </div>
+    </section>
   );
 };
 
