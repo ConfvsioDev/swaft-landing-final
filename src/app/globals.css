@@ -123,3 +123,14 @@ body {
   }
 }
 
+/* Add to your global styles */
+:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
+
+/* Improve focus visibility for dark mode */
+.dark :focus-visible {
+  outline-color: white;
+}
+

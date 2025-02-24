@@ -5,6 +5,8 @@ import Navbar from '../components/Navbar';
 import Footer from '@/components/Footer';
 import "./globals.css";
 import { PostHogProvider } from "./providers";
+import { Suspense } from 'react';
+import LoadingSpinner from '@/components/Loader';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -22,7 +24,7 @@ export const metadata: Metadata = {
   }
 };
 
-export default async function RootLayout({
+export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
@@ -30,11 +32,25 @@ export default async function RootLayout({
   return (
     <html lang="fr" suppressHydrationWarning className="scroll-smooth">
       <head>
-        <link rel="preconnect" href="https://cdn.jsdelivr.net" />
+        <link rel="preconnect" href="https://cdn.jsdelivr.net" crossOrigin="anonymous" />
+        <link rel="preconnect" href="https://app.posthog.com" crossOrigin="anonymous" />
         <script
           defer
           type="module"
           src="https://cdn.jsdelivr.net/npm/ldrs/dist/auto/spiral.js"
+        />
+        <link 
+          rel="preload" 
+          href="/fonts/your-main-font.woff2" 
+          as="font" 
+          type="font/woff2" 
+          crossOrigin="anonymous" 
+        />
+        <link 
+          rel="preload"
+          as="image"
+          href="/images/hero-image.webp"
+          type="image/webp"
         />
       </head>
       <PostHogProvider>
@@ -48,11 +64,17 @@ export default async function RootLayout({
             <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:z-50 focus:p-4">
               Skip to main content
             </a>
-            <Navbar />
+            <Suspense fallback={<LoadingSpinner />}>
+              <Navbar />
+            </Suspense>
             <main id="main-content">
-              {children}
+              <Suspense fallback={<LoadingSpinner />}>
+                {children}
+              </Suspense>
             </main>
-            <Footer />
+            <Suspense fallback={null}>
+              <Footer />
+            </Suspense>
           </body>
         </ThemeProvider>
       </PostHogProvider>

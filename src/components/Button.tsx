@@ -73,7 +73,7 @@ const Button = memo(() => {
                 href="/reserver" 
                 onClick={handleClick}
                 className="mt-4 px-6 py-3 rounded-full border border-white text-white transition-colors duration-300 text-base font-medium relative hover:bg-gradient-to-b from-[#2B1AC1] to-[#2b1ac1e1] hover:shadow-[0_4px_15px_rgba(255,255,255,0.3),0_4px_15px_rgba(33,20,148,0.3)]"
-                aria-label="Réserver un Appel"
+                aria-label="Réserver un appel de consultation gratuit"
                 role="button"
             >
                 Réserver un Appel

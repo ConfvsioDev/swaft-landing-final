@@ -73,27 +73,27 @@ const Hero: React.FC = () => {
       
       {/* Content */}
       <div className="relative z-10 space-y-6 md:space-y-8">
-        <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-medium leading-tight text-center max-w-5xl mx-auto">
-          <span 
-            className={`inline-block mb-2 sm:mb-3 ${styles.textColors.primary} tracking-tight`}
-            style={styles.textShadow}
-          >
-            Des interfaces intuitives qui
-          </span>
-          <br />
-          <span 
-            className={`inline-block ${styles.textColors.secondary} tracking-tight`}
-            style={styles.textShadow}
-          >
-            transforment l'expérience utilisateur
-          </span>
-        </h1>
-        
-        <h3 
-          className={`text-xl sm:text-2xl md:text-3xl font-light ${styles.textColors.secondary} text-center max-w-3xl mx-auto leading-relaxed`}
+      <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-medium leading-tight text-center max-w-5xl mx-auto">
+        <span 
+          className={`inline-block mb-2 sm:mb-3 ${styles.textColors.primary} tracking-tight`}
+          style={styles.textShadow}
         >
-          Optimisez votre taux de conversion grâce à une landing page parfaite.
-        </h3>
+          Des interfaces intuitives qui
+        </span>
+        <br />
+        <span 
+          className={`inline-block ${styles.textColors.secondary} tracking-tight`}
+          style={styles.textShadow}
+        >
+          transforment l'expérience utilisateur
+        </span>
+      </h1>
+        
+      <h2 // Changed from h3 to maintain proper hierarchy
+        className={`text-xl sm:text-2xl md:text-3xl font-light ${styles.textColors.secondary} text-center max-w-3xl mx-auto leading-relaxed`}
+      >
+        Optimisez votre taux de conversion grâce à une landing page parfaite.
+      </h2>
         
         <div className="mt-8 sm:mt-10 md:mt-12 flex justify-center">
           <button 

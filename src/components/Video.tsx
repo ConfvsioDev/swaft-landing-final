@@ -144,10 +144,11 @@ const Video: React.FC<VideoProps> = ({
         <iframe
           className="w-full h-full"
           src={youtubeUrl}
-          title={title}
+          title={`${title} - Vidéo de démonstration`} // More descriptive title
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           allowFullScreen
           loading={preload ? "eager" : "lazy"}
+          aria-label={`${title} - Vidéo de démonstration du produit`}
         />
       </motion.div>
     </div>
