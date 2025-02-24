@@ -6,7 +6,6 @@ import Creations from '../components/Creations';
 import Process from '../components/Process';
 import Pain from '../components/Pain';
 import Testimonials from '@/components/Testimonials';
-import Offer from '@/components/Offer';
 import { useFeatureFlagVariantKey } from 'posthog-js/react'
 import { posthog } from '@/lib/posthog'
 
