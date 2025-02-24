@@ -44,11 +44,27 @@ body {
   overflow-x: hidden;
 }
 
+/* Critical CSS for hero section */
+.hero h1 {
+  font-weight: medium;
+  line-height: tight;
+}
+
+.hero span {
+  display: inline-block;
+}
+
 /* Optimize text effects */
 .neon-effect {
   --glow-color: rgba(255, 255, 255, 0.5);
   text-shadow: 0 0 1px var(--glow-color),
                0 0 2px var(--glow-color);
+}
+
+/* Apply content-visibility for below-the-fold content */
+.below-fold {
+  content-visibility: auto;
+  contain-intrinsic-size: 1px 5000px; /* Estimate of content size */
 }
 
 /* Optimize scrollbar styles */

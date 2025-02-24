@@ -47,6 +47,7 @@ const ImageWithLoader = memo<ImageWithLoaderProps>(({
         loading={priority ? 'eager' : 'lazy'}
         sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
         decoding="async"
+        fetchPriority={priority ? "high" : "auto"}
       />
     </div>
   );

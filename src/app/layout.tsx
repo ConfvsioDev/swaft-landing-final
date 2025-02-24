@@ -8,9 +8,13 @@ import { PostHogProvider } from "./providers";
 import { Suspense } from 'react';
 import LoadingSpinner from '@/components/Loader';
 
+// Optimize font loading
 const inter = Inter({ 
   subsets: ['latin'],
-  display: 'swap' // Optimize font loading
+  display: 'swap',
+  preload: true,
+  fallback: ['system-ui', 'Arial', 'sans-serif'],
+  variable: '--font-inter',
 });
 
 export const metadata: Metadata = {
@@ -38,13 +42,26 @@ export default function RootLayout({
         <link rel="preconnect" href="https://cdn.jsdelivr.net" crossOrigin="anonymous" />
         <link rel="preconnect" href="https://app.posthog.com" crossOrigin="anonymous" />
         <link rel="preconnect" href="https://us-assets.i.posthog.com" crossOrigin="anonymous" />
-        {/* Add preload for critical resources */}
+        
+        {/* Preload critical resources */}
         <link 
           rel="preload" 
           href="https://cdn.jsdelivr.net/npm/ldrs/dist/auto/spiral.js" 
           as="script"
           crossOrigin="anonymous"
         />
+        
+        {/* Inline critical CSS */}
+        <style dangerouslySetInnerHTML={{ __html: `
+          /* Critical CSS only */
+          .hero h1 {
+            font-weight: 500;
+            line-height: 1.2;
+          }
+          .hero span {
+            display: inline-block;
+          }
+        `}} />
       </head>
       <body className={`${inter.className} dark:bg-[#01020E] bg-[#F2F2F2] antialiased`}>
         <PostHogProvider>
