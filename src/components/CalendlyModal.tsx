@@ -166,14 +166,18 @@ const CalendlyModal: React.FC<CalendlyModalProps> = ({ isOpen, onClose }) => {
     <AnimatePresence>
       {isOpen && (
         <motion.div
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-70 backdrop-blur-sm"
+          className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-black bg-opacity-70 backdrop-blur-sm"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.3 }}
         >
           <motion.div
-            className="relative w-full max-w-3xl max-h-[90vh] bg-white dark:bg-gray-900 rounded-xl shadow-2xl overflow-hidden"
+            className="relative w-full max-w-3xl bg-white dark:bg-gray-900 rounded-xl shadow-2xl overflow-hidden flex flex-col"
+            style={{ 
+              maxHeight: 'calc(100vh - 16px)',
+              height: step === 'calendly' ? 'calc(100vh - 16px)' : 'auto'
+            }}
             initial={{ scale: 0.9, y: 20 }}
             animate={{ scale: 1, y: 0 }}
             exit={{ scale: 0.9, y: 20 }}
@@ -191,10 +195,14 @@ const CalendlyModal: React.FC<CalendlyModalProps> = ({ isOpen, onClose }) => {
             {/* Contenu du modal selon l'étape */}
             <div className="w-full h-full overflow-auto">
               {step === 'calendly' && (
-                <div className="h-[600px]">
+                <div className="h-full">
                   <InlineWidget
                     url={calendlyUrl}
-                    styles={{ height: '100%', width: '100%' }}
+                    styles={{ 
+                      height: '100%', 
+                      width: '100%',
+                      minHeight: '100%' 
+                    }}
                     prefill={{
                       email: "",
                       firstName: "",
@@ -219,14 +227,14 @@ const CalendlyModal: React.FC<CalendlyModalProps> = ({ isOpen, onClose }) => {
               )}
 
               {step === 'whatsapp' && (
-                <div className="p-8 text-center">
-                  <h2 className="text-2xl font-bold mb-4 text-gray-900 dark:text-white">
+                <div className="p-6 sm:p-8 text-center">
+                  <h2 className="text-xl sm:text-2xl font-bold mb-4 text-gray-900 dark:text-white">
                     Ce n'est pas encore fini !
                   </h2>
-                  <p className="mb-6 text-gray-700 dark:text-gray-300">
+                  <p className="mb-4 sm:mb-6 text-gray-700 dark:text-gray-300">
                     Merci d'avoir réservé un appel pour le <strong>{eventDetails.date}</strong> à <strong>{eventDetails.time}</strong>.
                   </p>
-                  <p className="mb-8 text-gray-700 dark:text-gray-300">
+                  <p className="mb-6 sm:mb-8 text-gray-700 dark:text-gray-300">
                     Pour confirmer votre rendez-vous, veuillez nous envoyer un message sur WhatsApp en indiquant la date et l'heure de votre rendez-vous.
                   </p>
                   <button
@@ -240,8 +248,8 @@ const CalendlyModal: React.FC<CalendlyModalProps> = ({ isOpen, onClose }) => {
               )}
 
               {step === 'success' && (
-                <div className="p-8 text-center">
-                  <h2 className="text-3xl font-bold mb-6 text-gray-900 dark:text-white">
+                <div className="p-6 sm:p-8 text-center">
+                  <h2 className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-6 text-gray-900 dark:text-white">
                     On se retrouve sur WhatsApp !
                   </h2>
                   <p className="text-gray-700 dark:text-gray-300">
