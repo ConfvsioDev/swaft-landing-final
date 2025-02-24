@@ -1,7 +1,6 @@
 import { useCallback, useState, memo } from "react";
 import { Engine } from "tsparticles-engine";
 import { Particles } from "react-tsparticles";
-import Link from "next/link";
 import { usePostHog } from 'posthog-js/react';
 import { loadSlim } from "tsparticles-slim";
 import CalendlyModal from "./CalendlyModal";

@@ -13,11 +13,11 @@ interface CalendlyEvent {
   payload: {
     event: {
       start_time: string;
-      [key: string]: any;
+      [key: string]: unknown;
     };
-    [key: string]: any;
+    [key: string]: unknown;
   };
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 export default function ReserverPage() {
