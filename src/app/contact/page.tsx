@@ -4,9 +4,12 @@ import React from 'react';
 import { usePostHog } from 'posthog-js/react';
 import { useEffect } from 'react';
 import Link from 'next/link';
+import { MessageCircle } from 'lucide-react';
 
 export default function ContactPage() {
   const posthog = usePostHog();
+  // WhatsApp URL - remplacer par votre numéro
+  const whatsappUrl = "https://wa.me/33600000000";
 
   useEffect(() => {
     // Track page view
@@ -14,6 +17,12 @@ export default function ContactPage() {
       page: 'contact'
     });
   }, [posthog]);
+
+  const handleWhatsAppClick = () => {
+    posthog?.capture('whatsapp_contact', {
+      source: 'contact_page'
+    });
+  };
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-4">
@@ -26,9 +35,13 @@ export default function ContactPage() {
       
       <div className="w-full max-w-md p-6 bg-white dark:bg-gray-800 rounded-lg shadow-md">
         <Link 
-          href="#" 
+          href={whatsappUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          onClick={handleWhatsAppClick}
           className="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-green-700 hover:bg-green-800 transition-colors duration-300 text-white font-medium w-full justify-center"
         >
+          <MessageCircle className="w-5 h-5" />
           Nous contacter sur WhatsApp
         </Link>
       </div>

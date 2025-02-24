@@ -154,7 +154,7 @@ const FAQ: React.FC = () => {
                 Pour toute question, n'hésitez pas à nous contacter sur WhatsApp :
               </p>
               <Link 
-                href="#" 
+                href="https://wa.me/33600000000" 
                 className={`inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-green-700 hover:bg-green-800 transition-colors duration-300 text-white font-medium`}
               >
                 <WhatsappIcon className="w-5 h-5" />
