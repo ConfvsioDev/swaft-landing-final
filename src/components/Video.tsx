@@ -21,7 +21,7 @@ interface VideoProps {
   title?: string;
   videoId?: string;
   aspectRatio?: string;
-  quality?: 'auto' | 'low' | 'medium' | 'high';
+  quality?: 'auto' | 'small' | 'medium' | 'large' | 'hd720' | 'hd1080';
   preload?: boolean;
 }
 
@@ -35,6 +35,7 @@ const Video: React.FC<VideoProps> = ({
 }) => {
   const [isClient, setIsClient] = useState(false);
   const [isInView, setIsInView] = useState(false);
+  const [videoLoaded, setVideoLoaded] = useState(false);
   const containerRef = useRef<HTMLDivElement | null>(null);
   const { theme } = useTheme();
 
@@ -103,10 +104,13 @@ const Video: React.FC<VideoProps> = ({
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // Generate optimized YouTube URL
+  // Generate optimized YouTube URL with privacy-enhanced mode
   const youtubeUrl = useMemo(() => {
+    // Use youtube-nocookie.com for enhanced privacy
+    const baseUrl = 'https://www.youtube-nocookie.com/embed/';
+    
     const params = new URLSearchParams({
-      autoplay: isInView ? '1' : '0',
+      autoplay: isInView && videoLoaded ? '1' : '0',
       mute: '1',
       loop: '1',
       playlist: videoId,
@@ -116,8 +120,13 @@ const Video: React.FC<VideoProps> = ({
       controls: '0',
       ...(quality !== 'auto' && { vq: quality })
     });
-    return `https://www.youtube.com/embed/${videoId}?${params.toString()}`;
-  }, [videoId, quality, isInView]);
+    
+    return `${baseUrl}${videoId}?${params.toString()}`;
+  }, [videoId, quality, isInView, videoLoaded]);
+
+  const handleIframeLoad = () => {
+    setVideoLoaded(true);
+  };
 
   if (!isClient) return null;
 
@@ -145,15 +154,18 @@ const Video: React.FC<VideoProps> = ({
           className="absolute inset-0 z-10 pointer-events-none"
           style={{ backgroundColor: themeColors.overlayColor }}
         />
-        <iframe
-          className="w-full h-full"
-          src={youtubeUrl}
-          title={`${title} - Vidéo de démonstration`} // More descriptive title
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowFullScreen
-          loading={preload ? "eager" : "lazy"}
-          aria-label={`${title} - Vidéo de démonstration du produit`}
-        />
+        {isInView && (
+          <iframe
+            className="w-full h-full"
+            src={youtubeUrl}
+            title={`${title} - Vidéo de démonstration`}
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+            loading={preload ? "eager" : "lazy"}
+            aria-label={`${title} - Vidéo de démonstration du produit`}
+            onLoad={handleIframeLoad}
+          />
+        )}
       </motion.div>
     </div>
   );

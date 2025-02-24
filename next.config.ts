@@ -26,6 +26,33 @@ const nextConfig: NextConfig = {
       },
     ];
   },
+  async headers() {
+    return [
+      {
+        source: '/:path*',
+        headers: [
+          {
+            key: 'Content-Security-Policy',
+            value: `
+              default-src 'self';
+              script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://app.posthog.com;
+              style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net;
+              img-src 'self' data: https: blob:;
+              font-src 'self' data:;
+              connect-src 'self' https://app.posthog.com;
+              frame-src 'self' https://www.youtube-nocookie.com;
+              object-src 'none';
+              base-uri 'self';
+              form-action 'self';
+              frame-ancestors 'self';
+              block-all-mixed-content;
+              upgrade-insecure-requests;
+            `.replace(/\s+/g, ' ').trim()
+          }
+        ]
+      }
+    ];
+  },
   images: {
     formats: ['image/avif', 'image/webp'],
     minimumCacheTTL: 60,
