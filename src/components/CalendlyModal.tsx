@@ -193,7 +193,7 @@ const CalendlyModal: React.FC<CalendlyModalProps> = ({ isOpen, onClose }) => {
             </button>
 
             {/* Contenu du modal selon l'étape */}
-            <div className="w-full h-full overflow-auto">
+            <div className="w-full h-full overflow-hidden">
               {step === 'calendly' && (
                 <div className="h-full">
                   <InlineWidget
@@ -210,11 +210,11 @@ const CalendlyModal: React.FC<CalendlyModalProps> = ({ isOpen, onClose }) => {
                       name: ""
                     }}
                     pageSettings={{
-                      backgroundColor: 'ffffff',
+                      backgroundColor: '1e1e1e',
                       hideEventTypeDetails: false,
                       hideLandingPageDetails: false,
                       primaryColor: '2B1AC1',
-                      textColor: '000000'
+                      textColor: 'ffffff'
                     }}
                     utm={{
                       utmCampaign: 'landing_page',
