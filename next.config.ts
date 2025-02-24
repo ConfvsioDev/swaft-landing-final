@@ -39,8 +39,16 @@ const nextConfig: NextConfig = {
     return [
       {
         source: "/ingest/:path*",
-        destination: "https://app.posthog.com/:path*", // Proxy to PostHog cloud service
+        destination: "https://app.posthog.com/:path*",
       },
+      {
+        source: "/ph/e/:path*",
+        destination: "https://us.i.posthog.com/e/:path*",
+      },
+      {
+        source: "/ph/decide/:path*",
+        destination: "https://us.i.posthog.com/decide/:path*",
+      }
     ];
   },
   async headers() {
@@ -52,11 +60,11 @@ const nextConfig: NextConfig = {
             key: 'Content-Security-Policy',
             value: `
               default-src 'self';
-              script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://app.posthog.com https://us-assets.i.posthog.com;
+              script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://app.posthog.com https://us-assets.i.posthog.com https://us.i.posthog.com;
               style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net;
               img-src 'self' data: https: blob:;
               font-src 'self' data:;
-              connect-src 'self' https://app.posthog.com https://us-assets.i.posthog.com;
+              connect-src 'self' https://app.posthog.com https://us-assets.i.posthog.com https://us.i.posthog.com;
               frame-src 'self' https://www.youtube-nocookie.com;
               object-src 'none';
               base-uri 'self';
