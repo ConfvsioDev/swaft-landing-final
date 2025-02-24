@@ -117,7 +117,6 @@ const nextConfig: NextConfig = {
       'motion'
     ],
     webVitalsAttribution: ['CLS', 'LCP', 'FID'],
-    optimizeCss: true,
   },
   compiler: {
     removeConsole: process.env.NODE_ENV === 'production',
