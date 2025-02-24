@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useMemo } from 'react';
-import { motion, useAnimation, useMotionValue, animate } from 'motion/react';
+import { motion, useMotionValue, animate } from 'motion/react';
 import { useTheme } from 'next-themes';
 import useMeasure from 'react-use-measure';
 import Image from 'next/image';
@@ -38,9 +38,23 @@ const testimonials: Testimonial[] = [
   },
 ];
 
+interface ThemeStyles {
+  text: string;
+  cardBg: string;
+  subtitleColor: string;
+  roleColor: string;
+  background: string;
+  cardShadow: string;
+  textShadow: {
+    textShadow: string;
+  };
+  fadeLeft: string;
+  fadeRight: string;
+}
+
 const TestimonialCard = React.memo(({ testimonial, themeStyles, isMobile }: {
   testimonial: Testimonial;
-  themeStyles: any;
+  themeStyles: ThemeStyles;
   isMobile: boolean;
 }) => (
   <motion.div

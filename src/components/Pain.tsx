@@ -31,18 +31,20 @@ const Pain: React.FC<PainProps> = ({
     }))
   ).current;
 
-  const scrollConfigs = questions.map((_, index) => {
-    const { scrollYProgress } = useScroll({
+  // Create scroll progress values for each question outside of the map function
+  const scrollProgressValues = questions.map((_, index) => 
+    useScroll({
       target: questionRefs[index].main,
       offset: ["start center", "end start"]
-    });
+    }).scrollYProgress
+  );
 
-    return {
-      opacity: useTransform(scrollYProgress, [0, 0.5, 1], [0, 1, 0]),
-      scale: useTransform(scrollYProgress, [0, 0.5, 1], [0.5, 1, 4]),
-      blur: useTransform(scrollYProgress, [0.6, 0.8], ['blur(0px)', 'blur(2px)']),
-    };
-  });
+  // Create transform configs using the scroll progress values
+  const scrollConfigs = scrollProgressValues.map(scrollYProgress => ({
+    opacity: useTransform(scrollYProgress, [0, 0.5, 1], [0, 1, 0]),
+    scale: useTransform(scrollYProgress, [0, 0.5, 1], [0.5, 1, 4]),
+    blur: useTransform(scrollYProgress, [0.6, 0.8], ['blur(0px)', 'blur(2px)']),
+  }));
 
   return (
     <section 
