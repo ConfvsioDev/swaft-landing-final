@@ -16,11 +16,11 @@ interface CalendlyEventData {
   data?: {
     event?: {
       start_time?: string;
-      [key: string]: any;
+      [key: string]: unknown;
     };
-    [key: string]: any;
+    [key: string]: unknown;
   };
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 const CalendlyModal: React.FC<CalendlyModalProps> = ({ isOpen, onClose }) => {

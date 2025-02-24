@@ -77,7 +77,7 @@ const nextConfig: NextConfig = {
               img-src 'self' data: https: blob:;
               font-src 'self' data:;
               connect-src 'self' https://app.posthog.com https://us-assets.i.posthog.com https://us.i.posthog.com;
-              frame-src 'self' https://www.youtube-nocookie.com;
+              frame-src 'self' https://www.youtube-nocookie.com https://calendly.com;
               object-src 'none';
               base-uri 'self';
               form-action 'self';
