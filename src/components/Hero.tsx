@@ -55,7 +55,7 @@ const Hero = () => {
   const styles = useMemo(() => ({
     textColors: {
       primary: theme === 'dark' ? 'text-white' : 'text-gray-900',
-      secondary: theme === 'dark' ? 'text-blue-400' : 'text-blue-600',
+      secondary: theme === 'dark' ? 'text-gray-300' : 'text-gray-700',
     },
     textShadow: {
       textShadow: theme === "dark" 
