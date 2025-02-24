@@ -34,11 +34,6 @@ export default function RootLayout({
       <head>
         <link rel="preconnect" href="https://cdn.jsdelivr.net" crossOrigin="anonymous" />
         <link rel="preconnect" href="https://app.posthog.com" crossOrigin="anonymous" />
-        <script
-          defer
-          type="module"
-          src="https://cdn.jsdelivr.net/npm/ldrs/dist/auto/spiral.js"
-        />
         <link 
           rel="preload" 
           href="/fonts/your-main-font.woff2" 
@@ -53,14 +48,14 @@ export default function RootLayout({
           type="image/webp"
         />
       </head>
-      <PostHogProvider>
-        <ThemeProvider 
-          attribute="class" 
-          defaultTheme="dark"
-          enableSystem={true}
-          disableTransitionOnChange
-        >
-          <body className={`${inter.className} dark:bg-[#01020E] bg-[#F2F2F2] antialiased`}>
+      <body className={`${inter.className} dark:bg-[#01020E] bg-[#F2F2F2] antialiased`}>
+        <PostHogProvider>
+          <ThemeProvider 
+            attribute="class" 
+            defaultTheme="dark"
+            enableSystem={true}
+            disableTransitionOnChange
+          >
             <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:z-50 focus:p-4">
               Skip to main content
             </a>
@@ -75,9 +70,14 @@ export default function RootLayout({
             <Suspense fallback={null}>
               <Footer />
             </Suspense>
-          </body>
-        </ThemeProvider>
-      </PostHogProvider>
+            <script
+              defer
+              type="module"
+              src="https://cdn.jsdelivr.net/npm/ldrs/dist/auto/spiral.js"
+            />
+          </ThemeProvider>
+        </PostHogProvider>
+      </body>
     </html>
   );
 }

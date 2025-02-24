@@ -60,7 +60,7 @@ const TypingEffect: React.FC<TypingEffectProps> = ({
       clearInterval(interval);
       clearTimeout(timeoutId);
     };
-  }, [displayedWord, isTyping, currentIndex, handleComplete, updateText]);
+  }, [displayedWord, currentIndex, isTyping, handleComplete, updateText]);
 
   return (
     <span 
