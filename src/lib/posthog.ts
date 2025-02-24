@@ -16,6 +16,16 @@ if (typeof window !== 'undefined') {
     advanced_disable_feature_flags: true,
     xhr_headers: {
       'Cache-Control': 'max-age=3600'
+    },
+    _onCapture: (data: any) => {
+      if (data && typeof data === 'object') {
+        return {
+          ...data,
+          $browser_version: typeof navigator !== 'undefined' ? navigator.userAgent : undefined,
+          $modern_browser: typeof window !== 'undefined' && 'IntersectionObserver' in window && 'fetch' in window
+        }
+      }
+      return data;
     }
   })
 }

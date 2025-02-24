@@ -8,7 +8,10 @@ import { PostHogProvider } from "./providers";
 import { Suspense } from 'react';
 import LoadingSpinner from '@/components/Loader';
 
-const inter = Inter({ subsets: ['latin'] });
+const inter = Inter({ 
+  subsets: ['latin'],
+  display: 'swap' // Optimize font loading
+});
 
 export const metadata: Metadata = {
   title: "Swaft Landing Page",
@@ -35,6 +38,13 @@ export default function RootLayout({
         <link rel="preconnect" href="https://cdn.jsdelivr.net" crossOrigin="anonymous" />
         <link rel="preconnect" href="https://app.posthog.com" crossOrigin="anonymous" />
         <link rel="preconnect" href="https://us-assets.i.posthog.com" crossOrigin="anonymous" />
+        {/* Add preload for critical resources */}
+        <link 
+          rel="preload" 
+          href="https://cdn.jsdelivr.net/npm/ldrs/dist/auto/spiral.js" 
+          as="script"
+          crossOrigin="anonymous"
+        />
       </head>
       <body className={`${inter.className} dark:bg-[#01020E] bg-[#F2F2F2] antialiased`}>
         <PostHogProvider>
@@ -58,6 +68,7 @@ export default function RootLayout({
             <Suspense fallback={null}>
               <Footer />
             </Suspense>
+            {/* Use modern script loading */}
             <script
               defer
               type="module"

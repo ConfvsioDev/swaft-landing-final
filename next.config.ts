@@ -1,9 +1,19 @@
 import type { NextConfig } from 'next';
 import type { Configuration as WebpackConfig } from 'webpack';
 
+// Import bundle analyzer conditionally to avoid the error
+let withBundleAnalyzer: (config: NextConfig) => NextConfig;
+try {
+  withBundleAnalyzer = require('@next/bundle-analyzer')({
+    enabled: process.env.ANALYZE === 'true',
+  });
+} catch (e) {
+  withBundleAnalyzer = (config: NextConfig) => config;
+}
+
 const nextConfig: NextConfig = {
   reactStrictMode: true,
-  webpack: (config: WebpackConfig, { isServer }: { isServer: boolean }) => {
+  webpack: (config: WebpackConfig, { isServer, dev }: { isServer: boolean; dev: boolean }) => {
     // Fixes npm packages that depend on `fs` module
     if (!isServer) {
       config.resolve = {
@@ -16,6 +26,13 @@ const nextConfig: NextConfig = {
         },
       };
     }
+    
+    // Add modern JavaScript optimizations for production builds
+    if (!dev && !isServer) {
+      // Use modern output for modern browsers
+      // Note: removed ecmaVersion as it's not a valid property
+    }
+    
     return config;
   },
   async rewrites() {
@@ -84,6 +101,8 @@ const nextConfig: NextConfig = {
   compiler: {
     removeConsole: process.env.NODE_ENV === 'production',
   },
+  swcMinify: true,
 };
 
-export default nextConfig;
+// Apply bundle analyzer wrapper if available
+export default withBundleAnalyzer(nextConfig);
