@@ -13,6 +13,7 @@
     "@phosphor-icons/react": "^2.1.7",
     "canvas-confetti": "^1.9.3",
     "critters": "^0.0.23",
+    "framer-motion": "^12.4.7",
     "framer-motion-ticker": "^1.0.19",
     "gsap": "^3.12.5",
     "ldrs": "^1.0.2",

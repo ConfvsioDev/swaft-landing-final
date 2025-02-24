@@ -4,6 +4,7 @@ import { Particles } from "react-tsparticles";
 import Link from "next/link";
 import { usePostHog } from 'posthog-js/react';
 import { loadSlim } from "tsparticles-slim";
+import CalendlyModal from "./CalendlyModal";
 //import { loadFull } from "tsparticles"; // if you are going to use `loadFull`, install the "tsparticles" package too.
 
 // Separate particles configuration for reusability and performance
@@ -49,13 +50,15 @@ const particlesConfig = {
 
 const Button = memo(() => {
     const [showParticles, setShowParticles] = useState(false);
+    const [isModalOpen, setIsModalOpen] = useState(false);
     const posthog = usePostHog();
 
     const handleClick = useCallback(() => {
+        setIsModalOpen(true);
         posthog?.capture('main-cta', {
             component: 'Button',
             action: 'click',
-            destination: '/reserver'
+            type: 'open_calendly_modal'
         });
     }, [posthog]);
 
@@ -64,37 +67,42 @@ const Button = memo(() => {
     }, []);
 
     return (
-        <div 
-            onMouseEnter={() => setShowParticles(true)}
-            onMouseLeave={() => setShowParticles(false)}
-            className="relative"
-        >
-            <Link 
-                href="/reserver" 
-                onClick={handleClick}
-                className="mt-4 px-6 py-3 rounded-full border border-white text-white transition-colors duration-300 text-base font-medium relative hover:bg-gradient-to-b from-[#2B1AC1] to-[#2b1ac1e1] hover:shadow-[0_4px_15px_rgba(255,255,255,0.3),0_4px_15px_rgba(33,20,148,0.3)]"
-                aria-label="Réserver un appel de consultation gratuit"
-                role="button"
+        <>
+            <div 
+                onMouseEnter={() => setShowParticles(true)}
+                onMouseLeave={() => setShowParticles(false)}
+                className="relative"
             >
-                Réserver un Appel
-                {showParticles && (
-                    <div className="absolute inset-0" aria-hidden="true">
-                        <Particles
-                            id="particles-effect"
-                            className="absolute inset-0"
-                            init={particlesInit}
-                            options={{
-                                ...particlesConfig,
-                                particles: {
-                                    ...particlesConfig.particles,
-                                    size: { value: { min: 0.3, max: 2 } },
-                                }
-                            }}
-                        />
-                    </div>
-                )}
-            </Link>
-        </div>
+                <button 
+                    onClick={handleClick}
+                    className="mt-4 px-6 py-3 rounded-full border border-white text-white transition-colors duration-300 text-base font-medium relative hover:bg-gradient-to-b from-[#2B1AC1] to-[#2b1ac1e1] hover:shadow-[0_4px_15px_rgba(255,255,255,0.3),0_4px_15px_rgba(33,20,148,0.3)]"
+                    aria-label="Réserver un appel de consultation gratuit"
+                >
+                    Réserver un Appel
+                    {showParticles && (
+                        <div className="absolute inset-0" aria-hidden="true">
+                            <Particles
+                                id="particles-effect"
+                                className="absolute inset-0"
+                                init={particlesInit}
+                                options={{
+                                    ...particlesConfig,
+                                    particles: {
+                                        ...particlesConfig.particles,
+                                        size: { value: { min: 0.3, max: 2 } },
+                                    }
+                                }}
+                            />
+                        </div>
+                    )}
+                </button>
+            </div>
+            
+            <CalendlyModal 
+                isOpen={isModalOpen} 
+                onClose={() => setIsModalOpen(false)} 
+            />
+        </>
     );
 });
 
