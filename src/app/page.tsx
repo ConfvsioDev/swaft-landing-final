@@ -52,7 +52,9 @@ export default function Home() {
       ) : (
         <>
           <Hero />
+          <Pain />
           <Video id="video" />
+
           
           <div className="w-full h-0.5 mt-24 mx-auto">
             <div 
