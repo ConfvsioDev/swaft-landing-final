@@ -76,21 +76,21 @@ const Hero: React.FC = () => {
             <span className="relative z-10 mr-4">
               Nous découvrir
             </span>
-            <span className={`absolute right-0 w-14 h-14 rounded-full transition-all duration-300 ease-out group-hover:w-full
-                ${theme === 'dark' 
-                    ? 'bg-white' 
-                    : 'bg-black'}`} />
-            <span className="absolute right-0 z-10 flex h-14 w-14 items-center justify-center">
+            <div className="absolute right-0 top-0 h-14 w-14 flex items-center justify-center">
+              <span className={`absolute inset-0 rounded-full transition-all duration-300 ease-out transform origin-right group-hover:scale-[5.5]
+                  ${theme === 'dark' 
+                      ? 'bg-white' 
+                      : 'bg-black'}`} />
               <svg 
                 xmlns="http://www.w3.org/2000/svg" 
                 fill="none" 
                 viewBox="0 0 24 24" 
                 stroke="currentColor" 
-                className={`h-6 w-6 rotate-90 transition-transform duration-300 group-hover:rotate-[135deg] ${theme === 'dark' ? 'text-black' : 'text-white'}`}
+                className={`relative z-10 h-6 w-6 rotate-90 transition-transform duration-300 ease-out group-hover:rotate-[135deg] ${theme === 'dark' ? 'text-black' : 'text-white'}`}
               >
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
               </svg>
-            </span>
+            </div>
           </button>
         </div>
       </div>
