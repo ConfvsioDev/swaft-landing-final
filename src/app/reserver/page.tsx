@@ -8,6 +8,18 @@ import Link from 'next/link';
 import confetti from 'canvas-confetti';
 import { MessageCircle } from 'lucide-react';
 
+interface CalendlyEvent {
+  event: string;
+  payload: {
+    event: {
+      start_time: string;
+      [key: string]: any;
+    };
+    [key: string]: any;
+  };
+  [key: string]: any;
+}
+
 export default function ReserverPage() {
   const posthog = usePostHog();
   const [step, setStep] = useState(1);
@@ -24,11 +36,12 @@ export default function ReserverPage() {
     });
 
     // Écouter les événements de Calendly
-    const handleCalendlyEvent = (e: any) => {
-      if (e.data.event && e.data.event.indexOf('calendly') === 0) {
-        if (e.data.event === 'calendly.event_scheduled') {
+    const handleCalendlyEvent = (e: MessageEvent) => {
+      const data = e.data as CalendlyEvent;
+      if (data.event && typeof data.event === 'string' && data.event.indexOf('calendly') === 0) {
+        if (data.event === 'calendly.event_scheduled') {
           // Extraire les informations de rendez-vous
-          const eventData = e.data.payload;
+          const eventData = data.payload;
           const date = new Date(eventData.event.start_time);
           
           // Formater la date et l'heure
@@ -79,7 +92,7 @@ export default function ReserverPage() {
       return Math.random() * (max - min) + min;
     }
 
-    const interval: any = setInterval(() => {
+    const interval = setInterval(() => {
       const timeLeft = animationEnd - Date.now();
 
       if (timeLeft <= 0) {
