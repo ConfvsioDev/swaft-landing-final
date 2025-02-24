@@ -3,13 +3,14 @@ import { motion, useScroll, useTransform, useSpring } from 'motion/react';
 import { useTheme } from 'next-themes';
 import { memo } from 'react';
 
-// Replace lodash debounce with a custom implementation
-const debounce = <T extends (...args: any[]) => void>(
+type DebouncedFunction<T extends (...args: unknown[]) => void> = (
   func: T,
   wait: number
-): ((...args: Parameters<T>) => void) => {
+) => (...args: Parameters<T>) => void;
+
+const debounce: DebouncedFunction<(...args: unknown[]) => void> = (func, wait) => {
   let timeout: NodeJS.Timeout;
-  return (...args: Parameters<T>) => {
+  return (...args) => {
     clearTimeout(timeout);
     timeout = setTimeout(() => func(...args), wait);
   };

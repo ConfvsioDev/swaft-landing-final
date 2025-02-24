@@ -1,12 +1,17 @@
 // src/components/Pain.tsx
 'use client';
 
-import React, { useRef, useEffect } from 'react';
+import React, { useRef } from 'react';
 import { CaretDoubleDown } from '@phosphor-icons/react';
 import { motion, useScroll, useTransform } from "motion/react"
 
 interface PainProps {
   questions?: string[];
+}
+
+interface QuestionRef {
+  main: React.RefObject<HTMLDivElement | null>;
+  trigger: React.RefObject<HTMLDivElement | null>;
 }
 
 const Pain: React.FC<PainProps> = ({ 
@@ -17,14 +22,18 @@ const Pain: React.FC<PainProps> = ({
   ] 
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const questionRefs = useRef(questions.map(() => ({
-    main: useRef<HTMLDivElement>(null),
-    trigger: useRef<HTMLDivElement>(null),
-  })));
+  
+  // Fix the ref typing
+  const questionRefs = useRef<QuestionRef[]>(
+    questions.map(() => ({
+      main: React.createRef<HTMLDivElement>(),
+      trigger: React.createRef<HTMLDivElement>()
+    }))
+  ).current;
 
   const scrollConfigs = questions.map((_, index) => {
     const { scrollYProgress } = useScroll({
-      target: questionRefs.current[index].main,
+      target: questionRefs[index].main,
       offset: ["start center", "end start"]
     });
 
@@ -85,11 +94,11 @@ const Pain: React.FC<PainProps> = ({
         {questions.map((_, index) => (
           <React.Fragment key={index}>
             <motion.div 
-              ref={questionRefs.current[index].main}
+              ref={questionRefs[index].main}
               className='relative w-full h-[45vh] overflow-hidden'
             />
             <motion.div 
-              ref={questionRefs.current[index].trigger}
+              ref={questionRefs[index].trigger}
               className='relative w-full h-[45vh] overflow-hidden'
             />
             <motion.div 

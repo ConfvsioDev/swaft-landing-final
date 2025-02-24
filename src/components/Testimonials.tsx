@@ -1,5 +1,7 @@
-import React, { useState, useEffect, useMemo, useRef } from 'react';
-import { animate, motion, useAnimation, useMotionValue } from 'motion/react';
+'use client';
+
+import React, { useState, useEffect, useMemo } from 'react';
+import { motion, useAnimation, useMotionValue, animate } from 'motion/react';
 import { useTheme } from 'next-themes';
 import useMeasure from 'react-use-measure';
 import Image from 'next/image';
@@ -85,7 +87,6 @@ const Testimonials: React.FC = () => {
   const [mounted, setMounted] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const { theme } = useTheme();
-  const controls = useAnimation();
   const [ref, { width }] = useMeasure();
   const xTranslation = useMotionValue(0);
 
