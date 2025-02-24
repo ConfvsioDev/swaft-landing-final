@@ -2,14 +2,9 @@
 import posthog from 'posthog-js'
 
 if (typeof window !== 'undefined') {
-  // Define the host based on environment
-  const host = process.env.NODE_ENV === 'production' 
-    ? window.location.origin  // Use our domain in production for proxying
-    : 'https://app.posthog.com'  // Use direct connection in development
-    
   posthog.init(process.env.NEXT_PUBLIC_POSTHOG_KEY!, {
-    api_host: host,
-    capture_pageview: false,
+    api_host: process.env.NEXT_PUBLIC_POSTHOG_HOST || 'https://app.posthog.com',
+    capture_pageview: false, // Since we're handling this separately
     loaded: (posthog) => {
       if (process.env.NODE_ENV === 'development') posthog.debug()
     },
@@ -17,11 +12,7 @@ if (typeof window !== 'undefined') {
       distinctID: posthog.get_distinct_id(),
       featureFlags: {},
     },
-    persistence: 'localStorage',
-    advanced_disable_feature_flags: true,
-    xhr_headers: {
-      'Cache-Control': 'max-age=3600'
-    }
+    advanced_disable_feature_flags: false  // Make sure feature flags are enabled
   })
 }
 
