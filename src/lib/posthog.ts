@@ -1,6 +1,9 @@
 'use client'
 import posthog from 'posthog-js'
 
+// Import or define the correct types from posthog-js
+type CaptureResult = Record<string, any>;
+
 if (typeof window !== 'undefined') {
   posthog.init(process.env.NEXT_PUBLIC_POSTHOG_KEY!, {
     api_host: process.env.NEXT_PUBLIC_POSTHOG_HOST || 'https://app.posthog.com',
@@ -17,15 +20,17 @@ if (typeof window !== 'undefined') {
     xhr_headers: {
       'Cache-Control': 'max-age=3600'
     },
-    _onCapture: (data: any) => {
-      if (data && typeof data === 'object') {
+    // Match the expected function signature
+    _onCapture: (eventName: string, eventData: CaptureResult) => {
+      // We're only interested in modifying the eventData
+      if (eventData && typeof eventData === 'object') {
         return {
-          ...data,
+          ...eventData,
           $browser_version: typeof navigator !== 'undefined' ? navigator.userAgent : undefined,
           $modern_browser: typeof window !== 'undefined' && 'IntersectionObserver' in window && 'fetch' in window
         }
       }
-      return data;
+      return eventData;
     }
   })
 }
