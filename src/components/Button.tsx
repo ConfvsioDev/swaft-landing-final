@@ -2,11 +2,21 @@ import { useCallback, useState } from "react";
 import type { Container, Engine } from "tsparticles-engine";
 import { Particles } from "react-tsparticles";
 import Link from "next/link";
+import { usePostHog } from 'posthog-js/react'
 //import { loadFull } from "tsparticles"; // if you are going to use `loadFull`, install the "tsparticles" package too.
 import { loadSlim } from "tsparticles-slim"; // if you are going to use `loadSlim`, install the "tsparticles-slim" package too.
 
 const Button = () => {
     const [showParticles, setShowParticles] = useState(false);
+    const posthog = usePostHog()
+
+    const handleClick = () => {
+        posthog?.capture('main-cta', {
+            component: 'Button',
+            action: 'click',
+            destination: '/reserver'
+        })
+    }
 
     const particlesInit = useCallback(async (engine: Engine) => {
         console.log(engine);
@@ -29,6 +39,7 @@ const Button = () => {
             >
                 <Link 
                     href="/reserver" 
+                    onClick={handleClick}
                     className="mt-4 px-6 py-3 rounded-full border border-white text-white transition-colors duration-300 text-base font-medium relative hover:bg-gradient-to-b from-[#2B1AC1] to-[#2b1ac1e1] hover:shadow-[0_4px_15px_rgba(255,255,255,0.3),0_4px_15px_rgba(33,20,148,0.3)]"
                 >
                     Réserver un Appel
