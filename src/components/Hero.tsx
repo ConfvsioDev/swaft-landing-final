@@ -113,6 +113,8 @@ const Hero: React.FC = () => {
                 viewBox="0 0 24 24" 
                 stroke="currentColor" 
                 className={`h-6 w-6 rotate-90 transition-transform duration-300 group-hover:rotate-[135deg] ${theme === 'dark' ? 'text-black' : 'text-white'}`}
+                aria-label="Arrow icon"
+                role="img"
               >
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
               </svg>
