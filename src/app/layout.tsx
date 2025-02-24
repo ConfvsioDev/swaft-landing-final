@@ -34,19 +34,7 @@ export default function RootLayout({
       <head>
         <link rel="preconnect" href="https://cdn.jsdelivr.net" crossOrigin="anonymous" />
         <link rel="preconnect" href="https://app.posthog.com" crossOrigin="anonymous" />
-        <link 
-          rel="preload" 
-          href="/fonts/your-main-font.woff2" 
-          as="font" 
-          type="font/woff2" 
-          crossOrigin="anonymous" 
-        />
-        <link 
-          rel="preload"
-          as="image"
-          href="/images/hero-image.webp"
-          type="image/webp"
-        />
+        <link rel="preconnect" href="https://us-assets.i.posthog.com" crossOrigin="anonymous" />
       </head>
       <body className={`${inter.className} dark:bg-[#01020E] bg-[#F2F2F2] antialiased`}>
         <PostHogProvider>
