@@ -31,20 +31,38 @@ const Pain: React.FC<PainProps> = ({
     }))
   ).current;
 
-  // Create scroll progress values for each question outside of the map function
-  const scrollProgressValues = questions.map((_, index) => 
-    useScroll({
-      target: questionRefs[index].main,
-      offset: ["start center", "end start"]
-    }).scrollYProgress
-  );
+  // Create individual scroll progress values and transform configs for each question
+  // This avoids calling hooks inside a callback
+  const scrollConfig0 = useScroll({
+    target: questionRefs[0].main,
+    offset: ["start center", "end start"]
+  });
+  const opacity0 = useTransform(scrollConfig0.scrollYProgress, [0, 0.5, 1], [0, 1, 0]);
+  const scale0 = useTransform(scrollConfig0.scrollYProgress, [0, 0.5, 1], [0.5, 1, 4]);
+  const blur0 = useTransform(scrollConfig0.scrollYProgress, [0.6, 0.8], ['blur(0px)', 'blur(2px)']);
 
-  // Create transform configs using the scroll progress values
-  const scrollConfigs = scrollProgressValues.map(scrollYProgress => ({
-    opacity: useTransform(scrollYProgress, [0, 0.5, 1], [0, 1, 0]),
-    scale: useTransform(scrollYProgress, [0, 0.5, 1], [0.5, 1, 4]),
-    blur: useTransform(scrollYProgress, [0.6, 0.8], ['blur(0px)', 'blur(2px)']),
-  }));
+  const scrollConfig1 = useScroll({
+    target: questionRefs[1].main,
+    offset: ["start center", "end start"]
+  });
+  const opacity1 = useTransform(scrollConfig1.scrollYProgress, [0, 0.5, 1], [0, 1, 0]);
+  const scale1 = useTransform(scrollConfig1.scrollYProgress, [0, 0.5, 1], [0.5, 1, 4]);
+  const blur1 = useTransform(scrollConfig1.scrollYProgress, [0.6, 0.8], ['blur(0px)', 'blur(2px)']);
+
+  const scrollConfig2 = useScroll({
+    target: questionRefs[2].main,
+    offset: ["start center", "end start"]
+  });
+  const opacity2 = useTransform(scrollConfig2.scrollYProgress, [0, 0.5, 1], [0, 1, 0]);
+  const scale2 = useTransform(scrollConfig2.scrollYProgress, [0, 0.5, 1], [0.5, 1, 4]);
+  const blur2 = useTransform(scrollConfig2.scrollYProgress, [0.6, 0.8], ['blur(0px)', 'blur(2px)']);
+
+  // Combine the transform values into an array for easy access
+  const scrollConfigs = [
+    { opacity: opacity0, scale: scale0, blur: blur0 },
+    { opacity: opacity1, scale: scale1, blur: blur1 },
+    { opacity: opacity2, scale: scale2, blur: blur2 },
+  ];
 
   return (
     <section 
