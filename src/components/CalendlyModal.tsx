@@ -10,6 +10,19 @@ interface CalendlyModalProps {
   onClose: () => void;
 }
 
+// Définir un type pour l'événement Calendly
+interface CalendlyEventData {
+  event: string;
+  data?: {
+    event?: {
+      start_time?: string;
+      [key: string]: any;
+    };
+    [key: string]: any;
+  };
+  [key: string]: any;
+}
+
 const CalendlyModal: React.FC<CalendlyModalProps> = ({ isOpen, onClose }) => {
   const [step, setStep] = useState<'calendly' | 'whatsapp' | 'success'>('calendly');
   const [eventDetails, setEventDetails] = useState<{ date?: string; time?: string }>({});
@@ -67,33 +80,35 @@ const CalendlyModal: React.FC<CalendlyModalProps> = ({ isOpen, onClose }) => {
   }, [onClose, posthog, step]);
 
   // Gérer l'événement de réservation Calendly
-  const handleEventScheduled = useCallback((event: any) => {
+  const handleEventScheduled = useCallback((event: CalendlyEventData) => {
     try {
       // Extraire la date et l'heure de l'événement
-      const eventDate = new Date(event.data.event.start_time);
-      const formattedDate = eventDate.toLocaleDateString('fr-FR', {
-        day: 'numeric',
-        month: 'long',
-        year: 'numeric'
-      });
-      const formattedTime = eventDate.toLocaleTimeString('fr-FR', {
-        hour: '2-digit',
-        minute: '2-digit'
-      });
+      if (event.data?.event?.start_time) {
+        const eventDate = new Date(event.data.event.start_time);
+        const formattedDate = eventDate.toLocaleDateString('fr-FR', {
+          day: 'numeric',
+          month: 'long',
+          year: 'numeric'
+        });
+        const formattedTime = eventDate.toLocaleTimeString('fr-FR', {
+          hour: '2-digit',
+          minute: '2-digit'
+        });
 
-      setEventDetails({
-        date: formattedDate,
-        time: formattedTime
-      });
+        setEventDetails({
+          date: formattedDate,
+          time: formattedTime
+        });
 
-      // Passer à l'étape WhatsApp
-      setStep('whatsapp');
-      
-      // Tracking PostHog
-      posthog?.capture('calendly_event_scheduled', {
-        event_date: formattedDate,
-        event_time: formattedTime
-      });
+        // Passer à l'étape WhatsApp
+        setStep('whatsapp');
+        
+        // Tracking PostHog
+        posthog?.capture('calendly_event_scheduled', {
+          event_date: formattedDate,
+          event_time: formattedTime
+        });
+      }
     } catch (error) {
       console.error('Erreur lors du traitement de l\'événement Calendly:', error);
     }
@@ -128,17 +143,17 @@ const CalendlyModal: React.FC<CalendlyModalProps> = ({ isOpen, onClose }) => {
       document.body.style.overflow = 'hidden';
       
       // Ajouter l'écouteur d'événement pour Calendly
-      const handleCalendlyEvent = (e: any) => {
+      const handleCalendlyEvent = (e: MessageEvent<CalendlyEventData>) => {
         if (e.data.event && e.data.event === 'calendly.event_scheduled') {
-          handleEventScheduled(e);
+          handleEventScheduled(e.data);
         }
       };
       
-      window.addEventListener('message', handleCalendlyEvent);
+      window.addEventListener('message', handleCalendlyEvent as EventListener);
       
       return () => {
         document.body.style.overflow = '';
-        window.removeEventListener('message', handleCalendlyEvent);
+        window.removeEventListener('message', handleCalendlyEvent as EventListener);
       };
     } else {
       document.body.style.overflow = '';
