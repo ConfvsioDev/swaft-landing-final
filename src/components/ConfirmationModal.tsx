@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { usePostHog } from 'posthog-js/react';
 import confetti from 'canvas-confetti';
 import { X, MessageCircle } from 'lucide-react';
 
@@ -22,8 +21,6 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
   onWhatsAppClick,
   step
 }) => {
-  const posthog = usePostHog();
-
   // Fonction pour lancer les confettis
   const launchConfetti = useCallback(() => {
     const duration = 3000;

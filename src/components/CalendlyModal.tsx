@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { InlineWidget } from 'react-calendly';
 import { motion, AnimatePresence } from 'framer-motion';
-import { usePostHog } from 'posthog-js/react';
 import { X } from 'lucide-react';
 import ConfirmationModal from './ConfirmationModal';
 
@@ -27,7 +26,6 @@ const CalendlyModal: React.FC<CalendlyModalProps> = ({ isOpen, onClose }) => {
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [confirmationStep, setConfirmationStep] = useState<'confirmation' | 'success'>('confirmation');
   const [eventDetails, setEventDetails] = useState<{ date?: string; time?: string }>({});
-  const posthog = usePostHog();
 
   // URL de Calendly exacte fournie
   const calendlyUrl = "https://calendly.com/swaft-uiux/appel-de-decouverte-pour-un-diagnostic-gratuit";
@@ -38,17 +36,14 @@ const CalendlyModal: React.FC<CalendlyModalProps> = ({ isOpen, onClose }) => {
   // Gérer la fermeture du modal
   const handleClose = useCallback(() => {
     onClose();
-    
-    // Tracking PostHog
-    posthog?.capture('calendly_modal_closed');
-  }, [onClose, posthog]);
+  }, [onClose]);
 
   // Gérer l'événement de réservation Calendly
   const handleEventScheduled = useCallback((event: CalendlyEventData) => {
     try {
       // Extraire la date et l'heure de l'événement
       if (event.data?.event?.start_time) {
-        const eventDate = new Date(event.data.event.start_time);
+        const eventDate = new Date(event.data.event.start_time as string);
         const formattedDate = eventDate.toLocaleDateString('fr-FR', {
           day: 'numeric',
           month: 'long',
@@ -66,62 +61,60 @@ const CalendlyModal: React.FC<CalendlyModalProps> = ({ isOpen, onClose }) => {
 
         // Fermer le modal Calendly et ouvrir le modal de confirmation
         onClose();
-        setShowConfirmation(true);
-        
-        // Tracking PostHog
-        posthog?.capture('calendly_event_scheduled', {
-          event_date: formattedDate,
-          event_time: formattedTime
-        });
+        setTimeout(() => {
+          setShowConfirmation(true);
+        }, 300); // Petit délai pour éviter les problèmes d'animation
       }
     } catch (error) {
       console.error('Erreur lors du traitement de l\'événement Calendly:', error);
     }
-  }, [posthog, onClose]);
+  }, [onClose]);
 
   // Gérer le clic sur le bouton WhatsApp
   const handleWhatsAppClick = useCallback(() => {
     // Passer à l'étape de succès
     setConfirmationStep('success');
     
-    // Tracking PostHog
-    posthog?.capture('whatsapp_redirect', {
-      from: 'confirmation_modal',
-      with_event_details: !!eventDetails.date
-    });
-    
     // Ouvrir WhatsApp dans un nouvel onglet
-    window.open(whatsappUrl, '_blank');
+    window.open(`${whatsappUrl}?text=Bonjour, je souhaite confirmer mon rendez-vous du ${eventDetails.date} à ${eventDetails.time}.`, '_blank');
     
     // Fermer automatiquement le modal après quelques secondes
     setTimeout(() => {
       setShowConfirmation(false);
       setConfirmationStep('confirmation');
     }, 5000);
-  }, [eventDetails, posthog, whatsappUrl]);
+  }, [eventDetails, whatsappUrl]);
 
-  // Effet pour gérer le scroll du body
+  // Effet pour gérer le scroll du body et les événements Calendly
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden';
       
       // Ajouter l'écouteur d'événement pour Calendly
-      const handleCalendlyEvent = (e: MessageEvent<CalendlyEventData>) => {
-        if (e.data.event && e.data.event === 'calendly.event_scheduled') {
-          handleEventScheduled(e.data);
+      const handleCalendlyEvent = (e: MessageEvent) => {
+        const data = e.data as CalendlyEventData;
+        if (data.event && data.event === 'calendly.event_scheduled') {
+          handleEventScheduled(data);
         }
       };
       
-      window.addEventListener('message', handleCalendlyEvent as EventListener);
+      window.addEventListener('message', handleCalendlyEvent);
       
       return () => {
         document.body.style.overflow = '';
-        window.removeEventListener('message', handleCalendlyEvent as EventListener);
+        window.removeEventListener('message', handleCalendlyEvent);
       };
     } else {
       document.body.style.overflow = '';
     }
   }, [isOpen, handleEventScheduled]);
+
+  // Réinitialiser l'état du modal de confirmation lorsque le modal principal est fermé
+  useEffect(() => {
+    if (!isOpen) {
+      setConfirmationStep('confirmation');
+    }
+  }, [isOpen]);
 
   return (
     <>
