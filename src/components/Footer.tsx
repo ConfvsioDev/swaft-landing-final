@@ -65,7 +65,7 @@ const Footer: React.FC = () => {
               </li>
               <li>
                 <a 
-                  href="#" 
+                  href="/faq" 
                   className="text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white transition-colors text-sm sm:text-base hover:underline"
                 >
                   FAQ
@@ -89,7 +89,7 @@ const Footer: React.FC = () => {
               </li>
               <li>
                 <a 
-                  href="#" 
+                  href="/legal" 
                   className="text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white transition-colors text-sm sm:text-base hover:underline"
                 >
                   Legal

@@ -127,12 +127,9 @@ const Navbar: React.FC = () => {
                         <NavLink href="#creations">Nos Créations</NavLink>
                         <NavLink href="#process">Notre Processus</NavLink>
                         <NavLink href="#offres">Nos Offres</NavLink>
-                        <Link 
-                            href="/reserver" 
-                            className="text-center px-4 py-3 mt-2 rounded-full border border-white text-white hover:bg-white hover:text-[#01020E] transition-colors duration-300 text-sm font-medium"
-                        >
-                            Réserver un Appel
-                        </Link>
+                        <div className=" hidden sm:hidden md:hidden lg:hidden 2xl:flex justify-center lg:justify-start w-full"> 
+                           <Button />
+                        </div>
                     </nav>
                 </div>
             </motion.div>

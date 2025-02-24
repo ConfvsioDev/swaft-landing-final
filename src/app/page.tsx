@@ -1,6 +1,5 @@
 'use client';
 import React, { useState, useEffect } from 'react';
-import { useFeatureFlagVariantKey } from 'posthog-js/react'
 import Hero from '../components/Hero';
 import Video from '../components/Video';
 import Creations from '../components/Creations';
@@ -8,6 +7,8 @@ import Process from '../components/Process';
 import Pain from '../components/Pain';
 import Testimonials from '@/components/Testimonials';
 import Offer from '@/components/Offer';
+import { useFeatureFlagVariantKey } from 'posthog-js/react'
+import { posthog } from '@/lib/posthog'
 
 const LoadingSpinner: React.FC = () => {
   return (
@@ -19,12 +20,6 @@ const LoadingSpinner: React.FC = () => {
 
 export default function Home() {
   const [isLoading, setIsLoading] = useState(true);
-  const variant = useFeatureFlagVariantKey('main-cta');
-
-  const colors = {
-    side: '#01020E',
-    middle: '#1A1E30',
-  };
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -34,7 +29,22 @@ export default function Home() {
     return () => clearTimeout(timer);
   }, []);
 
-  const MainCTA = variant === 'test' ? Pain : Process;
+  const colors = {
+    side: '#01020E',
+    middle: '#1A1E30',
+  };
+
+  const variant = useFeatureFlagVariantKey('main-cta')
+
+  useEffect(() => {
+    if (variant !== null) {  // Important: check for null specifically
+      posthog.capture('$feature_flag_called', {
+        $feature_flag: 'main-cta',
+        $feature_flag_response: variant,
+        $feature_flag_decision: true
+      })
+    }
+  }, [variant])
 
   return (
     <main className='flex min-h-screen flex-col items-center justify-start'>
@@ -61,20 +71,23 @@ export default function Home() {
 
           <div className="relative w-screen bg-[#01020E] overflow-hidden"></div>
 
-          <MainCTA id="process" />
+           {variant === 'test' ? <Pain /> : <Process />}
 
           <Testimonials/>
 
-          <div className="relative w-screen bg-[#F2F2F2] dark:bg-[#01020E] overflow-hidden">
+          {/* <div className="relative w-screen bg-[#F2F2F2] dark:bg-[#01020E] overflow-hidden">
             <div className="absolute inset-0">
               <div className="absolute inset-0 w-full h-full bg-[radial-gradient(#d1d1d1_1.5px,transparent_1.5px)] dark:bg-[radial-gradient(#ffffff22_1.5px,transparent_1.5px)] [background-size:24px_24px] opacity-30" />
               <div className="absolute inset-x-0 top-0 w-full h-24 sm:h-32 bg-gradient-to-b from-[#F2F2F2] dark:from-[#01020E] to-transparent" />
               <div className="absolute inset-x-0 bottom-0 w-full h-24 sm:h-32 bg-gradient-to-t from-[#F2F2F2] dark:from-[#01020E] to-transparent" />
             </div>
             <Offer id="offer" />
-          </div>
+          </div> */}
         </>
       )}
     </main>
   );
 }
+
+
+
