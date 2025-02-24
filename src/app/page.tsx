@@ -52,7 +52,6 @@ export default function Home() {
       ) : (
         <>
           <Hero />
-          <Pain />
           <Video id="video" />
 
           
