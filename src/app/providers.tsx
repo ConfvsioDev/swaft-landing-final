@@ -14,7 +14,6 @@ export function PostHogProvider({ children }: { children: React.ReactNode }) {
     </PHProvider>
   )
 }
-
 function FeatureFlagLoader() {
   useEffect(() => {
     posthog.reloadFeatureFlags()

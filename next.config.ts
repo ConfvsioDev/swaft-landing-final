@@ -38,6 +38,18 @@ const nextConfig: NextConfig = {
   async rewrites() {
     return [
       {
+        source: "/array/:path*",
+        destination: "https://app.posthog.com/array/:path*",
+      },
+      {
+        source: "/decide/:path*",
+        destination: "https://us.i.posthog.com/decide/:path*",
+      },
+      {
+        source: "/e/:path*",
+        destination: "https://us.i.posthog.com/e/:path*",
+      },
+      {
         source: "/ingest/:path*",
         destination: "https://app.posthog.com/:path*",
       },
