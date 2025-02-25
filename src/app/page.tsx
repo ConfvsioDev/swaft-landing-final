@@ -5,7 +5,6 @@ import Video from '../components/Video';
 import Creations from '../components/Creations';
 import Process from '../components/Process';
 import Pain from '../components/Pain';
-import Testimonials from '@/components/Testimonials';
 import { useFeatureFlagVariantKey } from 'posthog-js/react'
 import { posthog } from '@/lib/posthog'
 import { motion } from 'motion/react';

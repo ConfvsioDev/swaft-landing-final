@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import { InlineWidget } from 'react-calendly';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X } from 'lucide-react';

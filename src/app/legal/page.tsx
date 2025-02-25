@@ -3,7 +3,7 @@
 import React, { useMemo } from 'react';
 import { useTheme } from 'next-themes';
 import Link from 'next/link';
-import { Shield, Scale, FileText, Building2, Server } from 'lucide-react';
+import { Shield, Scale, FileText, Server } from 'lucide-react';
 import { motion } from 'motion/react';
 
 const Legal: React.FC = () => {
