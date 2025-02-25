@@ -56,7 +56,7 @@ const Video: React.FC<VideoProps> = ({
   // Optimize transformations with better performance values
   const rotateX = useTransform(smoothScrollProgress, [0, 0.15], [90, 0]);
   const opacity = useTransform(smoothScrollProgress, [0, 0.2], [0.2, 1]);
-  const scale = useTransform(smoothScrollProgress, [0, 0.2], [0.8, 1.2]);
+  const scale = useTransform(smoothScrollProgress, [0, 0.2], [1, 1.2]);
   const y = useTransform(smoothScrollProgress, [0, 0.1], ['30%', '0%']);
 
   // Memoize theme-dependent values with enhanced visual effects
@@ -134,7 +134,7 @@ const Video: React.FC<VideoProps> = ({
     <div 
       ref={containerRef} 
       id={id}
-      className="w-full min-h-[60vh] flex items-center justify-center perspective-1000 z-10 px-4 sm:px-6 lg:px-8 pt-0 sm:pt-10 lg:pt-24"
+      className="w-full min-h-[60vh] flex items-center justify-center perspective-1000 z-10 px-4 sm:px-6 lg:px-8 pt-0 sm:pt-0 lg:pt-4"
       role="region"
       aria-label={title}
     >
