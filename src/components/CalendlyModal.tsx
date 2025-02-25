@@ -25,7 +25,6 @@ interface CalendlyEventData {
 const CalendlyModal: React.FC<CalendlyModalProps> = ({ isOpen, onClose }) => {
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [confirmationStep, setConfirmationStep] = useState<'confirmation' | 'success'>('confirmation');
-  const [eventDetails, setEventDetails] = useState<{ date?: string; time?: string }>({});
 
   // URL de Calendly exacte fournie
   const calendlyUrl = "https://calendly.com/swaft-uiux/appel-de-decouverte-pour-un-diagnostic-gratuit";
@@ -57,10 +56,14 @@ const CalendlyModal: React.FC<CalendlyModalProps> = ({ isOpen, onClose }) => {
           minute: '2-digit'
         });
 
-        setEventDetails({
-          date: formattedDate,
-          time: formattedTime
-        });
+        // Instead of setting state, we can log the details or use them directly
+        console.log("Event scheduled:", formattedDate, formattedTime);
+        
+        // Alternatively, you can keep the state if you plan to use it later
+        // setEventDetails({
+        //   date: formattedDate,
+        //   time: formattedTime
+        // });
 
         // Fermer le modal Calendly et ouvrir le modal de confirmation
         onClose();
