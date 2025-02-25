@@ -42,7 +42,7 @@ export default function Home() {
   const variant = useFeatureFlagVariantKey('main-cta')
 
   useEffect(() => {
-    if (variant !== null) {  // Important: check for null specifically
+    if (variant !== null) {
       posthog.capture('$feature_flag_called', {
         $feature_flag: 'main-cta',
         $feature_flag_response: variant,

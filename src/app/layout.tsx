@@ -42,18 +42,14 @@ export default function RootLayout({
         <link rel="preconnect" href="https://cdn.jsdelivr.net" crossOrigin="anonymous" />
         <link rel="preconnect" href="https://app.posthog.com" crossOrigin="anonymous" />
         <link rel="preconnect" href="https://us-assets.i.posthog.com" crossOrigin="anonymous" />
-        
-        {/* Preload critical resources */}
+
         <link 
           rel="preload" 
           href="https://cdn.jsdelivr.net/npm/ldrs/dist/auto/spiral.js" 
           as="script"
           crossOrigin="anonymous"
         />
-        
-        {/* Inline critical CSS */}
         <style dangerouslySetInnerHTML={{ __html: `
-          /* Critical CSS only */
           .hero h1 {
             font-weight: 500;
             line-height: 1.2;
@@ -85,7 +81,6 @@ export default function RootLayout({
             <Suspense fallback={null}>
               <Footer />
             </Suspense>
-            {/* Use modern script loading */}
             <script
               defer
               type="module"
