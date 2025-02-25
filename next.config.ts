@@ -72,11 +72,11 @@ const nextConfig: NextConfig = {
             key: 'Content-Security-Policy',
             value: `
               default-src 'self';
-              script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://app.posthog.com https://us-assets.i.posthog.com https://us.i.posthog.com;
-              style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net;
+              script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://app.posthog.com https://*.i.posthog.com https://*.posthog.com;
+              style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://*.posthog.com;
               img-src 'self' data: https: blob:;
               font-src 'self' data:;
-              connect-src 'self' https://app.posthog.com https://us-assets.i.posthog.com https://us.i.posthog.com;
+              connect-src 'self' https://app.posthog.com https://*.i.posthog.com https://*.posthog.com;
               frame-src 'self' https://www.youtube-nocookie.com https://calendly.com;
               object-src 'none';
               base-uri 'self';
