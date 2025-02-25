@@ -48,7 +48,7 @@ const particlesConfig = {
     },
 };
 
-const Button = memo(() => {
+const SecondButton = memo(() => {
     const [showParticles, setShowParticles] = useState(false);
     const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState(false);
     const [isCalendlyModalOpen, setIsCalendlyModalOpen] = useState(false);
@@ -118,14 +118,25 @@ const Button = memo(() => {
             <div 
                 onMouseEnter={() => setShowParticles(true)}
                 onMouseLeave={() => setShowParticles(false)}
-                className="relative"
+                className="relative flex justify-center items-center"
             >
+                {/* Lowered glowing background effect */}
+                <div className="absolute inset-0 -m-1 mt-2 bg-blue-500/20 rounded-full blur-md animate-pulse-slow"></div>
+                <div className="absolute inset-0 -m-0.5 mt-1 bg-gradient-to-r from-indigo-500/30 via-purple-500/30 to-indigo-500/30 rounded-full blur-sm"></div>
+                
                 <button 
                     onClick={handleClick}
-                    className="mt-4 px-6 py-3 rounded-full border border-white text-white transition-colors duration-300 text-base font-medium relative hover:bg-gradient-to-b from-[#2B1AC1] to-[#2b1ac1e1] hover:shadow-[0_4px_15px_rgba(255,255,255,0.3),0_4px_15px_rgba(33,20,148,0.3)]"
+                    className="mt-4 px-6 py-3 rounded-full border border-white text-white transition-all duration-300 text-base font-medium relative 
+                    bg-gradient-to-b from-[#2B1AC1]/80 to-[#2b1ac1]/40
+                    shadow-[0_2px_10px_rgba(255,255,255,0.2),0_2px_10px_rgba(33,20,148,0.2)]
+                    hover:bg-gradient-to-b hover:from-[#2B1AC1] hover:to-[#2b1ac1e1] 
+                    hover:shadow-[0_4px_15px_rgba(255,255,255,0.3),0_4px_15px_rgba(33,20,148,0.3)]"
                     aria-label="Réserver un appel de consultation gratuit"
                 >
-                    Réserver un Appel
+                    <span className="relative z-10 animate-pulse-subtle">Réserver un Appel</span>
+                    <div className="absolute inset-0 rounded-full overflow-hidden" aria-hidden="true">
+                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent animate-shimmer"></div>
+                    </div>
                     {showParticles && (
                         <div className="absolute inset-0" aria-hidden="true">
                             <Particles
@@ -162,7 +173,7 @@ const Button = memo(() => {
     );
 });
 
-Button.displayName = 'Button';
+SecondButton.displayName = 'SecondButton';
 
-export { Button };
-export default Button;
+export { SecondButton };
+export default SecondButton;

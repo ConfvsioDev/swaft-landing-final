@@ -20,15 +20,6 @@ const Legal: React.FC = () => {
 
   const sections = [
     {
-      title: "Informations Légales",
-      icon: <Building2 className={`w-6 h-6 ${themeStyles.iconColor}`} />,
-      content: [
-        "Adresse de l'entreprise : [À compléter]",
-        "Nom du titulaire : [À compléter]",
-        "Statut Juridique : [À compléter]",
-      ]
-    },
-    {
       title: "Protection des Données",
       icon: <Shield className={`w-6 h-6 ${themeStyles.iconColor}`} />,
       content: [

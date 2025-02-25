@@ -3,6 +3,7 @@ import { ThemeProvider } from 'next-themes';
 import { Inter } from "next/font/google";
 import Navbar from '../components/Navbar';
 import Footer from '@/components/Footer';
+import WAButton from '@/components/WAButton';
 import "./globals.css";
 import { PostHogProvider } from "./providers";
 import { Suspense } from 'react';
@@ -83,6 +84,10 @@ export default function RootLayout({
             <Suspense fallback={null}>
               <Footer />
             </Suspense>
+            
+            {/* WhatsApp Button */}
+            <WAButton />
+            
             <script
               defer
               type="module"

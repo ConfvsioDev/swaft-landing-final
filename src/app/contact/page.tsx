@@ -33,7 +33,7 @@ export default function ContactPage() {
         Vous avez des questions ? N'hésitez pas à nous contacter.
       </p>
       
-      <div className="w-full max-w-md p-6 bg-white dark:bg-gray-800 rounded-lg shadow-md">
+      <div className="w-full max-w-md">
         <Link 
           href={whatsappUrl}
           target="_blank"

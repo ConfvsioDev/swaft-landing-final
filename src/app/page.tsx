@@ -9,7 +9,7 @@ import Testimonials from '@/components/Testimonials';
 import { useFeatureFlagVariantKey } from 'posthog-js/react'
 import { posthog } from '@/lib/posthog'
 import { motion } from 'motion/react';
-import { Button } from '@/components/Button';
+import { SecondButton } from '@/components/SecondButton';
 
 interface LoadingSpinnerProps {
   'aria-label': string;
@@ -79,7 +79,7 @@ export default function Home() {
 
            {variant === 'test' ? <Pain /> : <Process />}
 
-           <div className="w-full pt-40 flex flex-col items-center justify-center text-center px-4 sm:px-6 lg:px-8">
+           <div className="w-full pt-40 pb-48 flex flex-col items-center justify-center text-center px-4 sm:px-6 lg:px-8">
             <motion.h2 
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -93,11 +93,11 @@ export default function Home() {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.4 }}
             >
-              <Button />
+              <SecondButton />
             </motion.div>
           </div>
 
-          <Testimonials/>
+          {/* <Testimonials/> */}
 
           {/* <div className="relative w-screen bg-[#F2F2F2] dark:bg-[#01020E] overflow-hidden">
             <div className="absolute inset-0">
