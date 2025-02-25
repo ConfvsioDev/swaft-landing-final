@@ -1,8 +1,9 @@
-import { useCallback, useState, memo } from "react";
+import { useCallback, useState, memo, useEffect } from "react";
 import { Engine } from "tsparticles-engine";
 import { Particles } from "react-tsparticles";
 import { usePostHog } from 'posthog-js/react';
 import { loadSlim } from "tsparticles-slim";
+import ConfirmationModal from "./ConfirmationModal";
 import CalendlyModal from "./CalendlyModal";
 //import { loadFull } from "tsparticles"; // if you are going to use `loadFull`, install the "tsparticles" package too.
 
@@ -49,21 +50,74 @@ const particlesConfig = {
 
 const Button = memo(() => {
     const [showParticles, setShowParticles] = useState(false);
-    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState(false);
+    const [isCalendlyModalOpen, setIsCalendlyModalOpen] = useState(false);
+    const [confirmationStep, setConfirmationStep] = useState<'confirmation' | 'success'>('confirmation');
     const posthog = usePostHog();
 
     const handleClick = useCallback(() => {
-        setIsModalOpen(true);
+        // First open the confirmation modal
+        setIsConfirmationModalOpen(true);
+        setConfirmationStep('confirmation');
+        
         posthog?.capture('main-cta', {
             component: 'Button',
             action: 'click',
-            type: 'open_calendly_modal'
+            type: 'open_confirmation_modal'
         });
+        
+        console.log("Button clicked, opening confirmation modal");
     }, [posthog]);
+
+    const handleConfirmationClose = useCallback(() => {
+        console.log("Closing confirmation modal");
+        setIsConfirmationModalOpen(false);
+        
+        // Open Calendly modal after confirmation modal is closed
+        setTimeout(() => {
+            setIsCalendlyModalOpen(true);
+            console.log("Opening Calendly modal after confirmation closed");
+        }, 300);
+    }, []);
+
+    const handleWhatsAppClick = useCallback(() => {
+        // Passer à l'étape de succès
+        setConfirmationStep('success');
+        console.log("WhatsApp button clicked, showing success step");
+        
+        // Ouvrir WhatsApp dans un nouvel onglet
+        window.open("https://api.whatsapp.com/send?phone=33766259551", '_blank');
+        
+        // Fermer automatiquement le modal après quelques secondes
+        setTimeout(() => {
+            setIsConfirmationModalOpen(false);
+            setConfirmationStep('confirmation');
+            
+            // Open Calendly modal after success message
+            setTimeout(() => {
+                setIsCalendlyModalOpen(true);
+                console.log("Opening Calendly modal after success message");
+            }, 300);
+        }, 5000);
+    }, []);
+
+    const handleCalendlyClose = useCallback(() => {
+        console.log("Closing Calendly modal");
+        setIsCalendlyModalOpen(false);
+    }, []);
 
     const particlesInit = useCallback(async (engine: Engine) => {
         await loadSlim(engine);
     }, []);
+
+    // Add console log to check modal states
+    useEffect(() => {
+        console.log("Modal states:", { 
+            confirmationModal: isConfirmationModalOpen, 
+            calendlyModal: isCalendlyModalOpen,
+            step: confirmationStep 
+        });
+    }, [isConfirmationModalOpen, isCalendlyModalOpen, confirmationStep]);
 
     return (
         <>
@@ -97,9 +151,18 @@ const Button = memo(() => {
                 </button>
             </div>
             
-            <CalendlyModal 
-                isOpen={isModalOpen} 
-                onClose={() => setIsModalOpen(false)} 
+            {/* Confirmation Modal */}
+            <ConfirmationModal 
+                isOpen={isConfirmationModalOpen} 
+                onClose={handleConfirmationClose}
+                onWhatsAppClick={handleWhatsAppClick}
+                step={confirmationStep}
+            />
+            
+            {/* Calendly Modal */}
+            <CalendlyModal
+                isOpen={isCalendlyModalOpen}
+                onClose={handleCalendlyClose}
             />
         </>
     );

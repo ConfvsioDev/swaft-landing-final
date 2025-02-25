@@ -6,10 +6,6 @@ import { X, MessageCircle } from 'lucide-react';
 interface ConfirmationModalProps {
   isOpen: boolean;
   onClose: () => void;
-  eventDetails: {
-    date?: string;
-    time?: string;
-  };
   onWhatsAppClick: () => void;
   step: 'confirmation' | 'success';
 }
@@ -17,7 +13,6 @@ interface ConfirmationModalProps {
 const ConfirmationModal: React.FC<ConfirmationModalProps> = ({ 
   isOpen, 
   onClose, 
-  eventDetails, 
   onWhatsAppClick,
   step
 }) => {
@@ -72,7 +67,14 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
     }
   }, [isOpen]);
 
-  if (!isOpen) return null;
+  // Add console log for debugging
+  useEffect(() => {
+    console.log("ConfirmationModal rendered with isOpen:", isOpen, "step:", step);
+  }, [isOpen, step]);
+
+  if (!isOpen) {
+    return null;
+  }
 
   return (
     <AnimatePresence>
@@ -106,11 +108,11 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
                 <h2 className="text-xl sm:text-2xl font-bold mb-4 text-gray-900 dark:text-white">
                   Ce n'est pas encore fini !
                 </h2>
-                <p className="mb-4 sm:mb-6 text-gray-700 dark:text-gray-300">
-                  Merci d'avoir réservé un appel pour le <strong>{eventDetails.date}</strong> à <strong>{eventDetails.time}</strong>.
+                <p className="mb-6 sm:mb-8 text-gray-700 dark:text-gray-300">
+                  Pour continuer, veuillez m'envoyer un message sur WhatsApp indiquant l'heure et la date du rendez-vous que vous souhaitez.
                 </p>
                 <p className="mb-6 sm:mb-8 text-gray-700 dark:text-gray-300">
-                  Pour confirmer votre rendez-vous, veuillez nous envoyer un message sur WhatsApp en indiquant la date et l'heure de votre rendez-vous.
+                  Une fois envoyé, je vous répondrai et nous pourrons échanger librement comme n'importe quels humains.
                 </p>
                 <button
                   onClick={onWhatsAppClick}

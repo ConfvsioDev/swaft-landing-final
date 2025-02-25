@@ -30,12 +30,15 @@ const CalendlyModal: React.FC<CalendlyModalProps> = ({ isOpen, onClose }) => {
   // URL de Calendly exacte fournie
   const calendlyUrl = "https://calendly.com/swaft-uiux/appel-de-decouverte-pour-un-diagnostic-gratuit";
   
-  // URL de WhatsApp (à remplacer par votre numéro)
-  const whatsappUrl = "https://wa.me/33600000000";
+  // URL de WhatsApp (mise à jour avec votre numéro)
+  const whatsappUrl = "https://api.whatsapp.com/send?phone=33766259551";
 
   // Gérer la fermeture du modal
   const handleClose = useCallback(() => {
     onClose();
+    // Make sure we reset the confirmation modal state
+    setShowConfirmation(false);
+    console.log("CalendlyModal closed");
   }, [onClose]);
 
   // Gérer l'événement de réservation Calendly
@@ -63,6 +66,7 @@ const CalendlyModal: React.FC<CalendlyModalProps> = ({ isOpen, onClose }) => {
         onClose();
         setTimeout(() => {
           setShowConfirmation(true);
+          console.log("Opening confirmation modal after Calendly event scheduled");
         }, 300); // Petit délai pour éviter les problèmes d'animation
       }
     } catch (error) {
@@ -74,16 +78,17 @@ const CalendlyModal: React.FC<CalendlyModalProps> = ({ isOpen, onClose }) => {
   const handleWhatsAppClick = useCallback(() => {
     // Passer à l'étape de succès
     setConfirmationStep('success');
+    console.log("WhatsApp button clicked in CalendlyModal, showing success step");
     
     // Ouvrir WhatsApp dans un nouvel onglet
-    window.open(`${whatsappUrl}?text=Bonjour, je souhaite confirmer mon rendez-vous du ${eventDetails.date} à ${eventDetails.time}.`, '_blank');
+    window.open(whatsappUrl, '_blank');
     
     // Fermer automatiquement le modal après quelques secondes
     setTimeout(() => {
       setShowConfirmation(false);
       setConfirmationStep('confirmation');
     }, 5000);
-  }, [eventDetails, whatsappUrl]);
+  }, [whatsappUrl]);
 
   // Effet pour gérer le scroll du body et les événements Calendly
   useEffect(() => {
@@ -115,6 +120,11 @@ const CalendlyModal: React.FC<CalendlyModalProps> = ({ isOpen, onClose }) => {
       setConfirmationStep('confirmation');
     }
   }, [isOpen]);
+
+  // Add console log to track modal states
+  useEffect(() => {
+    console.log("CalendlyModal state:", { isOpen, showConfirmation, confirmationStep });
+  }, [isOpen, showConfirmation, confirmationStep]);
 
   return (
     <>
@@ -187,8 +197,10 @@ const CalendlyModal: React.FC<CalendlyModalProps> = ({ isOpen, onClose }) => {
       {/* Modal de confirmation après réservation */}
       <ConfirmationModal
         isOpen={showConfirmation}
-        onClose={() => setShowConfirmation(false)}
-        eventDetails={eventDetails}
+        onClose={() => {
+          console.log("Closing confirmation modal from CalendlyModal");
+          setShowConfirmation(false);
+        }}
         onWhatsAppClick={handleWhatsAppClick}
         step={confirmationStep}
       />
