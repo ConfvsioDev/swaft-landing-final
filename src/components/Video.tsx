@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useState, useMemo } from 'react';
-import { motion, useScroll, useTransform, useSpring } from 'motion/react';
+import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
 import { useTheme } from 'next-themes';
 import { memo } from 'react';
 
@@ -34,7 +34,7 @@ const Video: React.FC<VideoProps> = ({
   preload = true
 }) => {
   const [isClient, setIsClient] = useState(false);
-  const [isInView, setIsInView] = useState(false);
+  const [isInView, setIsInView] = useState(true);
   const [videoLoaded, setVideoLoaded] = useState(false);
   const containerRef = useRef<HTMLDivElement | null>(null);
   const { theme } = useTheme();
@@ -106,23 +106,23 @@ const Video: React.FC<VideoProps> = ({
 
   // Generate optimized YouTube URL with privacy-enhanced mode
   const youtubeUrl = useMemo(() => {
-    // Use youtube-nocookie.com for enhanced privacy
-    const baseUrl = 'https://www.youtube-nocookie.com/embed/';
+    // Use regular YouTube embed for better compatibility
+    const baseUrl = 'https://www.youtube.com/embed/';
     
     const params = new URLSearchParams({
-      autoplay: isInView && videoLoaded ? '1' : '0',
+      autoplay: '1', // Always autoplay
       mute: '1',
       loop: '1',
       playlist: videoId,
       rel: '0',
       modestbranding: '1',
       playsinline: '1',
-      controls: '0',
+      controls: '1', // Show controls
       ...(quality !== 'auto' && { vq: quality })
     });
     
     return `${baseUrl}${videoId}?${params.toString()}`;
-  }, [videoId, quality, isInView, videoLoaded]);
+  }, [videoId, quality]);
 
   const handleIframeLoad = () => {
     setVideoLoaded(true);
@@ -151,21 +151,19 @@ const Video: React.FC<VideoProps> = ({
         className="w-full max-w-[85vw] sm:max-w-[75vw] md:max-w-[70vw] lg:max-w-[1000px] rounded-lg sm:rounded-xl lg:rounded-2xl overflow-hidden border-2 sm:border-3 lg:border-4 relative"
       >
         <div 
-          className="absolute inset-0 z-10 pointer-events-none"
+          className="absolute inset-0 z-1 pointer-events-none"
           style={{ backgroundColor: themeColors.overlayColor }}
         />
-        {isInView && (
-          <iframe
-            className="w-full h-full"
-            src={youtubeUrl}
-            title={`${title} - Vidéo de démonstration`}
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen
-            loading={preload ? "eager" : "lazy"}
-            aria-label={`${title} - Vidéo de démonstration du produit`}
-            onLoad={handleIframeLoad}
-          />
-        )}
+        <iframe
+          className="w-full h-full z-2"
+          src={youtubeUrl}
+          title={`${title} - Vidéo de démonstration`}
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowFullScreen
+          loading={preload ? "eager" : "lazy"}
+          aria-label={`${title} - Vidéo de démonstration du produit`}
+          onLoad={handleIframeLoad}
+        />
       </motion.div>
     </div>
   );
