@@ -4,12 +4,12 @@ import { useTheme } from 'next-themes';
 import { memo } from 'react';
 
 // Optimize debounce function with proper typing
-type DebouncedFunction<T extends (...args: any[]) => void> = (
+type DebouncedFunction<T extends (...args: unknown[]) => void> = (
   func: T,
   wait: number
 ) => (...args: Parameters<T>) => void;
 
-const debounce: DebouncedFunction<(...args: any[]) => void> = (func, wait) => {
+const debounce: DebouncedFunction<(...args: unknown[]) => void> = (func, wait) => {
   let timeout: NodeJS.Timeout;
   return (...args) => {
     clearTimeout(timeout);
