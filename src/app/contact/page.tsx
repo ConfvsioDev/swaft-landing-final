@@ -25,7 +25,7 @@ export default function ContactPage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center p-4">
+    <div className="min-h-screen flex flex-col items-center justify-center p-4 'bg-gradient-to-b from-[#0A051E] to-black'">
       <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-6 text-center">
         Contactez-nous
       </h1>
