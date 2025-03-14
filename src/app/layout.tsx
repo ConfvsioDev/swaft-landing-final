@@ -28,7 +28,21 @@ export const metadata: Metadata = {
     title: 'Swaft Landing Page',
     description: 'Boostez votre conversion avec Swaft',
     siteName: 'Swaft',
-  }
+    images: [
+      {
+        url: '/og-image.jpg',
+        width: 1200,
+        height: 630,
+        alt: 'Swaft Landing Page',
+      }
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Swaft Landing Page',
+    description: 'Boostez votre conversion avec Swaft',
+    images: ['/og-image.jpg'],
+  },
 };
 
 // Add separate viewport export
@@ -37,6 +51,10 @@ export const viewport: Viewport = {
   initialScale: 1,
   maximumScale: 5,
   userScalable: true,
+  themeColor: [
+    { media: '(prefers-color-scheme: light)', color: '#F2F2F2' },
+    { media: '(prefers-color-scheme: dark)', color: '#01020E' },
+  ],
 };
 
 export default function RootLayout({

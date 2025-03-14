@@ -29,8 +29,28 @@ const nextConfig: NextConfig = {
     
     // Add modern JavaScript optimizations for production builds
     if (!dev && !isServer) {
-      // Use modern output for modern browsers
-      // Note: removed ecmaVersion as it's not a valid property
+      // Optimize chunk splitting for better performance
+      config.optimization = {
+        ...config.optimization,
+        splitChunks: {
+          chunks: 'all',
+          cacheGroups: {
+            default: false,
+            vendors: false,
+            commons: {
+              name: 'commons',
+              chunks: 'all',
+              minChunks: 2,
+            },
+            // Separate vendor chunks for better caching
+            vendor: {
+              test: /[\\/]node_modules[\\/]/,
+              name: 'vendors',
+              chunks: 'all',
+            },
+          },
+        },
+      };
     }
     
     return config;

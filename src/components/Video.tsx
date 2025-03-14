@@ -79,7 +79,10 @@ const Video: React.FC<VideoProps> = ({
     
     const observer = new IntersectionObserver(
       ([entry]) => {
-        console.log('Video element visibility:', entry.isIntersecting);
+        // Only log in development
+        if (process.env.NODE_ENV === 'development') {
+          console.log('Video element visibility:', entry.isIntersecting);
+        }
       },
       { threshold: 0.1, rootMargin: '100px' }
     );
@@ -122,7 +125,9 @@ const Video: React.FC<VideoProps> = ({
       modestbranding: '1',
       playsinline: '1',
       controls: '1',
-      ...(quality !== 'auto' && { vq: quality })
+      ...(quality !== 'auto' && { vq: quality }),
+      // Add origin parameter for better security
+      origin: typeof window !== 'undefined' ? window.location.origin : '',
     });
     
     return `${baseUrl}${videoId}?${params.toString()}`;
