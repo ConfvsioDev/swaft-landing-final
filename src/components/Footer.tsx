@@ -45,9 +45,9 @@ const Footer: React.FC = () => {
             />
             
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
-                    {/* Logo section with improved responsive spacing */}
-                    <div className="space-y-4 flex flex-col items-center md:items-start">
+                <div className="flex flex-col md:flex-row justify-between items-center">
+                    {/* Logo section with centered spacing */}
+                    <div className="space-y-4 flex flex-col items-center mb-6 md:mb-0">
                         <div className="flex items-center space-x-2">
                             <Link href="/" className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white">
                                 SWAFT
@@ -58,15 +58,12 @@ const Footer: React.FC = () => {
                         </p>
                     </div>
 
-                    {/* Empty column for spacing on medium and larger screens */}
-                    <div className="hidden md:block"></div>
-
-                    {/* Information links - now always aligned to the right */}
+                    {/* Information links - right aligned but centered on mobile */}
                     <nav className="space-y-4" aria-label="Information">
-                        <h3 className="font-semibold text-gray-900 dark:text-white text-right text-base sm:text-lg">
+                        <h3 className="font-semibold text-gray-900 dark:text-white text-center md:text-right text-base sm:text-lg">
                             Information
                         </h3>
-                        <ul className="space-y-2 flex flex-col items-end">
+                        <ul className="space-y-2 flex flex-col items-center md:items-end">
                             {FOOTER_LINKS.info.map(link => (
                                 <FooterLink key={link.href} {...link} />
                             ))}
