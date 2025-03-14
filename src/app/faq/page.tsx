@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { useTheme } from 'next-themes';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { MessageCircle, Clock, Star, Heart, Users, MapIcon as WhatsappIcon } from 'lucide-react';

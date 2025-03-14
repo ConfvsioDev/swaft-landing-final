@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { useTheme } from 'next-themes';
 import Link from 'next/link';
 import { Shield, Scale, FileText, Server } from 'lucide-react';
 import { motion } from 'framer-motion';
