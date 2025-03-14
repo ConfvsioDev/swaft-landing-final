@@ -31,15 +31,17 @@ const Creations: React.FC<CreationsProps> = ({ id }) => {
       id={id} 
       className="py-8 sm:py-12 md:py-24 min-h-[600px] w-full overflow-x-hidden"
       aria-label="Nos créations"
+      style={{ containIntrinsicSize: '0 600px' }}
     > 
       <div className="container mx-auto px-4 flex flex-col lg:flex-row items-center justify-between sm:gap-1 lg:gap-2">
-        {/* Image Container */}
-        <div className="w-full lg:w-1/2 flex flex-col items-center">
+        {/* Image Container with fixed dimensions */}
+        <div className="w-full lg:w-1/2 flex flex-col items-center h-[600px] lg:h-auto">
           <motion.h1 
             className={`text-2xl sm:text-3xl md:text-4xl font-bold text-center ${styles.title} mb-6 sm:mb-8`}
             initial={{ opacity: 0, y: -20 }} 
             whileInView={{ opacity: 1, y: 0 }} 
             transition={{ duration: 0.5 }}
+            style={{ minHeight: '40px' }}
           >
             Notre collaboration actuelle
           </motion.h1>
@@ -51,8 +53,9 @@ const Creations: React.FC<CreationsProps> = ({ id }) => {
             transition={{ duration: 0.6, ease: 'easeInOut' }}
             style={{
               boxShadow: styles.glow,
-              minHeight: '500px',
-              maxHeight: '700px'
+              height: '500px',
+              width: '100%',
+              aspectRatio: '3/4'
             }}
           >
             <div className="overflow-hidden h-full">
@@ -63,6 +66,9 @@ const Creations: React.FC<CreationsProps> = ({ id }) => {
                 priority
                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                 loading="eager"
+                placeholder="blur"
+                width={400}
+                height={500}
               />
               <div 
                 className="absolute top-2 sm:top-4 left-2 sm:left-4 p-2 backdrop-blur-md bg-black bg-opacity-50 rounded-lg"
@@ -76,18 +82,19 @@ const Creations: React.FC<CreationsProps> = ({ id }) => {
           </motion.div>
         </div>
 
-        {/* Text Container */}
-        <div className="w-full lg:w-1/2 flex flex-col items-center mt-6 sm:mt-8 lg:mt-0 text-center">
+        {/* Text Container with fixed height */}
+        <div className="w-full lg:w-1/2 flex flex-col items-center mt-6 sm:mt-8 lg:mt-0 text-center min-h-[200px]">
           <motion.div 
             className={`text-base sm:text-lg md:text-xl mb-4 sm:mb-6 relative max-w-xl ${styles.text}`}
             initial={{ opacity: 0, y: -20 }} 
             whileInView={{ opacity: 1, y: 0 }} 
             transition={{ duration: 0.5 }}
+            style={{ minHeight: '100px' }}
           >
             <p className={`mb-2 ${styles.text}`}>
               Nous nous adaptons à chaque demande
             </p>
-            <div>
+            <div style={{ minHeight: '30px' }}>
               <span>afin d'obtenir un résultat </span>
               <TypingEffect 
                 onComplete={handleTypingComplete}

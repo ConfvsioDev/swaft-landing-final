@@ -19,7 +19,7 @@ const FOOTER_LINKS = {
 } as const;
 
 const FooterLink: React.FC<{ href: string; label: string }> = ({ href, label }) => (
-    <li>
+    <li className="min-h-[24px]">
         <Link 
             href={href}
             className="text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white transition-colors text-sm sm:text-base hover:underline"
@@ -40,9 +40,12 @@ const Footer: React.FC = () => {
 
     return (
         <footer 
-            className="w-full py-8 sm:py-12 relative min-h-[200px]" 
+            className="w-full py-8 sm:py-12 relative min-h-[300px]" 
             role="contentinfo"
-            style={theme === 'dark' ? glowStyles.dark : glowStyles.light}
+            style={{
+                ...theme === 'dark' ? glowStyles.dark : glowStyles.light,
+                containIntrinsicSize: '0 300px', // Hint for layout
+            }}
         >
             {/* Glowing line with responsive width */}
             <div 
@@ -50,36 +53,36 @@ const Footer: React.FC = () => {
             />
             
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-[2fr,1fr,1fr] gap-8 md:gap-12">
-                    {/* Logo section with improved responsive spacing */}
-                    <div className="space-y-4 sm:pr-4">
-                        <div className="flex items-center space-x-2 justify-center sm:justify-start">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
+                    {/* Logo section with improved responsive spacing and fixed height */}
+                    <div className="space-y-4 flex flex-col items-center md:items-start min-h-[80px]">
+                        <div className="flex items-center space-x-2">
                             <Link href="/" className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white">
                                 SWAFT
                             </Link>
                         </div>
-                        <p className="text-gray-600 dark:text-gray-300 text-center sm:text-left text-sm sm:text-base">
+                        <p className="text-gray-600 dark:text-gray-300 text-sm sm:text-base">
                             Voyez plus grand.
                         </p>
                     </div>
 
-                    {/* Navigation sections with responsive alignment */}
-                    <nav className="space-y-4" aria-label="Navigation principale">
-                        <h3 className="font-semibold text-gray-900 dark:text-white text-center sm:text-right text-base sm:text-lg">
+                    {/* Navigation sections with consistent alignment and fixed heights */}
+                    <nav className="space-y-4 min-h-[150px]" aria-label="Navigation principale">
+                        <h3 className="font-semibold text-gray-900 dark:text-white text-center md:text-right text-base sm:text-lg">
                             Accueil
                         </h3>
-                        <ul className="space-y-2 flex flex-col items-center sm:items-end">
+                        <ul className="space-y-2 flex flex-col items-center md:items-end">
                             {FOOTER_LINKS.main.map(link => (
                                 <FooterLink key={link.href} {...link} />
                             ))}
                         </ul>
                     </nav>
 
-                    <nav className="space-y-4" aria-label="Information">
-                        <h3 className="font-semibold text-gray-900 dark:text-white text-center sm:text-right text-base sm:text-lg">
+                    <nav className="space-y-4 min-h-[100px]" aria-label="Information">
+                        <h3 className="font-semibold text-gray-900 dark:text-white text-center md:text-right text-base sm:text-lg">
                             Information
                         </h3>
-                        <ul className="space-y-2 flex flex-col items-center sm:items-end">
+                        <ul className="space-y-2 flex flex-col items-center md:items-end">
                             {FOOTER_LINKS.info.map(link => (
                                 <FooterLink key={link.href} {...link} />
                             ))}
@@ -87,8 +90,8 @@ const Footer: React.FC = () => {
                     </nav>
                 </div>
 
-                {/* Added copyright section */}
-                <div className="mt-8 pt-8 border-t border-gray-200 dark:border-gray-800">
+                {/* Added copyright section with fixed height */}
+                <div className="mt-8 pt-8 border-t border-gray-200 dark:border-gray-800 min-h-[40px]">
                     <p className="text-center text-sm text-gray-500 dark:text-gray-400">
                         © {new Date().getFullYear()} Swaft. Tous droits réservés.
                     </p>

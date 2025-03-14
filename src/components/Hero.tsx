@@ -26,12 +26,27 @@ const Hero: React.FC = () => {
       : '0 0 12px rgba(0, 0, 0, 0.2)',
   }), [theme]);
 
+  // Precompute styles to avoid layout shifts
+  const textStyles = useMemo(() => ({
+    heading1: {
+      color: theme === 'dark' ? '#FFFFFF' : '#01020E',
+      ...shadowStyle
+    },
+    heading2: {
+      color: theme === 'dark' ? '#D1D5DB' : '#4B5563',
+      ...shadowStyle
+    }
+  }), [theme, shadowStyle]);
+
   if (theme === undefined) {
     return <div>Loading theme...</div>;
   }
 
   return (
-    <div className="hero min-h-[75vh] flex flex-col justify-center items-center px-4 sm:px-6 lg:px-8 py-6 sm:py-8 md:py-10 lg:py-6 relative w-screen overflow-hidden">
+    <div 
+      className="hero min-h-[75vh] flex flex-col justify-center items-center px-4 sm:px-6 lg:px-8 py-6 sm:py-8 md:py-10 lg:py-6 relative w-screen overflow-hidden"
+      style={{ containIntrinsicSize: '0 75vh' }}
+    >
       {/* Background pattern with fade effect */}
       <div className="absolute inset-0">
         <div className="absolute inset-0 bg-[radial-gradient(#d1d1d1_1.5px,transparent_1.5px)] dark:bg-[radial-gradient(#ffffff22_1.5px,transparent_1.5px)] [background-size:24px_24px] opacity-30" />
@@ -42,18 +57,18 @@ const Hero: React.FC = () => {
       </div>
       
       {/* Content */}
-      <div className="relative z-10 space-y-4 md:space-y-6">
-        <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-medium leading-tight text-center max-w-7xl mx-auto">
+      <div className="relative z-10 space-y-4 md:space-y-6" style={{ minHeight: '200px' }}>
+        <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-medium leading-tight text-center max-w-7xl mx-auto" style={{ minHeight: '160px' }}>
           <span 
-            className={`inline-block mb-2 sm:mb-3 ${theme === 'dark' ? 'text-white' : 'text-[#01020E]'} tracking-tight`}
-            style={shadowStyle}
+            className="inline-block mb-2 sm:mb-3 tracking-tight"
+            style={textStyles.heading1}
           >
             Des interfaces intuitives qui
           </span>
           <br />
           <span 
-            className={`inline-block ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'} tracking-tight`}
-            style={shadowStyle}
+            className="inline-block tracking-tight"
+            style={textStyles.heading2}
           >
             transforment l'expérience utilisateur
           </span>
@@ -61,11 +76,12 @@ const Hero: React.FC = () => {
         
         <h3 
           className={`text-xl sm:text-2xl md:text-3xl font-light ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'} text-center max-w-4xl mx-auto leading-relaxed`}
+          style={{ minHeight: '40px' }}
         >
           Optimisez votre taux de conversion grâce à une landing page parfaite.
         </h3>
         
-        <div className="mt-8 sm:mt-10 md:mt-12 flex justify-center">
+        <div className="mt-8 sm:mt-10 md:mt-12 flex justify-center" style={{ minHeight: '56px' }}>
           <button 
             className={`group relative inline-flex items-center overflow-hidden rounded-full h-14 pr-14 pl-8 text-lg sm:text-xl font-medium transition-all duration-300 ease-out transform hover:scale-105
             ${theme === 'dark' 
