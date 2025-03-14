@@ -105,8 +105,8 @@ const Video: React.FC<VideoProps> = ({
 
   // Generate optimized YouTube URL with privacy-enhanced mode
   const youtubeUrl = useMemo(() => {
-    // Use regular YouTube embed for better compatibility
-    const baseUrl = 'https://www.youtube.com/embed/';
+    // Use youtube-nocookie.com for enhanced privacy and CSP compliance
+    const baseUrl = 'https://www.youtube-nocookie.com/embed/';
     
     const params = new URLSearchParams({
       autoplay: '1', // Always autoplay
