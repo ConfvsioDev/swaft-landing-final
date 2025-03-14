@@ -7,7 +7,6 @@ import { Shield, Scale, FileText, Server } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 const Legal: React.FC = () => {
-  const { theme } = useTheme();
   const [mounted, setMounted] = useState(false);
 
   // Fix hydration errors by ensuring client-side rendering is complete

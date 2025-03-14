@@ -6,15 +6,10 @@ import Link from 'next/link';
 
 // Extract navigation items to reduce repetition
 const FOOTER_LINKS = {
-    main: [
-        { href: '#creations', label: 'Nos créations' },
-        { href: '#process', label: 'Notre processus' },
-        { href: '#offer', label: 'Nos offres' },
-        { href: '/faq', label: 'FAQ' },
-    ],
     info: [
         { href: '/contact', label: 'Contact' },
         { href: '/legal', label: 'Legal' },
+        { href: '/faq', label: 'FAQ' },
     ]
 } as const;
 
@@ -63,23 +58,15 @@ const Footer: React.FC = () => {
                         </p>
                     </div>
 
-                    {/* Navigation sections with consistent alignment */}
-                    <nav className="space-y-4" aria-label="Navigation principale">
-                        <h3 className="font-semibold text-gray-900 dark:text-white text-center md:text-right text-base sm:text-lg">
-                            Accueil
-                        </h3>
-                        <ul className="space-y-2 flex flex-col items-center md:items-end">
-                            {FOOTER_LINKS.main.map(link => (
-                                <FooterLink key={link.href} {...link} />
-                            ))}
-                        </ul>
-                    </nav>
+                    {/* Empty column for spacing on medium and larger screens */}
+                    <div className="hidden md:block"></div>
 
+                    {/* Information links - now always aligned to the right */}
                     <nav className="space-y-4" aria-label="Information">
-                        <h3 className="font-semibold text-gray-900 dark:text-white text-center md:text-right text-base sm:text-lg">
+                        <h3 className="font-semibold text-gray-900 dark:text-white text-right text-base sm:text-lg">
                             Information
                         </h3>
-                        <ul className="space-y-2 flex flex-col items-center md:items-end">
+                        <ul className="space-y-2 flex flex-col items-end">
                             {FOOTER_LINKS.info.map(link => (
                                 <FooterLink key={link.href} {...link} />
                             ))}

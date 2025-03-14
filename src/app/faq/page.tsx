@@ -7,7 +7,6 @@ import { motion } from 'framer-motion';
 import { MessageCircle, Clock, Star, Heart, Users, MapIcon as WhatsappIcon } from 'lucide-react';
 
 const FAQ: React.FC = () => {
-  const { theme } = useTheme();
   const [mounted, setMounted] = useState(false);
 
   // Fix hydration errors by ensuring client-side rendering is complete
