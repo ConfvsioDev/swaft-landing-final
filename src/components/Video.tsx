@@ -34,8 +34,6 @@ const Video: React.FC<VideoProps> = ({
   preload = true
 }) => {
   const [isClient, setIsClient] = useState(false);
-  const [isInView, setIsInView] = useState(true);
-  const [videoLoaded, setVideoLoaded] = useState(false);
   const containerRef = useRef<HTMLDivElement | null>(null);
   const { theme } = useTheme();
 
@@ -76,7 +74,8 @@ const Video: React.FC<VideoProps> = ({
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
-        setIsInView(entry.isIntersecting);
+        // No longer need to track intersection
+        console.log('Video element visibility:', entry.isIntersecting);
       },
       { threshold: 0.1 }
     );
@@ -124,10 +123,6 @@ const Video: React.FC<VideoProps> = ({
     return `${baseUrl}${videoId}?${params.toString()}`;
   }, [videoId, quality]);
 
-  const handleIframeLoad = () => {
-    setVideoLoaded(true);
-  };
-
   if (!isClient) return null;
 
   return (
@@ -162,7 +157,6 @@ const Video: React.FC<VideoProps> = ({
           allowFullScreen
           loading={preload ? "eager" : "lazy"}
           aria-label={`${title} - Vidéo de démonstration du produit`}
-          onLoad={handleIframeLoad}
         />
       </motion.div>
     </div>
