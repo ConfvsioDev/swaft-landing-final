@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { ThemeProvider } from 'next-themes';
 import { Inter } from "next/font/google";
 import Navbar from '../components/Navbar';
@@ -21,7 +21,6 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: "Swaft Landing Page",
   description: "Boostez votre conversion avec Swaft",
-  viewport: 'width=device-width, initial-scale=1',
   robots: 'index, follow',
   openGraph: {
     type: 'website',
@@ -30,6 +29,14 @@ export const metadata: Metadata = {
     description: 'Boostez votre conversion avec Swaft',
     siteName: 'Swaft',
   }
+};
+
+// Add separate viewport export
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 5,
+  userScalable: true,
 };
 
 export default function RootLayout({

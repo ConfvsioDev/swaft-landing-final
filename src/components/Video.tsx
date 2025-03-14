@@ -3,12 +3,13 @@ import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
 import { useTheme } from 'next-themes';
 import { memo } from 'react';
 
-type DebouncedFunction<T extends (...args: unknown[]) => void> = (
+// Optimize debounce function with proper typing
+type DebouncedFunction<T extends (...args: any[]) => void> = (
   func: T,
   wait: number
 ) => (...args: Parameters<T>) => void;
 
-const debounce: DebouncedFunction<(...args: unknown[]) => void> = (func, wait) => {
+const debounce: DebouncedFunction<(...args: any[]) => void> = (func, wait) => {
   let timeout: NodeJS.Timeout;
   return (...args) => {
     clearTimeout(timeout);
@@ -33,6 +34,7 @@ const Video: React.FC<VideoProps> = ({
   quality = "auto",
   preload = true
 }) => {
+  // Only track client-side rendering
   const [isClient, setIsClient] = useState(false);
   const containerRef = useRef<HTMLDivElement | null>(null);
   const { theme } = useTheme();
@@ -67,17 +69,19 @@ const Video: React.FC<VideoProps> = ({
       : 'rgba(173, 216, 230, 0.2)',
     overlayColor: theme === 'dark'
       ? 'rgba(0, 0, 0, 0.05)'
-      : 'rgba(255, 255, 255, 0.05)'
+      : 'rgba(255, 255, 255, 0.05)',
+    backgroundColor: theme === 'dark' ? '#000' : '#fff'
   }), [theme]);
 
-  // Intersection Observer for better performance
+  // Simplified intersection observer - just for logging
   useEffect(() => {
+    if (typeof IntersectionObserver === 'undefined') return;
+    
     const observer = new IntersectionObserver(
       ([entry]) => {
-        // No longer need to track intersection
         console.log('Video element visibility:', entry.isIntersecting);
       },
-      { threshold: 0.1 }
+      { threshold: 0.1, rootMargin: '100px' }
     );
 
     if (containerRef.current) {
@@ -87,10 +91,11 @@ const Video: React.FC<VideoProps> = ({
     return () => observer.disconnect();
   }, []);
 
-  // Optimize resize handler
+  // Client-side initialization
   useEffect(() => {
     setIsClient(true);
 
+    // Optimize resize handler with proper debounce
     const handleResize = debounce(() => {
       if (containerRef.current) {
         const vh = window.innerHeight * 0.01;
@@ -109,20 +114,21 @@ const Video: React.FC<VideoProps> = ({
     const baseUrl = 'https://www.youtube-nocookie.com/embed/';
     
     const params = new URLSearchParams({
-      autoplay: '1', // Always autoplay
+      autoplay: '1',
       mute: '1',
       loop: '1',
       playlist: videoId,
       rel: '0',
       modestbranding: '1',
       playsinline: '1',
-      controls: '1', // Show controls
+      controls: '1',
       ...(quality !== 'auto' && { vq: quality })
     });
     
     return `${baseUrl}${videoId}?${params.toString()}`;
   }, [videoId, quality]);
 
+  // Don't render anything on server
   if (!isClient) return null;
 
   return (
@@ -142,7 +148,7 @@ const Video: React.FC<VideoProps> = ({
           boxShadow: `0 0 20px ${themeColors.glowColor}, 0 0 40px ${themeColors.glowColor}`,
           borderColor: themeColors.borderColor,
           aspectRatio,
-          backgroundColor: theme === 'dark' ? '#000' : '#fff',
+          backgroundColor: themeColors.backgroundColor,
         }}
         className="w-full max-w-[85vw] sm:max-w-[75vw] md:max-w-[70vw] lg:max-w-[1000px] rounded-lg sm:rounded-xl lg:rounded-2xl overflow-hidden border-2 sm:border-3 lg:border-4 relative"
       >

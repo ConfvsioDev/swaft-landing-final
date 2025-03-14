@@ -98,7 +98,6 @@ const nextConfig: NextConfig = {
     dangerouslyAllowSVG: true,
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
     loader: 'default',
-    domains: ['your-domain.com'],
     path: '/_next/image',
     disableStaticImages: false,
     remotePatterns: [
@@ -121,7 +120,6 @@ const nextConfig: NextConfig = {
   compiler: {
     removeConsole: process.env.NODE_ENV === 'production',
   },
-  swcMinify: true,
 };
 
 // Apply bundle analyzer wrapper if available
