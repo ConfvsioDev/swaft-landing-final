@@ -19,7 +19,7 @@ const FOOTER_LINKS = {
 } as const;
 
 const FooterLink: React.FC<{ href: string; label: string }> = ({ href, label }) => (
-    <li className="min-h-[24px]">
+    <li>
         <Link 
             href={href}
             className="text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white transition-colors text-sm sm:text-base hover:underline"
@@ -40,12 +40,9 @@ const Footer: React.FC = () => {
 
     return (
         <footer 
-            className="w-full py-8 sm:py-12 relative min-h-[300px]" 
+            className="w-full py-8 sm:py-12 relative min-h-[200px]" 
             role="contentinfo"
-            style={{
-                ...theme === 'dark' ? glowStyles.dark : glowStyles.light,
-                containIntrinsicSize: '0 300px', // Hint for layout
-            }}
+            style={theme === 'dark' ? glowStyles.dark : glowStyles.light}
         >
             {/* Glowing line with responsive width */}
             <div 
@@ -54,8 +51,8 @@ const Footer: React.FC = () => {
             
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
-                    {/* Logo section with improved responsive spacing and fixed height */}
-                    <div className="space-y-4 flex flex-col items-center md:items-start min-h-[80px]">
+                    {/* Logo section with improved responsive spacing */}
+                    <div className="space-y-4 flex flex-col items-center md:items-start">
                         <div className="flex items-center space-x-2">
                             <Link href="/" className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white">
                                 SWAFT
@@ -66,8 +63,8 @@ const Footer: React.FC = () => {
                         </p>
                     </div>
 
-                    {/* Navigation sections with consistent alignment and fixed heights */}
-                    <nav className="space-y-4 min-h-[150px]" aria-label="Navigation principale">
+                    {/* Navigation sections with consistent alignment */}
+                    <nav className="space-y-4" aria-label="Navigation principale">
                         <h3 className="font-semibold text-gray-900 dark:text-white text-center md:text-right text-base sm:text-lg">
                             Accueil
                         </h3>
@@ -78,7 +75,7 @@ const Footer: React.FC = () => {
                         </ul>
                     </nav>
 
-                    <nav className="space-y-4 min-h-[100px]" aria-label="Information">
+                    <nav className="space-y-4" aria-label="Information">
                         <h3 className="font-semibold text-gray-900 dark:text-white text-center md:text-right text-base sm:text-lg">
                             Information
                         </h3>
@@ -90,8 +87,8 @@ const Footer: React.FC = () => {
                     </nav>
                 </div>
 
-                {/* Added copyright section with fixed height */}
-                <div className="mt-8 pt-8 border-t border-gray-200 dark:border-gray-800 min-h-[40px]">
+                {/* Added copyright section */}
+                <div className="mt-8 pt-8 border-t border-gray-200 dark:border-gray-800">
                     <p className="text-center text-sm text-gray-500 dark:text-gray-400">
                         © {new Date().getFullYear()} Swaft. Tous droits réservés.
                     </p>
