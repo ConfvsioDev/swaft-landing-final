@@ -156,10 +156,12 @@ const Video: React.FC<VideoProps> = ({
           backgroundColor: themeColors.backgroundColor,
         }}
         className="w-full max-w-[85vw] sm:max-w-[75vw] md:max-w-[70vw] lg:max-w-[1000px] rounded-lg sm:rounded-xl lg:rounded-2xl overflow-hidden border-2 sm:border-3 lg:border-4 relative"
+        aria-hidden="false"
       >
         <div 
           className="absolute inset-0 z-[1] pointer-events-none"
           style={{ backgroundColor: themeColors.overlayColor }}
+          aria-hidden="true"
         />
         <iframe
           className="w-full h-full z-[2] relative"
@@ -169,6 +171,7 @@ const Video: React.FC<VideoProps> = ({
           allowFullScreen
           loading={preload ? "eager" : "lazy"}
           aria-label={`${title} - Vidéo de démonstration du produit`}
+          lang="fr"
         />
       </motion.div>
     </div>

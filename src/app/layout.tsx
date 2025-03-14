@@ -19,14 +19,18 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Swaft Landing Page",
-  description: "Boostez votre conversion avec Swaft",
+  metadataBase: new URL('https://swaft.com'),
+  title: {
+    template: '%s | Swaft',
+    default: 'Swaft - Boostez votre conversion',
+  },
+  description: "Swaft vous aide à booster vos conversions avec des solutions innovantes et personnalisées pour votre entreprise. Découvrez comment nous pouvons transformer votre présence en ligne.",
   robots: 'index, follow',
   openGraph: {
     type: 'website',
     locale: 'fr_FR',
-    title: 'Swaft Landing Page',
-    description: 'Boostez votre conversion avec Swaft',
+    title: 'Swaft - Boostez votre conversion',
+    description: 'Swaft vous aide à booster vos conversions avec des solutions innovantes et personnalisées pour votre entreprise.',
     siteName: 'Swaft',
     images: [
       {
@@ -39,9 +43,15 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Swaft Landing Page',
-    description: 'Boostez votre conversion avec Swaft',
+    title: 'Swaft - Boostez votre conversion',
+    description: 'Swaft vous aide à booster vos conversions avec des solutions innovantes et personnalisées pour votre entreprise.',
     images: ['/og-image.jpg'],
+  },
+  alternates: {
+    canonical: '/',
+    languages: {
+      'fr-FR': '/',
+    },
   },
 };
 
@@ -65,6 +75,19 @@ export default function RootLayout({
   return (
     <html lang="fr" suppressHydrationWarning className="scroll-smooth">
       <head>
+        <title>Swaft - Boostez votre conversion</title>
+        <meta name="description" content="Swaft vous aide à booster vos conversions avec des solutions innovantes et personnalisées pour votre entreprise." />
+        <meta name="author" content="Swaft" />
+        <meta name="application-name" content="Swaft" />
+        <meta name="keywords" content="conversion, marketing, business, digital, swaft" />
+        <meta property="og:locale" content="fr_FR" />
+        <meta name="format-detection" content="telephone=no" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+        <meta name="apple-mobile-web-app-title" content="Swaft" />
+        <meta name="theme-color" content="#01020E" media="(prefers-color-scheme: dark)" />
+        <meta name="theme-color" content="#F2F2F2" media="(prefers-color-scheme: light)" />
+        
         <link rel="preconnect" href="https://cdn.jsdelivr.net" crossOrigin="anonymous" />
         <link rel="preconnect" href="https://app.posthog.com" crossOrigin="anonymous" />
         <link rel="preconnect" href="https://us-assets.i.posthog.com" crossOrigin="anonymous" />
