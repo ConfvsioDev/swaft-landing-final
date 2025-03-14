@@ -1,27 +1,33 @@
 'use client';
 
-import React, { useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useTheme } from 'next-themes';
 import Link from 'next/link';
 import { Shield, Scale, FileText, Server } from 'lucide-react';
-import { motion } from 'motion/react';
+import { motion } from 'framer-motion';
 
 const Legal: React.FC = () => {
   const { theme } = useTheme();
+  const [mounted, setMounted] = useState(false);
 
-  const themeStyles = useMemo(() => ({
-    text: theme === 'dark' ? 'text-white' : 'text-gray-900',
-    subtext: theme === 'dark' ? 'text-gray-300' : 'text-gray-700',
-    sectionBg: theme === 'dark' ? 'bg-[#0A051E]/50' : 'bg-gray-50',
-    border: theme === 'dark' ? 'border-gray-800' : 'border-gray-200',
-    link: theme === 'dark' ? 'text-blue-400 hover:text-blue-300' : 'text-blue-600 hover:text-blue-500',
-    iconColor: theme === 'dark' ? 'text-gray-400' : 'text-gray-600',
-  }), [theme]);
+  // Fix hydration errors by ensuring client-side rendering is complete
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // Only render content after mounting to prevent hydration mismatch
+  if (!mounted) {
+    return (
+      <div className="min-h-screen bg-gradient-to-b from-[#0A051E] to-black flex items-center justify-center">
+        <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+      </div>
+    );
+  }
 
   const sections = [
     {
       title: "Protection des Données",
-      icon: <Shield className={`w-6 h-6 ${themeStyles.iconColor}`} />,
+      icon: <Shield className="w-6 h-6 text-blue-400" />,
       content: [
         "Chez Swaft, nous collectons des données... que vous nous donnez.",
         "Les numéros & e-mails sont gardés précieusement, et non transférés à quicquonque. Nous nous engageons pour votre sécurité et votre confidentialité.",
@@ -33,7 +39,7 @@ const Legal: React.FC = () => {
     },
     {
       title: "Conditions de Résiliation et Remboursement",
-      icon: <FileText className={`w-6 h-6 ${themeStyles.iconColor}`} />,
+      icon: <FileText className="w-6 h-6 text-blue-400" />,
       content: [
         "Vous pouvez résilier à tout moment.",
         "Le remboursement est intégral si vous avez résilié durant les 7 premiers jours.",
@@ -43,7 +49,7 @@ const Legal: React.FC = () => {
     },
     {
       title: "Règlement des Litiges",
-      icon: <Scale className={`w-6 h-6 ${themeStyles.iconColor}`} />,
+      icon: <Scale className="w-6 h-6 text-blue-400" />,
       content: [
         "Nous privilégions un règlement amiable, à défaut, le litige sera soumis aux tribunaux compétents."
       ]
@@ -72,7 +78,7 @@ const Legal: React.FC = () => {
   };
 
   return (
-    <div className={`min-h-screen py-32 px-4 sm:px-6 lg:px-8 'bg-gradient-to-b from-[#0A051E] to-black'`}>
+    <div className="min-h-screen py-32 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-[#0A051E] to-black">
       <motion.div 
         className="max-w-4xl mx-auto"
         initial="hidden"
@@ -80,7 +86,7 @@ const Legal: React.FC = () => {
         variants={containerVariants}
       >
         <motion.h1 
-          className={`text-4xl sm:text-5xl font-bold mb-6 text-center ${themeStyles.text} tracking-tight`}
+          className="text-4xl sm:text-5xl font-bold mb-6 text-center text-white tracking-tight"
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
@@ -88,7 +94,7 @@ const Legal: React.FC = () => {
           Mentions Légales
         </motion.h1>
         <motion.p 
-          className={`text-center ${themeStyles.subtext} text-lg mb-12 max-w-2xl mx-auto`}
+          className="text-center text-gray-300 text-lg mb-12 max-w-2xl mx-auto"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.2 }}
@@ -101,21 +107,21 @@ const Legal: React.FC = () => {
             <motion.div
               key={index}
               variants={sectionVariants}
-              className={`${themeStyles.sectionBg} rounded-2xl p-8 backdrop-blur-sm
-                border ${themeStyles.border} transition-all duration-300 hover:shadow-lg
-                hover:border-opacity-50 group`}
+              className="bg-white/5 backdrop-blur-md rounded-2xl p-8 
+                border border-white/10 transition-all duration-300 hover:shadow-lg hover:border-blue-500/30
+                hover:bg-white/10 group"
             >
               <div className="flex items-center gap-4 mb-6">
-                <div className="p-3 rounded-lg bg-primary/10 group-hover:bg-primary/20 transition-colors duration-300">
+                <div className="p-3 rounded-lg bg-blue-500/10 group-hover:bg-blue-500/20 transition-colors duration-300">
                   {section.icon}
                 </div>
-                <h2 className={`text-2xl sm:text-3xl font-semibold ${themeStyles.text}`}>
+                <h2 className="text-2xl sm:text-3xl font-semibold text-white">
                   {section.title}
                 </h2>
               </div>
               <div className="space-y-4">
                 {section.content.map((text, i) => (
-                  <p key={i} className={`${themeStyles.subtext} text-base sm:text-lg leading-relaxed`}>
+                  <p key={i} className="text-gray-300 text-base sm:text-lg leading-relaxed">
                     {text}
                   </p>
                 ))}
@@ -125,23 +131,23 @@ const Legal: React.FC = () => {
 
           <motion.div
             variants={sectionVariants}
-            className={`${themeStyles.sectionBg} rounded-2xl p-8 backdrop-blur-sm
-              border ${themeStyles.border} transition-all duration-300 hover:shadow-lg
-              hover:border-opacity-50 group`}
+            className="bg-white/5 backdrop-blur-md rounded-2xl p-8 
+              border border-white/10 transition-all duration-300 hover:shadow-lg hover:border-blue-500/30
+              hover:bg-white/10 group"
           >
             <div className="flex items-center gap-4 mb-6">
-              <div className="p-3 rounded-lg bg-primary/10 group-hover:bg-primary/20 transition-colors duration-300">
-                <Server className={`w-6 h-6 ${themeStyles.iconColor}`} />
+              <div className="p-3 rounded-lg bg-blue-500/10 group-hover:bg-blue-500/20 transition-colors duration-300">
+                <Server className="w-6 h-6 text-blue-400" />
               </div>
-              <h2 className={`text-2xl sm:text-3xl font-semibold ${themeStyles.text}`}>
+              <h2 className="text-2xl sm:text-3xl font-semibold text-white">
                 Contact et Hébergement
               </h2>
             </div>
             <div className="space-y-4">
-              <p className={`${themeStyles.subtext} text-base sm:text-lg leading-relaxed`}>
-                Pour nous contacter : <Link href="/contact" className={`${themeStyles.link} underline font-medium`}>Page Contact</Link>
+              <p className="text-gray-300 text-base sm:text-lg leading-relaxed">
+                Pour nous contacter : <Link href="/contact" className="text-blue-400 hover:text-blue-300 underline font-medium">Page Contact</Link>
               </p>
-              <p className={`${themeStyles.subtext} text-base sm:text-lg leading-relaxed`}>
+              <p className="text-gray-300 text-base sm:text-lg leading-relaxed">
                 Hébergeur du site : Vercel
               </p>
             </div>
@@ -149,13 +155,13 @@ const Legal: React.FC = () => {
 
           <motion.div 
             variants={sectionVariants}
-            className={`mt-16 pt-8 border-t ${themeStyles.border}`}
+            className="mt-16 pt-8 border-t border-white/10"
           >
-            <p className={`${themeStyles.subtext} text-sm text-center max-w-2xl mx-auto`}>
+            <p className="text-gray-400 text-sm text-center max-w-2xl mx-auto">
               © Toutes les données, images, textes et pages de Swaft sont soumises à des droits d'auteur.
               Toute copie/utilisation sera suivie d'une plainte.
             </p>
-            <p className={`${themeStyles.subtext} text-sm text-center mt-4 font-medium`}>
+            <p className="text-gray-400 text-sm text-center mt-4 font-medium">
               Swaft : Ylian.B Clarel.R Nathan.B Théophyl.L
             </p>
           </motion.div>

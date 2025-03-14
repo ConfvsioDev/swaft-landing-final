@@ -116,7 +116,7 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
                 </p>
                 <button
                   onClick={onWhatsAppClick}
-                  className="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-green-600 hover:bg-green-700 transition-colors duration-300 text-white font-medium"
+                  className="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-transparent border-2 border-green-500 text-green-500 hover:bg-green-500/10 transition-all duration-300 font-medium"
                 >
                   <MessageCircle className="w-5 h-5" />
                   Continuer sur WhatsApp
