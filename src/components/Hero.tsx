@@ -39,13 +39,20 @@ const Hero: React.FC = () => {
   }), [theme, shadowStyle]);
 
   if (theme === undefined) {
-    return <div>Loading theme...</div>;
+    return (
+      <div className="h-[75vh] flex items-center justify-center">
+        <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+      </div>
+    );
   }
 
   return (
     <div 
-      className="hero min-h-[75vh] flex flex-col justify-center items-center px-4 sm:px-6 lg:px-8 py-6 sm:py-8 md:py-10 lg:py-6 relative w-screen overflow-hidden"
-      style={{ containIntrinsicSize: '0 75vh' }}
+      className="hero h-[75vh] flex flex-col justify-center items-center px-4 sm:px-6 lg:px-8 py-6 sm:py-8 md:py-10 lg:py-6 relative w-screen overflow-hidden"
+      style={{ 
+        contentVisibility: 'auto',
+        containIntrinsicSize: '0 75vh'
+      }}
     >
       {/* Background pattern with fade effect */}
       <div className="absolute inset-0">
@@ -57,17 +64,16 @@ const Hero: React.FC = () => {
       </div>
       
       {/* Content */}
-      <div className="relative z-10 space-y-4 md:space-y-6" style={{ minHeight: '200px' }}>
-        <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-medium leading-tight text-center max-w-7xl mx-auto" style={{ minHeight: '160px' }}>
+      <div className="relative z-10 space-y-4 md:space-y-6 h-[300px] flex flex-col justify-center">
+        <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-medium leading-tight text-center max-w-7xl mx-auto h-[160px] flex flex-col justify-center">
           <span 
-            className="inline-block mb-2 sm:mb-3 tracking-tight"
+            className="inline-block mb-2 sm:mb-3 tracking-tight h-[60px] flex items-center justify-center"
             style={textStyles.heading1}
           >
             Des interfaces intuitives qui
           </span>
-          <br />
           <span 
-            className="inline-block tracking-tight"
+            className="inline-block tracking-tight h-[60px] flex items-center justify-center"
             style={textStyles.heading2}
           >
             transforment l'expérience utilisateur
@@ -75,13 +81,12 @@ const Hero: React.FC = () => {
         </h1>
         
         <h3 
-          className={`text-xl sm:text-2xl md:text-3xl font-light ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'} text-center max-w-4xl mx-auto leading-relaxed`}
-          style={{ minHeight: '40px' }}
+          className={`text-xl sm:text-2xl md:text-3xl font-light ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'} text-center max-w-4xl mx-auto leading-relaxed h-[40px] flex items-center justify-center`}
         >
           Optimisez votre taux de conversion grâce à une landing page parfaite.
         </h3>
         
-        <div className="mt-8 sm:mt-10 md:mt-12 flex justify-center" style={{ minHeight: '56px' }}>
+        <div className="mt-8 sm:mt-10 md:mt-12 flex justify-center h-[56px]">
           <button 
             className={`group relative inline-flex items-center overflow-hidden rounded-full h-14 pr-14 pl-8 text-lg sm:text-xl font-medium transition-all duration-300 ease-out transform hover:scale-105
             ${theme === 'dark' 
@@ -103,6 +108,7 @@ const Hero: React.FC = () => {
                 viewBox="0 0 24 24" 
                 stroke="currentColor" 
                 className={`relative z-10 h-6 w-6 rotate-90 transition-transform duration-300 ease-out group-hover:rotate-[135deg] ${theme === 'dark' ? 'text-black' : 'text-white'}`}
+                aria-hidden="true"
               >
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
               </svg>
