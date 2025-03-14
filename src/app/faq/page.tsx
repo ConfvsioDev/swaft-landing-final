@@ -82,7 +82,7 @@ const FAQ: React.FC = () => {
   };
 
   return (
-    <div className={`min-h-screen py-32 px-4 sm:px-6 lg:px-8 ${theme === 'dark' ? 'bg-gradient-to-b from-[#0A051E] to-black' : 'bg-gradient-to-b from-gray-50 to-white'}`}>
+    <div className={`min-h-screen py-32 px-4 sm:px-6 lg:px-8 'bg-gradient-to-b from-[#0A051E] to-black'`}>
       <motion.div 
         className="max-w-4xl mx-auto"
         initial="hidden"

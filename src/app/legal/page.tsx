@@ -142,7 +142,7 @@ const Legal: React.FC = () => {
                 Pour nous contacter : <Link href="/contact" className={`${themeStyles.link} underline font-medium`}>Page Contact</Link>
               </p>
               <p className={`${themeStyles.subtext} text-base sm:text-lg leading-relaxed`}>
-                Noms & Coordonnées de l'hébergeur du site : [À compléter]
+                Hébergeur du site : Vercel
               </p>
             </div>
           </motion.div>
