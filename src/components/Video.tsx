@@ -142,15 +142,16 @@ const Video: React.FC<VideoProps> = ({
           boxShadow: `0 0 20px ${themeColors.glowColor}, 0 0 40px ${themeColors.glowColor}`,
           borderColor: themeColors.borderColor,
           aspectRatio,
+          backgroundColor: theme === 'dark' ? '#000' : '#fff',
         }}
         className="w-full max-w-[85vw] sm:max-w-[75vw] md:max-w-[70vw] lg:max-w-[1000px] rounded-lg sm:rounded-xl lg:rounded-2xl overflow-hidden border-2 sm:border-3 lg:border-4 relative"
       >
         <div 
-          className="absolute inset-0 z-1 pointer-events-none"
+          className="absolute inset-0 z-[1] pointer-events-none"
           style={{ backgroundColor: themeColors.overlayColor }}
         />
         <iframe
-          className="w-full h-full z-2"
+          className="w-full h-full z-[2] relative"
           src={youtubeUrl}
           title={`${title} - Vidéo de démonstration`}
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
