@@ -28,7 +28,7 @@ interface VideoProps {
 const Video: React.FC<VideoProps> = ({ 
   id, 
   title = "Product Demo Video",
-  videoId = "z9sctViHNqg",
+  videoId = "dHTK61HjJBU",
   aspectRatio = "16/9",
   quality = "auto",
   preload = true
